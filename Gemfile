@@ -60,3 +60,5 @@ gem "devise", "~> 4.8"
 gem "turbo-rails", "~> 0.7.7"
 
 gem "simple_form", "~> 5.1"
+
+gem "lockbox", "~> 0.6.5"

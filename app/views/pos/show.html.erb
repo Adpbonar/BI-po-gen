@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>References:</strong>
+  <%= @po.references %>
+</p>
+
+<p>
+  <strong>Title:</strong>
+  <%= @po.title %>
+</p>
+
+<p>
+  <strong>Text:</strong>
+  <%= @po.text %>
+</p>
+
+<p>
+  <strong>Date time:</strong>
+  <%= @po.date_time %>
+</p>
+
+<%= link_to 'Edit', edit_po_path(@po) %> |
+<%= link_to 'Back', pos_path %>

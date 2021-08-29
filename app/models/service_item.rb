@@ -1,0 +1,2 @@
+class ServiceItem < LineItem
+end

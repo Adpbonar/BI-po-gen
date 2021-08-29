@@ -1,0 +1,2 @@
+class ExpenseItem < LineItem
+end

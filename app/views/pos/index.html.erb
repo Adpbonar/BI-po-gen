@@ -1,0 +1,33 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Pos</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>References</th>
+      <th>Title</th>
+      <th>Text</th>
+      <th>Date time</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @pos.each do |po| %>
+      <tr>
+        <td><%= po.references %></td>
+        <td><%= po.title %></td>
+        <td><%= po.text %></td>
+        <td><%= po.date_time %></td>
+        <td><%= link_to 'Show', po %></td>
+        <td><%= link_to 'Edit', edit_po_path(po) %></td>
+        <td><%= link_to 'Destroy', po, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Po', new_po_path %>

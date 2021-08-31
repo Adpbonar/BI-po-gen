@@ -62,3 +62,9 @@ gem "turbo-rails", "~> 0.7.7"
 gem "simple_form", "~> 5.1"
 
 gem "lockbox", "~> 0.6.5"
+
+gem "blind_index", "~> 2.2"
+
+gem "stimulus_reflex", "~> 3.4"
+
+gem "friendly_id", "~> 5.4"

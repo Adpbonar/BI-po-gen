@@ -1,5 +1,6 @@
 class PosController < ApplicationController
   before_action :set_po, only: %i[ show edit update destroy ]
+  before_action :authenticate_user!
 
   # GET /pos or /pos.json
   def index
@@ -23,6 +24,7 @@ class PosController < ApplicationController
   def create
     @po = Po.new(po_params)
     @po.po_number = @po.set_po_number
+    @po.user = current_user
     respond_to do |format|
       if @po.save
         format.html { redirect_to @po, notice: "Po was successfully created." }
@@ -64,6 +66,6 @@ class PosController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def po_params
-      params.require(:po).permit(:references, :title, :text, :date_time)
+      params.require(:po).permit(:po_number, :title, :description, :start_date, :end_date)
     end
 end

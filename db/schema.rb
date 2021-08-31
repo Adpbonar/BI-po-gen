@@ -10,10 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_29_213414) do
+ActiveRecord::Schema.define(version: 2021_08_30_235838) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "friendly_id_slugs", force: :cascade do |t|
+    t.string "slug", null: false
+    t.integer "sluggable_id", null: false
+    t.string "sluggable_type", limit: 50
+    t.string "scope"
+    t.datetime "created_at"
+    t.index ["slug", "sluggable_type", "scope"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type_and_scope", unique: true
+    t.index ["slug", "sluggable_type"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type"
+    t.index ["sluggable_type", "sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_type_and_sluggable_id"
+  end
 
   create_table "installements", force: :cascade do |t|
     t.integer "percentage"
@@ -35,13 +46,26 @@ ActiveRecord::Schema.define(version: 2021_08_29_213414) do
   end
 
   create_table "participants", force: :cascade do |t|
-    t.string "email"
-    t.string "name"
-    t.string "address"
-    t.text "pos"
-    t.string "type"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.text "email_ciphertext"
+    t.text "name_ciphertext"
+    t.text "phone_ciphertext"
+    t.text "pos_ciphertext"
+    t.text "address_ciphertext"
+    t.text "type_ciphertext"
+    t.string "email_bidx"
+    t.string "name_bidx"
+    t.string "phone_bidx"
+    t.string "pos_bidx"
+    t.string "address_bidx"
+    t.string "type_bidx"
+    t.index ["address_bidx"], name: "index_participants_on_address_bidx", unique: true
+    t.index ["email_bidx"], name: "index_participants_on_email_bidx", unique: true
+    t.index ["name_bidx"], name: "index_participants_on_name_bidx", unique: true
+    t.index ["phone_bidx"], name: "index_participants_on_phone_bidx", unique: true
+    t.index ["pos_bidx"], name: "index_participants_on_pos_bidx", unique: true
+    t.index ["type_bidx"], name: "index_participants_on_type_bidx", unique: true
   end
 
   create_table "pos", force: :cascade do |t|
@@ -65,6 +89,8 @@ ActiveRecord::Schema.define(version: 2021_08_29_213414) do
     t.integer "status"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "slug"
+    t.index ["slug"], name: "index_pos_on_slug", unique: true
     t.index ["user_id"], name: "index_pos_on_user_id"
   end
 
@@ -79,7 +105,6 @@ ActiveRecord::Schema.define(version: 2021_08_29_213414) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
@@ -91,7 +116,9 @@ ActiveRecord::Schema.define(version: 2021_08_29_213414) do
     t.string "last_sign_in_ip"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["email"], name: "index_users_on_email", unique: true
+    t.text "email_ciphertext"
+    t.string "email_bidx"
+    t.index ["email_bidx"], name: "index_users_on_email_bidx", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 

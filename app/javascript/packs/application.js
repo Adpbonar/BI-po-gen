@@ -10,15 +10,13 @@ import "channels"
 import "bootstrap"
 import "../stylesheets/application"
 import flatpickr from "flatpickr"
+import "@hotwired/turbo-rails"
+import "controllers"
 
 require("flatpickr/dist/flatpickr.css")
 
 Rails.start()
-// Turbolinks.start()
 ActiveStorage.start()
-
-import "@hotwired/turbo-rails"
-
 
 document.addEventListener("turbo:load", function () {
     flatpickr("[data-behavior='flatpickr']", {
@@ -27,6 +25,5 @@ document.addEventListener("turbo:load", function () {
       altFormat: "F j, Y H:i",
       dateFormat: "Y-m-d H:i",
       disableMobile: "true",
-    })
+    });
   });
-import "controllers"

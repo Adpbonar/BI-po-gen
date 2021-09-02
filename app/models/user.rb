@@ -8,11 +8,4 @@ class User < ApplicationRecord
   devise :database_authenticatable, 
          :recoverable, :rememberable, :validatable
 
-  def issued_by(user)
-    if user.email.split('@').last == 'bonarinstitute.com'
-      return "Issued by the Bonar Institute for Purposeful Leadership."
-    else
-      errors.add(:email, message: "not valid")
-    end
-  end
 end

@@ -1,0 +1,25 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Statements</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @statements.each do |statement| %>
+      <tr>
+        <td><%= link_to 'Show', statement_path(statement) %></td
+      </tr>
+      <%= turbo_frame_tag 'statement' do %>
+        <%= link_to 'Edit Statement', edit_statement_path(statement) %>
+      <% end %>
+      
+    <% end %>
+  </tbody>
+</table>
+
+<br>

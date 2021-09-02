@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_30_235838) do
+ActiveRecord::Schema.define(version: 2021_09_02_131341) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -26,20 +26,21 @@ ActiveRecord::Schema.define(version: 2021_08_30_235838) do
     t.index ["sluggable_type", "sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_type_and_sluggable_id"
   end
 
-  create_table "installements", force: :cascade do |t|
+  create_table "installments", force: :cascade do |t|
     t.integer "percentage"
+    t.datetime "due_date"
     t.bigint "po_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["po_id"], name: "index_installements_on_po_id"
+    t.index ["po_id"], name: "index_installments_on_po_id"
   end
 
   create_table "line_items", force: :cascade do |t|
-    t.string "name"
-    t.bigint "statement_id", null: false
+    t.bigint "statement_id"
+    t.string "title"
     t.text "description"
     t.float "cost"
-    t.string "type"
+    t.boolean "taxable", default: true
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["statement_id"], name: "index_line_items_on_statement_id"
@@ -68,6 +69,14 @@ ActiveRecord::Schema.define(version: 2021_08_30_235838) do
     t.index ["type_bidx"], name: "index_participants_on_type_bidx", unique: true
   end
 
+  create_table "po_users", force: :cascade do |t|
+    t.bigint "po_id"
+    t.boolean "facilitator", default: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["po_id"], name: "index_po_users_on_po_id"
+  end
+
   create_table "pos", force: :cascade do |t|
     t.bigint "user_id"
     t.string "title"
@@ -77,15 +86,15 @@ ActiveRecord::Schema.define(version: 2021_08_30_235838) do
     t.integer "po_number"
     t.string "service_type"
     t.float "po_amount"
-    t.float "amount_owed"
-    t.float "amount_paid"
-    t.boolean "taxable"
+    t.integer "number_of_installments"
+    t.string "tax_amount"
     t.string "issued_to"
     t.string "company_name"
     t.string "learning_coordinator"
     t.string "coachee_name"
     t.string "approved_by"
     t.integer "associate_percentage"
+    t.integer "founder_percentage"
     t.integer "status"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -95,10 +104,9 @@ ActiveRecord::Schema.define(version: 2021_08_30_235838) do
   end
 
   create_table "statements", force: :cascade do |t|
-    t.integer "number"
-    t.integer "issued_by"
-    t.bigint "po_id", null: false
-    t.string "type"
+    t.bigint "po_id"
+    t.text "terms"
+    t.text "notes"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["po_id"], name: "index_statements_on_po_id"
@@ -122,7 +130,5 @@ ActiveRecord::Schema.define(version: 2021_08_30_235838) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  add_foreign_key "installements", "pos"
-  add_foreign_key "line_items", "statements"
-  add_foreign_key "statements", "pos"
+  add_foreign_key "installments", "pos"
 end

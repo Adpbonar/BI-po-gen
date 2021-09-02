@@ -1,22 +1,4 @@
-<p>
-  <strong>References:</strong>
-  <%= @po.references %>
-</p>
-
-<p>
-  <strong>Title:</strong>
-  <%= @po.title %>
-</p>
-
-<p>
-  <strong>Text:</strong>
-  <%= @po.text %>
-</p>
-
-<p>
-  <strong>Date time:</strong>
-  <%= @po.date_time %>
-</p>
-
+<p>Approximate completion time: <%= @po.duration %></p>
+<p><%= @po.issued_by %></p>
 <%= link_to 'Edit', edit_po_path(@po) %> |
 <%= link_to 'Back', pos_path %>

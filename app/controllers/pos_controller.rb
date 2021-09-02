@@ -23,12 +23,17 @@ class PosController < ApplicationController
   # POST /pos or /pos.json
   def create
     @po = Po.new(po_params)
-    @po.po_number = @po.set_po_number
     @po.user = current_user
+    @po.approved_by = current_user.id 
+    @po.po_number = @po.set_po_number
+    @po.associate_percentage = 50
+    @po.founder_percentage = 10
+    @po.number_of_installments = 3
     respond_to do |format|
       if @po.save
         format.html { redirect_to @po, notice: "Po was successfully created." }
         format.json { render :show, status: :created, location: @po }
+        @po.set_up_po
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @po.errors, status: :unprocessable_entity }
@@ -59,9 +64,10 @@ class PosController < ApplicationController
   end
 
   private
+
     # Use callbacks to share common setup or constraints between actions.
     def set_po
-      @po = Po.find(params[:id])
+      @po = Po.friendly.find(params[:id])
     end
 
     # Only allow a list of trusted parameters through.

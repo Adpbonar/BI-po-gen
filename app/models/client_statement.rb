@@ -1,0 +1,3 @@
+class ClientStatement < Statement 
+  
+end

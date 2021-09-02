@@ -1,6 +1,4 @@
-
-
-<%= simple_form_for @po, local: true do |f| %>
+<%= simple_form_for @po do |f| %>
   <%= f.input :title %>
   <%= f.input :description %>
   <label>Start Date</label>  
@@ -9,5 +7,3 @@
   <%= f.text_field :end_date, class: 'flatpickr', placeholder: 'select the end date', data: { behavior: "flatpickr" } %>
   <%= f.submit class: 'btn btn-primary' %>
 <% end %>
-
-<%= current_user.issued_by(current_user) %>

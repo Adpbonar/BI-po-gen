@@ -1,0 +1,3 @@
+class AssociateStatement < Statement 
+
+end

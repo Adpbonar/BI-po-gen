@@ -2,5 +2,4 @@
 
 <%= render 'form', installment: @installment %>
 
-<%= link_to 'Show', @installment %> |
-<%= link_to 'Back', installments_path %>
+<%= link_to 'Back', po_path(@installment.po) %>

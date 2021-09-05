@@ -1,0 +1,3 @@
+class GeneralStatement < Statement 
+  
+end

@@ -8,7 +8,6 @@ class CreatePos < ActiveRecord::Migration[6.1]
       t.datetime :end_date
       t.integer :po_number
       t.string :service_type
-      t.float :po_amount
       t.integer :number_of_installments
       t.string :tax_amount
       t.string :issued_to
@@ -18,9 +17,11 @@ class CreatePos < ActiveRecord::Migration[6.1]
       t.string :approved_by
       t.integer :associate_percentage
       t.integer :founder_percentage
+      t.float :profit_share
       t.integer :status
 
       t.timestamps
     end
+    add_index :pos, :po_number, unique: true
   end
 end

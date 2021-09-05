@@ -9,6 +9,7 @@ class PosController < ApplicationController
 
   # GET /pos/1 or /pos/1.json
   def show
+    po_issuer = @po.user
   end
 
   # GET /pos/new
@@ -24,16 +25,18 @@ class PosController < ApplicationController
   def create
     @po = Po.new(po_params)
     @po.user = current_user
-    @po.approved_by = current_user.id 
     @po.po_number = @po.set_po_number
     @po.associate_percentage = 50
     @po.founder_percentage = 10
+    @po.profit_share = 7.5
     @po.number_of_installments = 3
+    @po.status = "Generated"
     respond_to do |format|
       if @po.save
         format.html { redirect_to @po, notice: "Po was successfully created." }
         format.json { render :show, status: :created, location: @po }
         @po.set_up_po
+        @po.initilize_default_installments
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @po.errors, status: :unprocessable_entity }
@@ -56,10 +59,13 @@ class PosController < ApplicationController
 
   # DELETE /pos/1 or /pos/1.json
   def destroy
+    @po.installments.destroy_all
+    @po.statements.destroy_all
     @po.destroy
     respond_to do |format|
       format.html { redirect_to pos_url, notice: "Po was successfully destroyed." }
       format.json { head :no_content }
+      format.turbo_stream { }
     end
   end
 
@@ -72,6 +78,6 @@ class PosController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def po_params
-      params.require(:po).permit(:po_number, :title, :description, :start_date, :end_date)
+      params.require(:po).permit(:po_number, :title, :description, :start_date, :end_date, :tax_amount, :company_name, :number_of_installments, :service_type)
     end
 end

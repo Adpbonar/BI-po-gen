@@ -10,3 +10,32 @@ body {
 .flatpickr {
     background-color: white !important;
 }
+
+#set-installment {
+    width: 100%;
+}
+
+.top-bottom-spacing {
+    padding-top: 2em !important; 
+    padding-bottom: 2em !important;
+}
+
+.no-show {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+.btn {
+    text-transform: uppercase;
+}
+
+.hightlight {
+    background-color: yellow;
+    background: yellow;
+    padding: 2px;
+    border-bottom: 1px solid black;
+}
+
+.center {
+    text-align: center;
+}

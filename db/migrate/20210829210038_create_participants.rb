@@ -6,6 +6,7 @@ class CreateParticipants < ActiveRecord::Migration[6.1]
       t.string :address
       t.text :pos
       t.string :type
+      t.integer :profit_share
 
       t.timestamps
     end

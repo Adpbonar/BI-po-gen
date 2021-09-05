@@ -1,6 +1,4 @@
 class Participant < ApplicationRecord
-    encrypts :email, :name, :phone, :address, :pos, :type
-    blind_index :email, :name, :phone, :address, :pos, :type
-    
-
+    encrypts :emailaddress, :name, :phone, :address, :pos
+    blind_index :emailaddress, :name, :phone, :address, :pos
 end

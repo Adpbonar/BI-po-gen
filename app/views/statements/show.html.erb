@@ -1,3 +1,83 @@
-<p id="notice"><%= notice %></p>
+<h1 class="center">Statement for PO <%= @statement.po.po_number %></h1>
+<p>Number of installments: <%= @statement.po.installments.count %> | Percentage Breakdown: <%= @installment_info %></p>
+<h2>Expense Items</h2>
+<% if @expenses.each do |item| %>
+    <div>
+        <p style="font-weight: 700"><%= item.title %></p>
+        <p><%= item.description %></p>
+        <table style="border: none !important; width: 100%;">
+            <tbody>
+                <tr>
+                    <td style="width: 33.33%;">
+                        <p>Cost: <%= number_to_currency(item.cost) %></p>
+                    </td>
+                    <td style="width: 33.33%;">
+                        <p>Tax: <%= item.taxable %></p>
+                    </td>
+                    <td style="width: 33.33%;">
+                        <p>Type: 
+                        <%if item.type == "ServiceItem" %>
+                            Service
+                        <% else %>
+                            Expense
+                        <% end %>
+                        </p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+<% end.any? %>
+<% else %>
+none
+<% end %>
+<h2>Services</h2>
+<% if @services.each do |item| %>
+    <div>
+        <p style="font-weight: 700"><%= item.title %></p>
+        <p><%= item.description %></p>
+        <table style="border: none !important; width: 100%;">
+            <tbody>
+                <tr>
+                    <td style="width: 33.33%;">
+                        <p>Cost: <%= number_to_currency(item.cost) %></p>
+                    </td>
+                    <td style="width: 33.33%;">
+                        <p>Tax: <%= item.taxable %></p>
+                    </td>
+                    <td style="width: 33.33%;">
+                        <p>Type: 
+                        <%if item.type == "ServiceItem" %>
+                            Service
+                        <% else %>
+                            Expense
+                        <% end %>
+                        </p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <hr />
+    </div>
+<% end.any? %>
+<% else %>
+    none 
+<% end %>
 
-<%= link_to 'Back', statements_path %>
+<%= simple_form_for(@line_item) do |f| %>
+    <%= f.error_notification %>
+    <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+  
+    <div class="form-inputs">
+    <%= f.input   :statement_id, as: :hidden, :input_html => { :value => @statement.id } %>
+    <%= f.input :title %>
+    <%= f.input :description %>
+    <%= f.input :cost, step: 0.01 %>
+    <%= f.input :taxable %>
+    <%= f.input :type, as: :select, collection: LineItem::TYPE, label: 'Type' %>
+    </div>
+  
+    <div class="form-actions">
+      <%= f.button :submit %>
+    </div>
+  <% end %>

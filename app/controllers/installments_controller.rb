@@ -38,7 +38,7 @@ class InstallmentsController < ApplicationController
   def update
     respond_to do |format|
       if @installment.update(installment_params)
-        format.html { redirect_to @installment, notice: "Installment was successfully updated." }
+        format.html { redirect_to po_path(@installment.po), notice: "Installment was successfully updated." }
         format.json { render :show, status: :ok, location: @installment }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -64,6 +64,6 @@ class InstallmentsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def installment_params
-      params.fetch(:installment, {})
+      params.require(:installment).permit(:percentage, :due_date)
     end
 end

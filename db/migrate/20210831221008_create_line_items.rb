@@ -4,8 +4,9 @@ class CreateLineItems < ActiveRecord::Migration[6.1]
       t.references :statement
       t.string :title
       t.text :description
-      t.float :cost
+      t.decimal :cost, precision: 5, scale: 2
       t.boolean :taxable, :default => true
+      t.string :type
 
       t.timestamps
     end

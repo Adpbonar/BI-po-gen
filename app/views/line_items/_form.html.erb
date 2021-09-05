@@ -4,6 +4,12 @@
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
 
   <div class="form-inputs">
+  <%# f.input   :statement_id, as: :hidden, :input_html => { :value => current_user.id } %>
+  <%= f.input :title %>
+  <%= f.input :description %>
+  <%= f.input :cost %>
+  <%= f.input :taxable %>
+  <%= f.input :type, as: :select, collection: LineItem::TYPE, label: 'Type' %>
   </div>
 
   <div class="form-actions">

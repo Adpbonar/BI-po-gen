@@ -15,15 +15,16 @@
 
   <tbody>
     <% @pos.each do |po| %>
-      <tr>
-        <td><%= po.title %></td>
-        <td><%= po.description %></td>
-        <td><%= po.duration %></td>
-        <td><%= time_ago_in_words(po.created_at) %></td>
-        <td><%= link_to 'Show', po %></td>
-        <td><%= link_to 'Edit', edit_po_path(po) %></td>
-        <td><%= link_to 'Destroy', po, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
+        <%= content_tag :tr, id: dom_id(po) do %>
+          <td><%= po.title %></td>
+          <td><%= po.description %></td>
+          <td><%= po.duration %></td>
+          <td><%= time_ago_in_words(po.created_at) %></td>
+          <td><%= link_to 'Show', po %></td>
+          <td><%= link_to 'Edit', edit_po_path(po) %></td>
+          <td><%= link_to 'Destroy', po, data: {"turbo-method": :delete,
+          confirm: 'Are you sure'}  %></td>
+        <% end %>
     <% end %>
   </tbody>
 </table>

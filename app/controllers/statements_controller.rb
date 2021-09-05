@@ -9,6 +9,10 @@ class StatementsController < ApplicationController
 
   # GET /statements/1 or /statements/1.json
   def show
+    @line_item = LineItem.new
+    @expenses = @statement.line_items.where(type: "ExpenseItem")
+    @services = @statement.line_items.where(type: "ServiceItem")
+    @installment_info = @statement.po.show_installments
   end
 
   # GET /statements/new

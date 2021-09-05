@@ -39,39 +39,41 @@ ActiveRecord::Schema.define(version: 2021_09_02_131341) do
     t.bigint "statement_id"
     t.string "title"
     t.text "description"
-    t.float "cost"
+    t.decimal "cost", precision: 5, scale: 2
     t.boolean "taxable", default: true
+    t.string "type"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["statement_id"], name: "index_line_items_on_statement_id"
   end
 
   create_table "participants", force: :cascade do |t|
+    t.string "type"
+    t.integer "profit_share"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.text "email_ciphertext"
+    t.text "emailaddress_ciphertext"
     t.text "name_ciphertext"
     t.text "phone_ciphertext"
     t.text "pos_ciphertext"
     t.text "address_ciphertext"
-    t.text "type_ciphertext"
-    t.string "email_bidx"
+    t.string "emailaddress_bidx"
     t.string "name_bidx"
     t.string "phone_bidx"
-    t.string "pos_bidx"
+    t.string "po_bidx"
     t.string "address_bidx"
-    t.string "type_bidx"
     t.index ["address_bidx"], name: "index_participants_on_address_bidx", unique: true
-    t.index ["email_bidx"], name: "index_participants_on_email_bidx", unique: true
+    t.index ["emailaddress_bidx"], name: "index_participants_on_emailaddress_bidx", unique: true
     t.index ["name_bidx"], name: "index_participants_on_name_bidx", unique: true
     t.index ["phone_bidx"], name: "index_participants_on_phone_bidx", unique: true
-    t.index ["pos_bidx"], name: "index_participants_on_pos_bidx", unique: true
-    t.index ["type_bidx"], name: "index_participants_on_type_bidx", unique: true
+    t.index ["po_bidx"], name: "index_participants_on_po_bidx", unique: true
   end
 
   create_table "po_users", force: :cascade do |t|
     t.bigint "po_id"
     t.boolean "facilitator", default: false
+    t.boolean "got_po", default: false
+    t.text "participants_ciphertext"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["po_id"], name: "index_po_users_on_po_id"
@@ -85,7 +87,6 @@ ActiveRecord::Schema.define(version: 2021_09_02_131341) do
     t.datetime "end_date"
     t.integer "po_number"
     t.string "service_type"
-    t.float "po_amount"
     t.integer "number_of_installments"
     t.string "tax_amount"
     t.string "issued_to"
@@ -95,16 +96,19 @@ ActiveRecord::Schema.define(version: 2021_09_02_131341) do
     t.string "approved_by"
     t.integer "associate_percentage"
     t.integer "founder_percentage"
+    t.float "profit_share"
     t.integer "status"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "slug"
+    t.index ["po_number"], name: "index_pos_on_po_number", unique: true
     t.index ["slug"], name: "index_pos_on_slug", unique: true
     t.index ["user_id"], name: "index_pos_on_user_id"
   end
 
   create_table "statements", force: :cascade do |t|
     t.bigint "po_id"
+    t.string "type"
     t.text "terms"
     t.text "notes"
     t.datetime "created_at", precision: 6, null: false

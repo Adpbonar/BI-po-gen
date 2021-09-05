@@ -1,5 +1,7 @@
-<h1>New Line Item</h1>
+<%= turbo_frame_tag 'lineitem' do %>
+    <h1>New Line Item</h1>
 
-<%= render 'form', line_item: @line_item %>
+    <%= render 'form', line_item: @line_item %>
 
-<%= link_to 'Back', line_items_path %>
+    <%# link_to 'Back', statement_path(@line_item.statement_id) %>
+<% end %>]

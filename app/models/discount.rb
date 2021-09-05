@@ -1,3 +1,8 @@
 class Discount < ApplicationRecord
-  belongs_to :service_item
+  belongs_to :line_item
+
+  TYPE = {
+        'Amount': 'amount',
+        'Percentage': 'percent',
+    }
 end

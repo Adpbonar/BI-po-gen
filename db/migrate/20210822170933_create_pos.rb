@@ -17,7 +17,7 @@ class CreatePos < ActiveRecord::Migration[6.1]
       t.string :approved_by
       t.integer :associate_percentage
       t.integer :founder_percentage
-      t.float :profit_share
+      t.float :revenue_share
       t.integer :status
 
       t.timestamps

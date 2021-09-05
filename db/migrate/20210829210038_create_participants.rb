@@ -6,7 +6,8 @@ class CreateParticipants < ActiveRecord::Migration[6.1]
       t.string :address
       t.text :pos
       t.string :type
-      t.integer :profit_share
+      t.boolean :revinue_share, :default => false
+      t.decimal :tax_rate, precision: 5, scale: 2
 
       t.timestamps
     end

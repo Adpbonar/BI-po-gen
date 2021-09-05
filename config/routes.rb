@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :discounts
   resources :installments
   root to: 'static_pages#home'
   resources :pos do

@@ -132,6 +132,7 @@ class Po < ApplicationRecord
       TYPE = {
         'Training Programs': 'Modular Training Programs',
         'Coaching & Mentorship Programs': ', Modular Coaching and Mentorship Programs',
-        'Integrated Programs': 'Integrated Programs'
+        'Integrated Programs': 'Integrated Programs',
+        'Partnership Programs': 'Exclusive Partnership Porgrams'
       }
 end

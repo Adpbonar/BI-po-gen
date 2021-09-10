@@ -1,0 +1,6 @@
+<%= turbo_frame_tag "participant" do %>
+    <%= render 'form', participant: @participant %>
+  
+    <%= link_to 'Show', participant_path(@participant) %> |
+    <%= link_to 'Back', participants_path, data: { "turbo-frame": "_top" } %>
+  <% end %>

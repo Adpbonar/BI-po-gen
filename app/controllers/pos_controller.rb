@@ -28,7 +28,7 @@ class PosController < ApplicationController
     @po.po_number = @po.set_po_number
     @po.associate_percentage = 50
     @po.founder_percentage = 10
-    @po.profit_share = 7.5
+    @po.revenue_share = 7.5
     @po.number_of_installments = 3
     @po.status = "Generated"
     respond_to do |format|
@@ -78,6 +78,6 @@ class PosController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def po_params
-      params.require(:po).permit(:po_number, :title, :description, :start_date, :end_date, :tax_amount, :company_name, :number_of_installments, :service_type)
+      params.require(:po).permit(:po_number, :title, :description, :start_date, :end_date, :tax_amount, :company_name, :number_of_installments, :service_type, :currency)
     end
 end

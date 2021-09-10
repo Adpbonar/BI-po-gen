@@ -10,15 +10,12 @@ class Po < ApplicationRecord
     validates_inclusion_of :associate_percentage, :in => 1..100
     validates_inclusion_of :founder_percentage, :in => 1..100
     validate :in_future, :on => :create
+    validates_length_of :description, within: 0..600
     # validate :time_duration, :on => :create
 
     extend FriendlyId
     friendly_id :po_number, use: :slugged
 
-    # convert precentages
-    def as_percetage(number)
-      self.to_f / n.to_f * 100
-    end
 
     # set up initial statement
 		def set_up_po
@@ -116,23 +113,30 @@ class Po < ApplicationRecord
             installment.due_date = self.end_date
             installment.percentage = 20
           else
-            new_date = ((self.end_date.to_i - self.start_date.to_i) / 3)
+            new_date = ((self.end_date.to_i - self.start_date.to_i) / 2)
             installment.due_date = self.start_date + new_date
             installment.percentage = 20
           end
-        installment.save
+        installment.save 
       end
     end
       def show_installments
         @installment_array = []
-        self.installments.order(:id).map {|item| @installment_array << item.percentage.to_s + "%" }
+        self.installments.order(:id).map { |item| @installment_array << item.percentage.to_s + "%" }
         return @installment_array.join(" ")
       end
 
       TYPE = {
         'Training Programs': 'Modular Training Programs',
-        'Coaching & Mentorship Programs': ', Modular Coaching and Mentorship Programs',
+        'Coaching & Mentorship Programs': 'Modular Coaching and Mentorship Programs',
         'Integrated Programs': 'Integrated Programs',
         'Partnership Programs': 'Exclusive Partnership Porgrams'
       }
+
+      CURRENCY = {
+        'Canadian Dollar': 'CA $',
+        'US Dollar': 'US $',
+        'Euro': '&euro;',
+        'British Pound': '&#163;',
+    }
 end

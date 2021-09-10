@@ -1,8 +1,7 @@
-<%= turbo_frame_tag 'statement' do %>
-    <%= simple_form_for(@statement) do |f| %>
+
+    <%= simple_form_for(@statement ,  :url => statement_url(@statement)) do |f| %>
         <%= f.input :terms %>
         <%= f.input :notes %>
         <%= f.submit class: 'btn btn-blue' %>
     <% end %>
-    <%= link_to 'back', statements_path %>
-<% end %>
+

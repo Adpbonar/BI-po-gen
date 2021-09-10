@@ -1,14 +1,10 @@
-<p id="notice"><%= notice %></p>
 
-<p>
-  <strong>Percentage:</strong>
-  <%= @discount.percentage %>
-</p>
-
-<p>
-  <strong>Service item:</strong>
-  <%= @discount.service_item_id %>
-</p>
-
-<%= link_to 'Edit', edit_discount_path(@discount) %> |
-<%= link_to 'Back', discounts_path %>
+<%= turbo_frame_tag dom_id(@discount) do %>
+    <p>Discount Applied</p>
+      <% if @discount.amount_type == 0 %>
+          <%= @discount.amount %>% off
+      <% else %>
+          <%= show_currency(@discount.line_item.statement.po) %> <%= @discount.amount %> off
+      <% end %>
+      <%= button_tag 'remove', id: "discount-submit#{@discount.line_item.id}", class: 'btn btn-danger btn-sm', data: { reflex: "click->DiscountReflex#remove", id: @discount.id } %>
+  <% end %>

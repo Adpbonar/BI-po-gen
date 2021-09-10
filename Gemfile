@@ -68,3 +68,5 @@ gem "blind_index", "~> 2.2"
 gem "stimulus_reflex", "~> 3.4"
 
 gem "friendly_id", "~> 5.4"
+
+gem "faker", "~> 2.19"

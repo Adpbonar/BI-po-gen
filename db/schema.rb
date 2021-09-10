@@ -10,10 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_02_131341) do
+ActiveRecord::Schema.define(version: 2021_09_09_164006) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "discounts", force: :cascade do |t|
+    t.integer "amount"
+    t.integer "amount_type"
+    t.bigint "line_item_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["line_item_id"], name: "index_discounts_on_line_item_id"
+  end
 
   create_table "friendly_id_slugs", force: :cascade do |t|
     t.string "slug", null: false
@@ -39,7 +48,7 @@ ActiveRecord::Schema.define(version: 2021_09_02_131341) do
     t.bigint "statement_id"
     t.string "title"
     t.text "description"
-    t.decimal "cost", precision: 5, scale: 2
+    t.decimal "cost", precision: 20, scale: 2
     t.boolean "taxable", default: true
     t.string "type"
     t.datetime "created_at", precision: 6, null: false
@@ -49,8 +58,8 @@ ActiveRecord::Schema.define(version: 2021_09_02_131341) do
 
   create_table "participants", force: :cascade do |t|
     t.string "type"
-    t.boolean "revinue_share", default: false
-    t.decimal "tax_rate", precision: 5, scale: 2
+    t.boolean "revenue_share", default: false
+    t.decimal "tax_rate"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.text "emailaddress_ciphertext"
@@ -68,6 +77,15 @@ ActiveRecord::Schema.define(version: 2021_09_02_131341) do
     t.index ["name_bidx"], name: "index_participants_on_name_bidx", unique: true
     t.index ["phone_bidx"], name: "index_participants_on_phone_bidx", unique: true
     t.index ["po_bidx"], name: "index_participants_on_po_bidx", unique: true
+  end
+
+  create_table "payments", force: :cascade do |t|
+    t.decimal "expected_amount", precision: 20, scale: 2
+    t.decimal "amount_received", precision: 20, scale: 2
+    t.string "currency"
+    t.string "reference_number"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "po_users", force: :cascade do |t|
@@ -98,7 +116,8 @@ ActiveRecord::Schema.define(version: 2021_09_02_131341) do
     t.integer "associate_percentage"
     t.integer "founder_percentage"
     t.float "revenue_share"
-    t.integer "status"
+    t.string "status"
+    t.string "currency"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "slug"
@@ -107,11 +126,18 @@ ActiveRecord::Schema.define(version: 2021_09_02_131341) do
     t.index ["user_id"], name: "index_pos_on_user_id"
   end
 
+  create_table "statement_notes", force: :cascade do |t|
+    t.text "terms"
+    t.text "notes"
+    t.bigint "statement_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["statement_id"], name: "index_statement_notes_on_statement_id"
+  end
+
   create_table "statements", force: :cascade do |t|
     t.bigint "po_id"
     t.string "type"
-    t.text "terms"
-    t.text "notes"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["po_id"], name: "index_statements_on_po_id"
@@ -135,5 +161,7 @@ ActiveRecord::Schema.define(version: 2021_09_02_131341) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "discounts", "line_items"
   add_foreign_key "installments", "pos"
+  add_foreign_key "statement_notes", "statements"
 end

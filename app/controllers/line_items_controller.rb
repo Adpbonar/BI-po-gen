@@ -7,7 +7,7 @@ class LineItemsController < ApplicationController
   end
 
   # GET /line_items/1 or /line_items/1.json
-  def show
+def show
   end
 
   # GET /line_items/new
@@ -24,10 +24,10 @@ class LineItemsController < ApplicationController
     @line_item = LineItem.new(line_item_params)
     respond_to do |format|
       if @line_item.save
-        format.html { redirect_to statement_path(@line_item.statement_id), notice: "Line item was successfully created." }
+        # format.html { redirect_to statement_path(@line_item.statement_id), notice: "Line item was successfully created." }
         format.json { render :show, status: :created, location: @line_item }
       else
-        format.html { render :new, status: :unprocessable_entity }
+        # format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @line_item.errors, status: :unprocessable_entity }
       end
     end

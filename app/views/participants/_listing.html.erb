@@ -1,0 +1,24 @@
+<tbody class="spaced-out">
+  <tr>
+    <td><h2>Clients</h2></td>
+  </tr>
+  <% @participants.each do |user| %>
+      <tr>
+        <td  class="participants default-link"><%= link_to user.name, participant_path(user) %></td>
+        <%= turbo_frame_tag "participant" do %>
+        <td  class="participants default-link"><%= link_to 'edit', edit_participant_path(user) %></td>
+        <% end %>
+      </tr>   
+  <% end %>
+  <tr>
+    <td><h2>Associates</h2></td>
+  </tr>
+  <% @associates.each do |user| %>
+    <tr>
+      <td  class="participants default-link"><%= link_to user.name, participant_path(user) %></td>
+      <%= turbo_frame_tag "participant" do %>
+      <td  class="participants default-link"><%= link_to 'edit', edit_participant_path(user) %></td>
+      <% end %>
+    </tr>   
+<% end %>
+</tbody>

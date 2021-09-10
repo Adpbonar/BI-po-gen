@@ -27,6 +27,12 @@ body {
 
 .btn {
     text-transform: uppercase;
+    padding: 1em;
+    margin: .5em;
+}
+
+.w-full {
+    width: 100%;
 }
 
 .hightlight {
@@ -38,4 +44,20 @@ body {
 
 .center {
     text-align: center;
+}
+
+.width-half {
+    width: 50% !important;
+    height: 2em;
+}
+
+.default-link {
+    color: navy !important;
+    border-bottom: 1px solid grey !important;
+    text-decoration: none !important;
+    padding: .25rem;
+}
+
+.spaced-out td {
+    padding: 1em;
 }

@@ -22,14 +22,18 @@ class DiscountsController < ApplicationController
   # POST /discounts or /discounts.json
   def create
     @discount = Discount.new(discount_params)
-
-    respond_to do |format|
-      if @discount.save
-        format.html { redirect_to @discount, notice: "Discount was successfully created." }
-        format.json { render :show, status: :created, location: @discount }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @discount.errors, status: :unprocessable_entity }
+    unless @discount.line_item.calculate_discounts == "Free" || @discount.line_item.type == "ExpenseItem"
+ 
+      respond_to do |format|
+        if @discount.save
+          # format.html { redirect_to @discount, notice: "Discount was successfully created." }
+          format.json { render :show, status: :created, location: @discount }
+          # format.turbo_stream { }
+        else
+          # format.html { broadcast_errors @discount, discount_params }
+          format.json { render json: @discount.errors, status: :unprocessable_entity }
+          # format.turbo_stream { }
+        end
       end
     end
   end
@@ -64,6 +68,6 @@ class DiscountsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def discount_params
-      params.require(:discount).permit(:percentage, :service_item_id)
+      params.require(:discount).permit(:amount, :amount_type, :line_item_id)
     end
 end

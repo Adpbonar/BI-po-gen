@@ -1,18 +1,19 @@
 <h1 class="center">Statement for PO <%= @statement.po.po_number %></h1>
-<p>Number of installments: <%= @statement.po.installments.count %> | Percentage Breakdown: <%= @installment_info %></p>
+<p>Number of installments: <%= @statement.po.installments.count %> | Percentage Breakdown: <%= @installment_info %>  | Currency: <%= show_currency(@statement.po) %></p>
+<p>Service: <%= @statement.po.service_type %></p>
+<%= link_to 'back to po', po_path(@statement.po), class: "btn btn-secondary" %>
 <h2>Expense Items</h2>
 <% if @expenses.each do |item| %>
     <div>
         <p style="font-weight: 700"><%= item.title %></p>
-        <p><%= item.description %></p>
         <table style="border: none !important; width: 100%;">
             <tbody>
                 <tr>
                     <td style="width: 33.33%;">
-                        <p>Cost: <%= number_to_currency(item.cost) %></p>
+                        <p>Cost: <%= item.statement.po.currency.html_safe %><%= number_to_currency(item.cost).split("$").last %></p>
                     </td>
                     <td style="width: 33.33%;">
-                        <p>Tax: <%= item.taxable %></p>
+                        <p>Tax: Not charged on expense items</p>
                     </td>
                     <td style="width: 33.33%;">
                         <p>Type: 
@@ -26,26 +27,49 @@
                 </tr>
             </tbody>
         </table>
+        <div><%= item.description %></div>
+        <hr />
     </div>
 <% end.any? %>
 <% else %>
 none
 <% end %>
+<div>
+    <h3 class="center">Add Expense</h3>
+    <%= simple_form_for(@line_item,  :url => line_items_path) do |f| %>
+        <%= f.error_notification %>
+        <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+    
+        <div class="form-inputs">
+        <%= f.input   :statement_id, as: :hidden, :input_html => { :value => @statement.id } %>
+        <%= f.input :title %>
+        <%= f.input :description, placeholder: "Description cannot be longer that 250 characters" %>
+        <%= f.input :cost, step: 0.01 %>
+        <%= f.input :type, as: :hidden, input_html: {value: "ExpenseItem" } %>
+        </div>
+    
+        <div class="form-actions">
+            <br />
+            <center>
+                <%= f.button :submit, 'create expense', class: 'btn btn-primary' %>
+            </center>
+        </div>
+    <% end %>
+  </div>
 <h2>Services</h2>
 <% if @services.each do |item| %>
     <div>
         <p style="font-weight: 700"><%= item.title %></p>
-        <p><%= item.description %></p>
         <table style="border: none !important; width: 100%;">
             <tbody>
                 <tr>
-                    <td style="width: 33.33%;">
-                        <p>Cost: <%= number_to_currency(item.cost) %></p>
+                    <td style="width: 25%;">
+                    <p>Cost: <%= item.statement.po.currency.html_safe %><%= number_to_currency(item.cost).split("$").last %></p>
                     </td>
-                    <td style="width: 33.33%;">
+                    <td style="width: 25%;">
                         <p>Tax: <%= item.taxable %></p>
                     </td>
-                    <td style="width: 33.33%;">
+                    <td style="width: 25%;">
                         <p>Type: 
                         <%if item.type == "ServiceItem" %>
                             Service
@@ -54,30 +78,69 @@ none
                         <% end %>
                         </p>
                     </td>
+                    <td style="width: 25%;">
+                    <table style="border: none !important; width: 100%;">
+                    <tbody>
+                        <tr>
+                            <td style="width: 100%;">
+                                <% unless item.calculate_discounts == "Free" %>
+                                    <h3 class="center">Add Discount</h3>
+                                    <%= simple_form_for(@discount) do |f| %>
+                                        <%= f.input :amount %>
+                                        <%= f.input :line_item_id, as: :hidden, :input_html => { :value => item.id }  %>
+                                        <%= f.input :amount_type, as: :select, collection: Discount::TYPE, label: 'Type of Discount' %>
+                                        <%= f.submit 'save discount', class: "btn btn-primary w-full" %>
+                                    <% end %>
+                                <% end %>
+                                <% item.discounts.each_with_index do |discount, i| %>
+                                    <% turbo_stream_from discount %>
+                                    <% if i == 0 %>
+                                        <% unless discount.line_item.calculate_discounts == "Free" %>
+                                            <div class="top-bottom-spacing"><p><b>New Price</b></p><%= discount.line_item.statement.po.currency.html_safe %><%= number_to_currency(discount.line_item.calculate_discounts).split("$").last %></p></div>
+                                        <% else %>
+                                            <div class="top-bottom-spacing"><p><b>New Price</b></p><%= discount.line_item.calculate_discounts %></p></div>
+                                        <% end %>
+                                        <% end %>
+                                    <%= render discount %>
+                                <% end %>
+                            </td>
+                          
+                        </tr>
+                    </tbody>
+                </table>
+                </td>
                 </tr>
             </tbody>
         </table>
+        <div><%= item.description %></div>
         <hr />
     </div>
 <% end.any? %>
 <% else %>
     none 
 <% end %>
-
-<%= simple_form_for(@line_item) do |f| %>
+<h3 class="center">Add Service</h3>
+<%= simple_form_for(@line_item,  :url => line_items_path) do |f| %>
     <%= f.error_notification %>
     <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
   
     <div class="form-inputs">
     <%= f.input   :statement_id, as: :hidden, :input_html => { :value => @statement.id } %>
     <%= f.input :title %>
-    <%= f.input :description %>
+    <%= f.input :description, placeholder: "Description cannot be longer that 250 characters" %>
     <%= f.input :cost, step: 0.01 %>
     <%= f.input :taxable %>
-    <%= f.input :type, as: :select, collection: LineItem::TYPE, label: 'Type' %>
+    <%= f.input :type, as: :hidden, input_html: {value: "ServiceItem" } %>
     </div>
   
     <div class="form-actions">
-      <%= f.button :submit %>
+        <br />
+        <center>
+            <%= f.button :submit, 'create service', class: 'btn btn-primary' %>
+        </center>
     </div>
   <% end %>
+
+  <style>
+    input { width: 50%; margin-bottom: 2px }
+  </style>

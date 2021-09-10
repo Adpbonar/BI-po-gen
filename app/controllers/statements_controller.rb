@@ -13,6 +13,8 @@ class StatementsController < ApplicationController
     @expenses = @statement.line_items.where(type: "ExpenseItem")
     @services = @statement.line_items.where(type: "ServiceItem")
     @installment_info = @statement.po.show_installments
+    @discount = Discount.new
+    @discounts = @statement.line_items
   end
 
   # GET /statements/new
@@ -69,6 +71,6 @@ class StatementsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def statement_params
-      params.fetch(:statement, {})
+      params.require(:statement).permit(:notes, :terms)
     end
 end

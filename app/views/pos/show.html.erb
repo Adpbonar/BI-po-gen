@@ -2,8 +2,9 @@
 <p>Approximate completion time: <%= @po.duration %><br />
 <small class="hightlight">From <%= read_date(@po.start_date) %> to <%= read_date(@po.end_date) %></small></p>
 <p><%= @po.issued_by %></p>
+<p>Service: <%= @po.service_type %></p>
 <% if @po.installments.count == @po.number_of_installments %>
-<div class="top-bottom-spacing">Number of installments: <%= @po.number_of_installments %></div>
+<div class="top-bottom-spacing">Number of installments: <%= @po.number_of_installments %>  |  PO client currency: <%= show_currency(@po) %></div>
 <% end %>
 <% @po.installments.order([:id]).each_with_index do |installment, index| %>
     <% if installment.due_date.present? %>
@@ -16,23 +17,23 @@
 <ul>
 <% @po.statements.each do |statement|%> 
     <% if statement.type == 'ClientStatement' %>
-        <li><%= link_to "client statement", statement_path(statement) %></li>
+        <li><%= link_to "client statement", statement_path(statement), class: 'default-link`' %></li>
     <% elsif statement.type == 'GeneralStatement' %>
-         <li><%= link_to "general statement", statement_path(statement) %></li>
+         <li><%= link_to "general statement", statement_path(statement), class: 'default-link' %></li>
     <% else %>
-        <li><%= link_to "associate statement", statement_path(statement) %></li>
+        <li><%= link_to "associate statement", statement_path(statement), class: 'default-link' %></li>
     <% end %>
 <% end %> 
 </ul>
-<center><button id="show-button" class="btn btn-secondary">Adjust installments</button><button id="hide-button" class="no-show btn btn-secondary">done</button></center>
+<center><button id="show-button" class="btn btn-warning">Adjust installments</button><button id="hide-button" class="no-show btn btn-secondary">done</button></center>
 <div class="top-bottom-spacing no-show" id="adjust-installments">
     <h2>Adjust the number and percentage of installments</h2>
     <%= text_field_tag 'set-installment' %>  
     <small>Adjust number and percentage of installments using the following format "30 30 30 10", where the number is the percentage and the quanity of numbers is the amount of installments.</small>
     <div class="top-bottom-spacing"><%= button_tag 'submit changes', type: "text", pattern: "([0-9]+.{0,1}[0-9]*,{0,1})*[0-9]",  id: "installment-submit", class: 'btn btn-secondary', data: { reflex: "click->InstallmentReflex#change", id: @po.id, installments: "" } %></div>
     </div>
-    <%= link_to 'Edit', edit_po_path(@po) %> |
-    <%= link_to 'Back', pos_path %>
+    <%= link_to 'Edit', edit_po_path(@po), class: 'btn btn-warning' %>
+    <%= link_to 'Back', pos_path, class: 'btn btn-secondary' %>
 
 <script>
 var installmentInput = document.getElementById("set-installment");

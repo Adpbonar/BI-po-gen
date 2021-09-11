@@ -11,6 +11,7 @@
     "bootstrap": "^5.0.0-beta3",
     "flatpickr": "^4.6.9",
     "jquery": "^3.6.0",
+    "noty": "^3.2.0-beta-deprecated",
     "popper.js": "^1.16.1",
     "stimulus": "^2.0.0",
     "stimulus-flatpickr": "^1.4.0",

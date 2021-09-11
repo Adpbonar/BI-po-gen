@@ -27,6 +27,7 @@ class InstallmentReflex < ApplicationReflex
       portion.save 
       po.number_of_installments = 1
       po.save
+      flash.alert = 'Installments adjusted please add due dates'
     elsif (! check_string(installments)) && percentage_ceiling(installments)
         po.installments.destroy_all
         new_installments_count = []
@@ -37,7 +38,7 @@ class InstallmentReflex < ApplicationReflex
         end
         po.number_of_installments = new_installments_count.length
         po.save
-        flash.notice = 'Installments adjusted please add due dates'
+        flash.alert = 'Installments adjusted please add due dates'
     end
   end
 end

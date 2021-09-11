@@ -1,5 +1,13 @@
 
 <%= turbo_frame_tag dom_id(@discount) do %>
+    <% flash.each do |msg_type, message| %>
+        <div class="alert">
+          <div class="container">
+            <button class="close" data-dismiss="alert"><span>×</span></button>
+            <%= message %>
+          </div>
+        </div>
+    <% end %>
     <p>Discount Applied</p>
       <% if @discount.amount_type == 0 %>
           <%= @discount.amount %>% off

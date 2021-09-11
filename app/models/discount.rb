@@ -18,8 +18,6 @@ class Discount < ApplicationRecord
         return unless discount_amount.to_i > total.to_i
         errors.add :amount, 'is too high.'
       end
-    else
-      errors.add :amount, 'can\'t be blank'
     end
   end
 

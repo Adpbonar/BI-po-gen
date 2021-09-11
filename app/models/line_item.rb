@@ -20,7 +20,7 @@ class LineItem < ApplicationRecord
             end
         end
         item_cost = (cost - total).to_s
-        if cost.to_i <= total.to_i || (item_cost.length == 3 && item.cost == "0.0")
+        if cost.to_i <= total.to_i || (item_cost.length == 3 && item_cost == "0.0")
             return "Free"
         else 
             return item_cost.to_f

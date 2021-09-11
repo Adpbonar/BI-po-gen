@@ -6,6 +6,10 @@ class Po < ApplicationRecord
 
 		validates :po_number, uniqueness: true
     validates :title, presence: true
+    validates :start_date, presence: true
+    validates :end_date, presence: true
+    validates :service_type, presence: true
+    validates :currency, presence: true
     # validates_inclusion_of :tax_amount, :in => 1..100
     validates_inclusion_of :associate_percentage, :in => 1..100
     validates_inclusion_of :founder_percentage, :in => 1..100

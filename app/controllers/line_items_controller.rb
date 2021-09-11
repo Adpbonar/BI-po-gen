@@ -27,7 +27,20 @@ def show
         # format.html { redirect_to statement_path(@line_item.statement_id), notice: "Line item was successfully created." }
         format.json { render :show, status: :created, location: @line_item }
       else
-        # format.html { render :new, status: :unprocessable_entity }
+        string = "<b>Errors:</b><br />"
+        @line_item.errors.full_messages.each do |error|
+          string = string + "<div>#{error}</div>".to_s
+        end
+        if @line_item.title.present?
+          string = string + "Previusly inputed title: " + @line_item.title
+        end
+        if @line_item.description.present?
+          string = string + "Previusly inputed description: " + @line_item.description
+        end
+        if @line_item.cost.present?
+          string = string + "Previusly inputed cost: " + @line_item.cost.to_s
+        end
+      format.html { redirect_to statement_path(@line_item.statement.id), notice: string }
         format.json { render json: @line_item.errors, status: :unprocessable_entity }
       end
     end

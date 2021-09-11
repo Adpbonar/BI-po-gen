@@ -37,6 +37,7 @@ class InstallmentReflex < ApplicationReflex
         end
         po.number_of_installments = new_installments_count.length
         po.save
+        flash.notice = 'Installments adjusted please add due dates'
     end
   end
 end

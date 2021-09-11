@@ -15,7 +15,7 @@ class Po < ApplicationRecord
     validates_inclusion_of :founder_percentage, :in => 1..100
     validate :in_future, :on => :create
     validates_length_of :description, within: 0..600
-    # validate :time_duration, :on => :create
+    validate :time_duration
 
     extend FriendlyId
     friendly_id :po_number, use: :slugged
@@ -104,8 +104,8 @@ class Po < ApplicationRecord
       end
     
       def time_duration
-        return unless (start_date + 1.hours) >= end_date 
-        errors.add :date_to, 'must be at least 1 hour long.'
+        return if end_date > start_date 
+        errors.add :end_date, "cannot finish before it starts"
       end
 
       def initilize_default_installments

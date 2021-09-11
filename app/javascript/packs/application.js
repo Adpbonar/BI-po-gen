@@ -9,23 +9,40 @@ import * as ActiveStorage from "@rails/activestorage"
 import "channels"
 import "bootstrap"
 import "../stylesheets/application"
-import flatpickr from "flatpickr"
+// import flatpickr from "flatpickr"
 import "@hotwired/turbo-rails"
 import "controllers"
+
 
 require("flatpickr/dist/flatpickr.css")
 
 Rails.start()
 ActiveStorage.start()
 
+import { Application } from 'stimulus'
+import { definitionsFromContext } from 'stimulus/webpack-helpers'
+
+const application = Application.start()
+const context = require.context('../controllers', true, /\.js$/)
+application.load(definitionsFromContext(context))
+
+// import Flatpickr
+import Flatpickr from 'stimulus-flatpickr'
+
+// Import style for flatpickr
+require("flatpickr/dist/flatpickr.css")
+
+// Manually register Flatpickr as a stimulus controller
+application.register('flatpickr', Flatpickr)
+
 document.addEventListener("turbo:load", function () {
-    flatpickr("[data-behavior='flatpickr']", {
-      altInput: true,
-      enableTime: true,
-      altFormat: "F j, Y H:i",
-      dateFormat: "Y-m-d H:i",
-      disableMobile: "true",
-    });
+//     flatpickr("[data-behavior='flatpickr']", {
+//       altInput: true,
+//       enableTime: true,
+//       altFormat: "F j, Y H:i",
+//       dateFormat: "Y-m-d H:i",
+//       disableMobile: "true",
+//     });
 
     var installmentSubmit  = document.getElementById("installment-submit");
     var showInstallments = document.getElementById("adjust-installments");

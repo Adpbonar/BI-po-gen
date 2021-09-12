@@ -13,10 +13,11 @@ class Discount < ApplicationRecord
       total = self.line_item.cost
       if self.amount_type == 0
         return if discount_amount <= 75.0
-        errors.add :amount, 'is too high.'
-      elsif self.amount_type == 1
-        return unless discount_amount.to_i > total.to_i
-        errors.add :amount, 'is too high.'
+        errors.add :amount, 'is too high. The maximum is 75%. Try a lower percentage.'
+      end
+      if self.amount_type == 1
+        return unless discount_amount.to_i >= total.to_i
+        errors.add :amount, 'is too high. Freebies must be done in mutiple discounts.'
       end
     end
   end

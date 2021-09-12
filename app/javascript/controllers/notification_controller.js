@@ -15,7 +15,7 @@ export default class extends Controller {
       timeout: 5000,
     }).show()
   }
-
+ 
   getNotificationType () {
     switch (this.typeTarget.value) {
       case 'notice':

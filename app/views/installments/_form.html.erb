@@ -1,11 +1,18 @@
 
 <%= simple_form_for(@installment) do |f| %>
-  <%= f.error_notification %>
-  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
-
+  <% if @installment.errors.any? %>
+    <div id="error_explanation">
+    The following errors prevented this installment from saving
+      <ul>
+      <% @installment.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
   <div class="form-inputs">
   <label>Due Date</label>
-  <%= f.text_field :due_date, class: 'flatpickr form-control', placeholder: 'select the due date', data: { controller: "flatpickr", flatpickr_min_date: @installment.po.start_date, flatpickr_enable_time: false, flatpickr_date_format: "Y-m-d", flatpickr_disable_days_of_week: [0,6] }  %>
+  <%= f.text_field :due_date, class: 'flatpickr form-control', placeholder: 'select the due date', data: { controller: "flatpickr", flatpickr_min_date: @installment.po.start_date, flatpickr_enable_time: false, flatpickr_default_date: DateTime.now, flatpickr_date_format: "Y-m-d", flatpickr_disable_days_of_week: [0,6] }  %>
   </div>
 
   <div class="form-actions">

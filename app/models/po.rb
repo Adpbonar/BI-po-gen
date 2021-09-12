@@ -10,12 +10,14 @@ class Po < ApplicationRecord
     validates :end_date, presence: true
     validates :service_type, presence: true
     validates :currency, presence: true
-    # validates_inclusion_of :tax_amount, :in => 1..100
-    validates_inclusion_of :associate_percentage, :in => 1..100
-    validates_inclusion_of :founder_percentage, :in => 1..100
-    validate :in_future, :on => :create
+    validates :tax_amount, numericality: { in: 1..100 }
+    validates :associate_percentage, numericality: { in: 1..100 }
+    validates :founder_percentage, numericality: { in: 1..100 }
     validates_length_of :description, within: 0..600
+    validate :in_future, :on => :create
     validate :time_duration
+    validate :start_date_is_valid_datetime
+    validate :end_date_is_valid_datetime
 
     extend FriendlyId
     friendly_id :po_number, use: :slugged
@@ -98,14 +100,14 @@ class Po < ApplicationRecord
         unless start_date.blank?
           return if (start_date >= Date.today)
           errors.add :start_date, 'must be in the future.'
-        else
-          errors.add :date, 'must be included'
         end
       end
     
       def time_duration
-        return if end_date > start_date 
-        errors.add :end_date, "cannot finish before it starts"
+        unless start_date.blank? || end_date.blank?
+          return if end_date > start_date 
+          errors.add :end_date, "cannot finish before it starts"
+        end
       end
 
       def initilize_default_installments
@@ -124,10 +126,19 @@ class Po < ApplicationRecord
         installment.save 
       end
     end
+
       def show_installments
         @installment_array = []
         self.installments.order(:id).map { |item| @installment_array << item.percentage.to_s + "%" }
         return @installment_array.join(" ")
+      end
+
+      def start_date_is_valid_datetime
+        errors.add(:start_date, 'must be a valid datetime') if ((DateTime.parse(start_date) rescue ArgumentError) == ArgumentError)
+      end
+
+      def end_date_is_valid_datetime
+        errors.add(:end_date, 'must be a valid datetime') if ((DateTime.parse(end_date) rescue ArgumentError) == ArgumentError)
       end
 
       TYPE = {

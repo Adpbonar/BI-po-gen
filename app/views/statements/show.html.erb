@@ -105,6 +105,7 @@ none
     <div class="form-inputs">
     <%= f.input   :statement_id, as: :hidden, :input_html => { :value => @statement.id } %>
     <%= f.input :title, maxlength: "100" %>
+    <div id="character-limit" class="no-show"></div>
     <div class="description-form">
         <%= f.input :description, placeholder: "Description can\'t be longer that 350 characters", maxlength: "355" %>
         <div id="counter-container" class="no-show"><small>Description character count: <span id="characterCount">0</span>/350</small></div>
@@ -126,36 +127,4 @@ none
     input { width: 50%; margin-bottom: 2px }
   </style>
 
-  <script>
-    function characterCount(element, len) {
-        var counter = document.getElementById("characterCount");
-        var container = document.getElementById("counter-container");
-        document.addEventListener('keyup', () => {
-            container.classList.remove('no-show');
-            var length = element.value.length;
-            counter.textContent = length;
-            if(length <= len) {
-            container.style.color = 'green';
-            counter.style.textDecoration = 'none';
-            container.style.fontWieght = '500';
-            } else {
-            container.style.color = 'red';
-            counter.style.textDecoration = 'line-through';
-            container.style.fontWieght = '700';
-            }
-            if (length === 0) {
-              container.classList.add('no-show');
-            } else {
-              container.classList.remove('no-show');
-            }
-        });
-    }
-    var tag = document.getElementById("line_item_description");
-    document.addEventListener("turbo:load", () => {
-        characterCount(tag, 350);
-    });
-
-    document.addEventListener("turbo:render", () => {
-        characterCount(tag, 350);
-    });
-</script>
+  

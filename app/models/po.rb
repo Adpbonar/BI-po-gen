@@ -17,8 +17,8 @@ class Po < ApplicationRecord
     validates_length_of :description, within: 0..600
     validate :in_future, :on => :create
     validate :time_duration
-    validate :start_date_is_valid_datetime
-    validate :end_date_is_valid_datetime
+    # validate :start_date_is_valid_datetime
+    # validate :end_date_is_valid_datetime
 
     extend FriendlyId
     friendly_id :po_number, use: :slugged

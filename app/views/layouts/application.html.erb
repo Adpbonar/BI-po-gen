@@ -47,31 +47,31 @@ function showLimit(element) {
     var length = element.value.length;
     if (length === 100) {
       titleLimit.classList.remove('no-show');
-      titleLimit.textContent = 'Character Limit Reached';
+      titleLimit.textContent = 'Your title can\'t be any longer';
     } else {
       titleLimit.classList.add('no-show');
     }
   });
 }
 
-var tag = document.getElementById("po_description");
-if (tag) {
+var description = document.getElementById("po_description");
+if (description) {
   document.addEventListener("turbo:load", () => {
-    characterCount(tag, 600);
+    characterCount(description, 600);
   });
 
   document.addEventListener("turbo:render", () => {
-    characterCount(tag, 600);
+    characterCount(description, 600);
   });
 }
-var tag2 = document.getElementById("line_item_description");
-if (tag2) {
+var description2 = document.getElementById("line_item_description");
+if (description2) {
   document.addEventListener("turbo:load", () => {
-    characterCount(tag2, 350);
+    characterCount(description2, 350);
   });
 
   document.addEventListener("turbo:render", () => {
-    characterCount(tag2, 350);
+    characterCount(description2, 350);
   });
 }
 

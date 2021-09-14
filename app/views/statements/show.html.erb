@@ -105,7 +105,7 @@ none
     <div class="form-inputs">
     <%= f.input   :statement_id, as: :hidden, :input_html => { :value => @statement.id } %>
     <%= f.input :title, maxlength: "100" %>
-    <div id="character-limit" class="no-show"></div>
+    <small id="character-limit" class="no-show"></small>
     <div class="description-form">
         <%= f.input :description, placeholder: "Description can\'t be longer that 350 characters", maxlength: "355" %>
         <div id="counter-container" class="no-show"><small>Description character count: <span id="characterCount">0</span>/350</small></div>

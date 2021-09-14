@@ -11,7 +11,7 @@
   <% end %>
 
   <%= f.input :title, maxlength: "100" %>  
-  <div id="character-limit" class="no-show"></div>
+  <small id="character-limit" class="no-show"></small>
   <%= f.input :description, placeholder: "Description can\'t be longer that 600 characters", maxlength: "605"  %>
   <div id="counter-container" class="no-show"><small>Description character count: <span id="characterCount">0</span>/600</small></div>
   <%= f.input :company_name %>

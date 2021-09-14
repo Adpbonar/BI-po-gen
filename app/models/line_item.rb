@@ -2,10 +2,11 @@ class LineItem < ApplicationRecord
     belongs_to :statement
     has_many :discounts
     validates :title, presence: true
+    validates_length_of :title, within: 1..150
     validates :cost, presence: true
     validates :type, presence: true
     validates :cost, numericality: { greater_than_or_equal_to: 0 }
-    validates_length_of :description, within: 0..250
+    validates_length_of :description, within: 0..350
 
     broadcasts
 

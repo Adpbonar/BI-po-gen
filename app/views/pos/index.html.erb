@@ -20,9 +20,9 @@
           <td><%= po.description %></td>
           <td><%= po.duration %></td>
           <td><%= time_ago_in_words(po.created_at) %></td>
-          <td><%= link_to 'Show', po %></td>
-          <td><%= link_to 'Edit', edit_po_path(po) %></td>
-          <td><%= link_to 'Destroy', po, data: {"turbo-method": :delete,
+          <td><%= link_to 'Show', po, class: 'btn btn-success' %></td>
+          <td><%= link_to 'Edit', edit_po_path(po), class: 'btn btn-warning' %></td>
+          <td><%= link_to 'Destroy', po, class: 'btn btn-danger', data: {"turbo-method": :delete,
           confirm: 'Are you sure'}  %></td>
         <% end %>
     <% end %>

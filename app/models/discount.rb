@@ -3,7 +3,7 @@ class Discount < ApplicationRecord
   validate :reasonable_amount_off
   validates :amount_type, presence: true
   validates :amount, presence: true
-  validates :amount, numericality: { greater_than_or_equal_to: 0 }
+  validates :amount, numericality: { greater_than_or_equal_to: 1 }
 
   broadcasts
 

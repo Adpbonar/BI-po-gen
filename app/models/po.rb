@@ -6,6 +6,7 @@ class Po < ApplicationRecord
 
 		validates :po_number, uniqueness: true
     validates :title, presence: true
+    validates_length_of :title, within: 1..100
     validates :start_date, presence: true
     validates :end_date, presence: true
     validates :service_type, presence: true

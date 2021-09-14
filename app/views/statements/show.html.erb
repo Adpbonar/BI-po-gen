@@ -34,28 +34,6 @@
 <% else %>
 none
 <% end %>
-<div>
-    <h3 class="center">Add Expense</h3>
-    <%= simple_form_for(@line_item,  :url => line_items_path) do |f| %>
-        <%= f.error_notification %>
-        <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
-    
-        <div class="form-inputs">
-        <%= f.input   :statement_id, as: :hidden, :input_html => { :value => @statement.id } %>
-        <%= f.input :title %>
-        <%= f.input :description, placeholder: "Description cannot be longer that 250 characters" %>
-        <%= f.input :cost, step: 0.01 %>
-        <%= f.input :type, as: :hidden, input_html: {value: "ExpenseItem" } %>
-        </div>
-    
-        <div class="form-actions">
-            <br />
-            <center>
-                <%= f.button :submit, 'create expense', class: 'btn btn-primary' %>
-            </center>
-        </div>
-    <% end %>
-  </div>
 <h2>Services</h2>
 <% if @services.each do |item| %>
     <div>
@@ -119,24 +97,27 @@ none
 <% else %>
     none 
 <% end %>
-<h3 class="center">Add Service</h3>
+<h3 class="center">Add Item</h3>
 <%= simple_form_for(@line_item,  :url => line_items_path) do |f| %>
     <%= f.error_notification %>
     <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
   
     <div class="form-inputs">
     <%= f.input   :statement_id, as: :hidden, :input_html => { :value => @statement.id } %>
-    <%= f.input :title %>
-    <%= f.input :description, placeholder: "Description cannot be longer that 250 characters" %>
+    <%= f.input :title, maxlength: "100" %>
+    <div class="description-form">
+        <%= f.input :description, placeholder: "Description can\'t be longer that 350 characters", maxlength: "355" %>
+        <div id="counter-container" class="no-show"><small>Description character count: <span id="characterCount">0</span>/350</small></div>
+    </div>
     <%= f.input :cost, step: 0.01 %>
-    <%= f.input :taxable %>
-    <%= f.input :type, as: :hidden, input_html: {value: "ServiceItem" } %>
+    <%= f.input :taxable, label: 'Taxable in Canada' %>
+    <%= f.input :type, as: :select, collection: LineItem::TYPE, label: 'Item Type' %>
     </div>
   
     <div class="form-actions">
         <br />
         <center>
-            <%= f.button :submit, 'create service', class: 'btn btn-primary' %>
+            <%= f.button :submit, 'create item', class: 'btn btn-primary' %>
         </center>
     </div>
   <% end %>
@@ -144,3 +125,37 @@ none
   <style>
     input { width: 50%; margin-bottom: 2px }
   </style>
+
+  <script>
+    function characterCount(element, len) {
+        var counter = document.getElementById("characterCount");
+        var container = document.getElementById("counter-container");
+        document.addEventListener('keyup', () => {
+            container.classList.remove('no-show');
+            var length = element.value.length;
+            counter.textContent = length;
+            if(length <= len) {
+            container.style.color = 'green';
+            counter.style.textDecoration = 'none';
+            container.style.fontWieght = '500';
+            } else {
+            container.style.color = 'red';
+            counter.style.textDecoration = 'line-through';
+            container.style.fontWieght = '700';
+            }
+            if (length === 0) {
+              container.classList.add('no-show');
+            } else {
+              container.classList.remove('no-show');
+            }
+        });
+    }
+    var tag = document.getElementById("line_item_description");
+    document.addEventListener("turbo:load", () => {
+        characterCount(tag, 350);
+    });
+
+    document.addEventListener("turbo:render", () => {
+        characterCount(tag, 350);
+    });
+</script>

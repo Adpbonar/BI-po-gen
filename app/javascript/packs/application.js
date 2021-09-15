@@ -62,3 +62,4 @@ document.addEventListener("turbo:load", function () {
         var value = submitForFindings.setAttribute("data-find", findParticipant.value);
     });
   });
+  

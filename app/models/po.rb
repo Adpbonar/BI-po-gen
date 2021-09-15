@@ -58,15 +58,20 @@ class Po < ApplicationRecord
     def duration
         start_time = self.start_date
         end_time = self.end_date
+        # defualt time units
         minutes = (end_time - start_time) / 1.minutes
         hours = (end_time - start_time) / 1.hours
         days = ((end_time - start_time) / 1.days).to_s.split(".").first.to_i
-				months = ((end_time - start_time) / 1.months).round
         weeks = ((end_time - start_time) / 1.weeks).round
+        months = ((end_time - start_time) / 1.months).round
+        years = ((end_time - start_time) / 1.years).round
+        # smaller units of time
         float_hours = hours.to_s.split(".").last
         decimal_hour_convert = (("0." + float_hours.to_s).to_f * 1.minutes).round
-        if weeks > 8
-					return "#{months} months"
+        if months > 24
+          return "#{years} years"
+        elsif weeks > 8
+          return "#{months} months"
         elsif days > 14
             return "#{weeks} weeks"
         elsif minutes < 120
@@ -129,31 +134,31 @@ class Po < ApplicationRecord
       end
     end
 
-      def show_installments
-        @installment_array = []
-        self.installments.order(:id).map { |item| @installment_array << item.percentage.to_s + "%" }
-        return @installment_array.join(" ")
-      end
+    def show_installments
+      @installment_array = []
+      self.installments.order(:id).map { |item| @installment_array << item.percentage.to_s + "%" }
+      return @installment_array.join(" ")
+    end
 
-      def start_date_is_valid_datetime
-        errors.add(:start_date, 'must be a valid datetime') if ((DateTime.parse(start_date) rescue ArgumentError) == ArgumentError)
-      end
+    def start_date_is_valid_datetime
+      errors.add(:start_date, 'must be a valid datetime') if ((DateTime.parse(start_date) rescue ArgumentError) == ArgumentError)
+    end
 
-      def end_date_is_valid_datetime
-        errors.add(:end_date, 'must be a valid datetime') if ((DateTime.parse(end_date) rescue ArgumentError) == ArgumentError)
-      end
+    def end_date_is_valid_datetime
+      errors.add(:end_date, 'must be a valid datetime') if ((DateTime.parse(end_date) rescue ArgumentError) == ArgumentError)
+    end
 
-      TYPE = {
-        'Training Programs': 'Modular Training Programs',
-        'Coaching & Mentorship Programs': 'Modular Coaching and Mentorship Programs',
-        'Integrated Programs': 'Integrated Programs',
-        'Partnership Programs': 'Exclusive Partnership Porgrams'
-      }
+    TYPE = {
+      'Training Programs': 'Modular Training Programs',
+      'Coaching & Mentorship Programs': 'Modular Coaching and Mentorship Programs',
+      'Integrated Programs': 'Integrated Programs',
+      'Partnership Programs': 'Exclusive Partnership Porgrams'
+    }
 
-      CURRENCY = {
-        'Canadian Dollar': 'CA $',
-        'US Dollar': 'US $',
-        'Euro': '&euro;',
-        'British Pound': '&#163;',
+    CURRENCY = {
+      'Canadian Dollar': 'CA $',
+      'US Dollar': 'US $',
+      'Euro': '&euro;',
+      'British Pound': '&#163;',
     }
 end

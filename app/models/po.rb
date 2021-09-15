@@ -22,7 +22,6 @@ class Po < ApplicationRecord
     extend FriendlyId
     friendly_id :po_number, use: :slugged
 
-
     # set up initial statement and create blank installments for the PO
 		def set_up_po
 			client = GeneralStatement.create(po_id: self.id)

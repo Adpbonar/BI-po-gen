@@ -1,0 +1,3 @@
+class SavedExpense < SavedItem
+
+end

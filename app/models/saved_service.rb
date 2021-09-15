@@ -1,0 +1,3 @@
+class SavedService < SavedItem
+    
+end

@@ -18,14 +18,12 @@ class Po < ApplicationRecord
     validates_length_of :description, in: 0..600
     validate :in_future, :on => :create
     validate :time_duration
-    # validate :start_date_is_valid_datetime
-    # validate :end_date_is_valid_datetime
 
     extend FriendlyId
     friendly_id :po_number, use: :slugged
 
 
-    # set up initial statement
+    # set up initial statement and create blank installments for the PO
 		def set_up_po
 			client = GeneralStatement.create(po_id: self.id)
       (self.number_of_installments).times.each do 
@@ -34,7 +32,7 @@ class Po < ApplicationRecord
       end
     end
 			
-
+    # Verify organization of email
 		def issued_by
 			if self.user.email.split('@').last == 'bonarinstitute.com'
 				return "Issued by the Bonar Institute for Purposeful Leadership."
@@ -103,6 +101,7 @@ class Po < ApplicationRecord
         end
       end
 
+      # Add error if po does not start in future
       def in_future
         unless start_date.blank?
           return if (start_date >= Date.today)
@@ -110,6 +109,7 @@ class Po < ApplicationRecord
         end
       end
     
+      # Add error if the end_date is before the start
       def time_duration
         unless start_date.blank? || end_date.blank?
           return if end_date > start_date 
@@ -117,6 +117,7 @@ class Po < ApplicationRecord
         end
       end
 
+      # Add default settings to the PO installments created earlier
       def initilize_default_installments
         self.installments.each_with_index do |installment, index|
          if index == 0
@@ -134,20 +135,14 @@ class Po < ApplicationRecord
       end
     end
 
+    # Show installment percentages on one line
     def show_installments
       @installment_array = []
       self.installments.order(:id).map { |item| @installment_array << item.percentage.to_s + "%" }
       return @installment_array.join(" ")
     end
 
-    def start_date_is_valid_datetime
-      errors.add(:start_date, 'must be a valid datetime') if ((DateTime.parse(start_date) rescue ArgumentError) == ArgumentError)
-    end
-
-    def end_date_is_valid_datetime
-      errors.add(:end_date, 'must be a valid datetime') if ((DateTime.parse(end_date) rescue ArgumentError) == ArgumentError)
-    end
-
+    # Type of program being offered form dropdown
     TYPE = {
       'Training Programs': 'Modular Training Programs',
       'Coaching & Mentorship Programs': 'Modular Coaching and Mentorship Programs',
@@ -155,6 +150,7 @@ class Po < ApplicationRecord
       'Partnership Programs': 'Exclusive Partnership Porgrams'
     }
 
+    # Type of currency being accepted form dropdown
     CURRENCY = {
       'Canadian Dollar': 'CA $',
       'US Dollar': 'US $',

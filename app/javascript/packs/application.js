@@ -10,10 +10,8 @@ import "channels"
 import "bootstrap"
 import "packs/counter"
 import "../stylesheets/application"
-// import flatpickr from "flatpickr"
 import "@hotwired/turbo-rails"
 import "controllers"
-
 
 require("flatpickr/dist/flatpickr.css")
 

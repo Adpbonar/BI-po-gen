@@ -1,7 +1,6 @@
-<p id="notice"><%= notice %></p>
+
 
 <h1>Participants</h1>
-
 <table>
   <thead>
     <tr>
@@ -14,7 +13,8 @@
 </table>
 
 <br>
-
-<%= link_to 'New Participant', new_participant_path %>
+<%= turbo_frame_tag 'participant' do %>
+  <%= link_to 'New Participant', new_participant_path %>
+<% end %>
 
 

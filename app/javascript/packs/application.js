@@ -38,6 +38,7 @@ application.register('flatpickr', Flatpickr)
 
 
 document.addEventListener("turbo:load", function () {
+    var submitForFindings = document.getElementById("participant-submit");
     var installmentSubmit  = document.getElementById("installment-submit");
     var showInstallments = document.getElementById("adjust-installments");
     var showMoreButton = document.getElementById("show-button")
@@ -57,4 +58,7 @@ document.addEventListener("turbo:load", function () {
           var value = installmentSubmit.setAttribute("data-installments", installmentInput.value);
       });
     }
+    findParticipant.addEventListener("keyup", () => {
+        var value = submitForFindings.setAttribute("data-find", findParticipant.value);
+    });
   });

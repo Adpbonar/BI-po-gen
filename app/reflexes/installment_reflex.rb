@@ -23,20 +23,28 @@ class InstallmentReflex < ApplicationReflex
     installments = element.dataset[:installments]
     if installments == "100"
       po.installments.destroy_all
-      portion = Installment.new(po_id: po.id, percentage: 100) 
+      portion = Installment.new(po_id: po.id, percentage: 100, due_date: po.start_date) 
       portion.save 
       po.number_of_installments = 1
       po.save
       flash.alert = 'Installments adjusted please add due dates'
     elsif (! check_string(installments)) && percentage_ceiling(installments)
         po.installments.destroy_all
-        new_installments_count = []
-        installments.split(" ").each do |installment| 
-          portion = Installment.new(po_id: po.id, percentage: installment) 
-          portion.save 
-          new_installments_count << 1
-        end
-        po.number_of_installments = new_installments_count.length
+        date_collector = []
+        multiple_installments = installments.split(" ")
+        num = (multiple_installments.length + 1) -2
+        date = ((po.end_date.to_i - po.start_date.to_i) / num).round.abs
+        multiple_installments.each_with_index do |installment, i| 
+          if i == 0
+            portion = Installment.new(po_id: po.id, percentage: installment, due_date: po.start_date)
+          else
+            new_due_date = date_collector[-1] + date
+            portion = Installment.new(po_id: po.id, percentage: installment, due_date: new_due_date)
+          end
+            portion.save 
+            date_collector << portion.due_date
+          end
+        po.number_of_installments = date_collector.length
         po.save
         flash.alert = 'Installments adjusted please add due dates'
     end

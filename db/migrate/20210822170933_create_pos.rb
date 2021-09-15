@@ -12,8 +12,7 @@ class CreatePos < ActiveRecord::Migration[6.1]
       t.string :tax_amount
       t.string :issued_to
       t.string :company_name
-      t.string :learning_coordinator
-      t.string :coachee_name
+      t.integer :learning_coordinator
       t.string :approved_by
       t.integer :associate_percentage
       t.integer :founder_percentage

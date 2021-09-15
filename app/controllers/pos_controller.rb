@@ -10,6 +10,7 @@ class PosController < ApplicationController
   # GET /pos/1 or /pos/1.json
   def show
     po_issuer = @po.user
+    @users = Participant.all
   end
 
   # GET /pos/new
@@ -78,6 +79,6 @@ class PosController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def po_params
-      params.require(:po).permit(:po_number, :title, :description, :start_date, :end_date, :tax_amount, :company_name, :number_of_installments, :service_type, :currency, :learning_coordinator, :coachee_name)
+      params.require(:po).permit(:po_number, :title, :description, :start_date, :end_date, :tax_amount, :company_name, :number_of_installments, :service_type, :currency, :learning_coordinator)
     end
 end

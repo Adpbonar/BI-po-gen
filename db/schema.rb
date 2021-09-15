@@ -89,13 +89,10 @@ ActiveRecord::Schema.define(version: 2021_09_09_164006) do
   end
 
   create_table "po_users", force: :cascade do |t|
-    t.bigint "po_id"
-    t.boolean "facilitator", default: false
-    t.boolean "got_po", default: false
-    t.text "participants_ciphertext"
+    t.integer "po_id"
+    t.integer "participant_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["po_id"], name: "index_po_users_on_po_id"
   end
 
   create_table "pos", force: :cascade do |t|
@@ -110,8 +107,7 @@ ActiveRecord::Schema.define(version: 2021_09_09_164006) do
     t.string "tax_amount"
     t.string "issued_to"
     t.string "company_name"
-    t.string "learning_coordinator"
-    t.string "coachee_name"
+    t.integer "learning_coordinator"
     t.string "approved_by"
     t.integer "associate_percentage"
     t.integer "founder_percentage"

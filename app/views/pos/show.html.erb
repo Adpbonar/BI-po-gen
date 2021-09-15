@@ -2,6 +2,12 @@
 <p>Approximate completion time: <%= @po.duration %><br />
 <small class="hightlight">From <%= read_date(@po.start_date) %> to <%= read_date(@po.end_date) %></small></p>
 <p><%= @po.issued_by %></p>
+<h2>Add Participants</h2>
+<div class="top-bottom-spacing">
+  <%# text_field_tag 'find-participant' %>  
+  <%# button_tag 'search', type: "text", pattern: "([0-9]+.{0,1}[0-9]*,{0,1})*[0-9]",  id: "participant-submit", class: 'btn btn-secondary', data: { reflex: "click->PartitipantReflex#find", id: @po.id, find: "" } %></div>
+</div>
+
 <p>Service: <%= @po.service_type %></p>
 <% if @po.installments.count == @po.number_of_installments %>
 <div class="top-bottom-spacing">Number of installments: <%= @po.number_of_installments %>  |  PO client currency: <%= show_currency(@po) %></div>
@@ -37,4 +43,5 @@
 
     <script>
     var installmentInput = document.getElementById("set-installment");
+    var findParticipant = document.getElementById("find-participant");
     </script>

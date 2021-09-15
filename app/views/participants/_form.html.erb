@@ -1,12 +1,31 @@
 
-<%= simple_form_for(@participant,  :url => participants_path) do |f| %>
-  <%= f.error_notification %>
-  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+<%= turbo_frame_tag 'participant' do %>
+  <%= form_for(@participant,  :url => participants_path) do |f| %>
+    <% if @participant.errors.any? %>
+    <div id="error_explanation">
+     The following errors prevented this participant from saving
+      <ul>
+      <% @participant.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
 
-  <div class="form-inputs">
-  </div>
+    <div class="form-inputs">
+      <%= f.label 'Name' %>
+      <%= f.text_field :name, class: 'form-control' %>
+      <%= f.label 'Email Address' %>
+      <%= f.text_field :emailaddress, class: 'form-control' %>
+      <%= f.label 'Phone Number' %>
+      <%= f.text_area :phone, class: 'form-control' %>
+      <%= f.label 'Address' %>
+      <%= f.text_field :address, class: 'form-control' %>
+    </div>
 
-  <div class="form-actions">
-    <%= f.button :submit, class: "btn btn-primary" %>
-  </div>
+    <div class="form-actions">
+      <%= f.button :submit, class: "btn btn-primary" %>
+    </div>
+  <% end %>
+  <%= link_to 'back', participants_path, class: 'btn btn-secondary' %>
 <% end %>

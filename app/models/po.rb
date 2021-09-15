@@ -3,10 +3,11 @@ class Po < ApplicationRecord
     belongs_to :user
 		has_many :installments
 		has_many :po_users
+    serialize :pos
 
 		validates :po_number, uniqueness: true
     validates :title, presence: true
-    validates_length_of :title, within: 1..100
+    validates_length_of :title, in: 1..100
     validates :start_date, presence: true
     validates :end_date, presence: true
     validates :service_type, presence: true
@@ -14,7 +15,7 @@ class Po < ApplicationRecord
     validates :tax_amount, numericality: { in: 1..100 }
     validates :associate_percentage, numericality: { in: 1..100 }
     validates :founder_percentage, numericality: { in: 1..100 }
-    validates_length_of :description, within: 0..600
+    validates_length_of :description, in: 0..600
     validate :in_future, :on => :create
     validate :time_duration
     # validate :start_date_is_valid_datetime
@@ -64,10 +65,10 @@ class Po < ApplicationRecord
         weeks = ((end_time - start_time) / 1.weeks).round
         float_hours = hours.to_s.split(".").last
         decimal_hour_convert = (("0." + float_hours.to_s).to_f * 1.minutes).round
-        if days > 14
-					return "#{weeks} weeks"
-        elsif weeks > 8
+        if weeks > 8
 					return "#{months} months"
+        elsif days > 14
+            return "#{weeks} weeks"
         elsif minutes < 120
           if minutes > 60
             if decimal_hour_convert == 1

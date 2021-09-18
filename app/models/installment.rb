@@ -12,7 +12,7 @@ class Installment < ApplicationRecord
             amount = 0
             installments = Installment.all.where(po_id: self.po_id)
             installments.each { |installment| amount = amount + installment.percentage }
-            return if amount.to_i < 100
+            return if amount.to_i < 100 || amount.to_i > 100
             errors.add :installment_percentages, 'must equal 100'
         end
     end

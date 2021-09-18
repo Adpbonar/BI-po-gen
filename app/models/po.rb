@@ -109,25 +109,31 @@ class Po < ApplicationRecord
 
       # Add default settings to the PO installments created earlier
       def initilize_default_installments
-        self.installments.each_with_index do |installment, index|
-         if index == 0
-            installment.percentage = 60
-            installment.due_date = self.start_date
-         elsif index == 2
-            installment.due_date = self.end_date
-            installment.percentage = 20
-          else
-            new_date = ((self.end_date.to_i - self.start_date.to_i) / 2)
-            installment.due_date = self.start_date + new_date
-            installment.percentage = 20
-          end
-        installment.save 
+        installments = self.installments
+        amount = 0.0
+        installments.map { |installment| amount = amount + installment.percentage.to_f }
+        if amount >= 99.0
+          installments.each_with_index do |installment, index|
+            if index == 0
+                installment.percentage = 60
+                installment.due_date = self.start_date
+            elsif index == 2
+                installment.due_date = self.end_date
+                installment.percentage = 20
+            else
+              new_date = ((self.end_date.to_i - self.start_date.to_i) / 2)
+              installment.due_date = self.start_date + new_date
+              installment.percentage = 20
+            end
+          installment.save 
+        end
       end
+      return (amount.to_i).to_s + "%"
     end
 
     # set up initial statement and create blank installments for the PO
 		def set_up_po
-			client = GeneralStatement.create(po_id: self.id)
+			GeneralStatement.create(po_id: self.id)
       (self.number_of_installments).times.each do 
           installment = Installment.create(po_id: self.id, due_date: Time.now, percentage: 33.33) 
       end

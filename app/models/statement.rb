@@ -7,7 +7,7 @@ class Statement < ApplicationRecord
     def total
         cost = 0.0
         self.po.installments.map { |installment| cost = cost + installment.cost }
-        return cost
+        return cost.to_d
     end
 
     def generate_associate_statement

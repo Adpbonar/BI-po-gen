@@ -6,13 +6,10 @@
 <p>PO <%= @po.issued_by %></p>
 <h2>Add Participants</h2>
 <div class="top-bottom-spacing">
-  <%# text_field_tag 'find-participant' %>  
-  <%# button_tag 'search', type: "text", pattern: "([0-9]+.{0,1}[0-9]*,{0,1})*[0-9]",  id: "participant-submit", class: 'btn btn-secondary', data: { reflex: "click->PartitipantReflex#find", id: @po.id, find: "" } %></div>
 </div>
-
 <p>Service: <%= @po.service_type %></p>
 <% if @po.installments.count == @po.number_of_installments %>
-<div class="top-bottom-spacing">Number of installments: <%= @po.number_of_installments %>  |  PO client currency: <%= show_currency(@po) %></div>
+<div class="top-bottom-spacing">Number of installments: <%= @po.number_of_installments %> (<%= @po.initilize_default_installments %>)  |  PO client currency: <%= show_currency(@po) %></div>
 <% end %>
 <% @po.installments.order([:id]).each_with_index do |installment, index| %>
     <% if installment.due_date.present? %>

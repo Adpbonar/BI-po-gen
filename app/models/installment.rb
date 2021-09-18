@@ -4,7 +4,18 @@ class Installment < ApplicationRecord
     validates :percentage, presence: true
     validates :percentage, numericality: { in: 1..75 }
     validate :reasonable_installment_due_date, :on => :update
+    validate :installment_total
     # validate :due_date_is_valid_datetime
+
+    def installment_total
+        unless po.status == "New"
+            amount = 0
+            installments = Installment.all.where(po_id: self.po_id)
+            installments.each { |installment| amount = amount + installment.percentage }
+            return if amount.to_i < 100
+            errors.add :installment_percentages, 'must equal 100'
+        end
+    end
 
     # Prevent due_date from being before the PO parent starts
     def reasonable_installment_due_date
@@ -12,6 +23,7 @@ class Installment < ApplicationRecord
         errors.add :due_date, 'must not be before the po start date'
     end
 
+    # Totaling statement line items and costing intallments
     def cost
         cost = 0.0
         items =  self.po.statements.first.line_items.order(:id)
@@ -24,7 +36,7 @@ class Installment < ApplicationRecord
                 cost = cost + item.cost
             end
         end
-        return cost * ("0." + self.percentage.to_s).to_f
+        return (cost * ("0." + self.percentage.to_s).to_f).to_d
     end
 
 

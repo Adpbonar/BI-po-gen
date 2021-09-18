@@ -18,9 +18,11 @@
       <%= f.label 'Email Address' %>
       <%= f.text_field :emailaddress, class: 'form-control' %>
       <%= f.label 'Phone Number' %>
-      <%= f.text_area :phone, class: 'form-control' %>
+      <%= f.text_field :phone, class: 'form-control' %>
       <%= f.label 'Address' %>
-      <%= f.text_field :address, class: 'form-control' %>
+      <%= f.text_area :address, class: 'form-control' %>
+      <%= f.label 'Country' %>
+      <%= f.country_select :country_code, include_blank: '', required: true, priority_countries: ["AU", "CA", "CN", "FR", "DE", "GB", "IN", "JP", "MX", "NZ", "SA", "US"] %>
     </div>
 
     <div class="form-actions">
@@ -29,3 +31,4 @@
   <% end %>
   <%= link_to 'back', participants_path, class: 'btn btn-secondary' %>
 <% end %>
+

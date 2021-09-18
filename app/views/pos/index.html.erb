@@ -1,8 +1,7 @@
-<p id="notice"><%= notice %></p>
+<%= link_to 'New Po', new_po_path, class: 'btn btn-primary', style: "position: fixed; right: 1em;" %>
+<h1>POs</h1>
 
-<h1>Pos</h1>
-
-<table>
+<table class="po-index">
   <thead>
     <tr>
       <th>Title</th>
@@ -19,7 +18,7 @@
           <td><%= po.title %></td>
           <td><%= po.description %></td>
           <td><%= po.duration %></td>
-          <td><%= time_ago_in_words(po.created_at) %></td>
+          <td><%= time_ago_in_words(po.created_at) %> ago</td>
           <td><%= link_to 'Show', po, class: 'btn btn-success' %></td>
           <td><%= link_to 'Edit', edit_po_path(po), class: 'btn btn-warning' %></td>
           <td><%= link_to 'Destroy', po, class: 'btn btn-danger', data: {"turbo-method": :delete,
@@ -29,5 +28,3 @@
   </tbody>
 </table>
 
-<br>
-  <%= link_to 'New Po', new_po_path, class: 'btn btn-primary' %>

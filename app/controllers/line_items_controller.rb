@@ -1,5 +1,6 @@
 class LineItemsController < ApplicationController
   before_action :set_line_item, only: %i[ show edit update destroy ]
+  before_action :authenticate_user!
 
   # GET /line_items or /line_items.json
   def index

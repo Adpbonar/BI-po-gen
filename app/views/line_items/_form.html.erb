@@ -1,27 +1,33 @@
-
-<%= simple_form_for(@line_item) do |f| %>
+<%= simple_form_for(@line_item,  :url => line_items_path) do |f| %>
   <% if @line_item.errors.any? %>
-  <div id="error_explanation">
-   The following errors prevented this line item from saving
-    <ul>
-    <% @line_item.errors.full_messages.each do |msg| %>
-      <li><%= msg %></li>
-    <% end %>
-    </ul>
-  </div>
-<% end %>
+    <div id="error_explanation">
+      <h2><%= pluralize(post.errors.count, "error") %> prohibited this item from being saved:</h2>
 
+      <ul>
+        <% @line_item.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
 
   <div class="form-inputs">
-  <%# f.input   :statement_id, as: :hidden, :input_html => { :value => current_user.id } %>
-  <%= f.input :title %>
-  <%= f.input :description %>
-  <%= f.input :cost %>
-  <%= f.input :taxable %>
-  <%= f.input :type, as: :select, collection: LineItem::TYPE, label: 'Type' %>
+  <%= f.input   :statement_id, as: :hidden, :input_html => { :value => @statement.id } %>
+  <%= f.input :title, maxlength: "100", data: { action: "form-validation#handleChange" } %>
+  <small id="character-limit" class="no-show"></small>
+  <div class="description-form">
+      <%= f.input :description, placeholder: "Description can\'t be longer that 350 characters", maxlength: "355", data: { action: "form-validation#handleChange" } %>
+      <div id="counter-container" class="no-show"><small>Description character count: <span id="characterCount">0</span>/350</small></div>
+  </div>
+  <%= f.input :cost, step: 0.01, data: { action: "form-validation#handleChange" } %>
+  <%= f.input :taxable, data: { action: "form-validation#handleChange" }, label: 'Taxable in Canada' %>
+  <%= f.input :type, as: :select, collection: LineItem::TYPE, label: 'Item Type', data: { action: "form-validation#handleChange" } %>
   </div>
 
   <div class="form-actions">
-    <%= f.button :submit %>
+      <br />
+      <center>
+          <%= f.button :submit, 'create item', class: 'btn btn-primary w-full',  disabled: @line_item.errors.any?  %>
+      </center>
   </div>
 <% end %>

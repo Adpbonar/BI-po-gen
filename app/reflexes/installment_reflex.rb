@@ -27,7 +27,7 @@ class InstallmentReflex < ApplicationReflex
       portion.save 
       po.number_of_installments = 1
       po.save
-      flash.alert = 'Installments have been adjusted. You are more than welcome to change the due date, but the default one has been provided.'
+      flash.alert = 'Installments have been adjusted. The default due date has been provided.'
     elsif (! check_string(installments)) && percentage_ceiling(installments)
       po.installments.destroy_all
       date_collector = []
@@ -46,9 +46,9 @@ class InstallmentReflex < ApplicationReflex
       end
       po.number_of_installments = date_collector.length
       po.save
-      flash.alert = 'Installments adjusted. You are more than welcome to change the due dates, but the default ones has been provided.'
+      flash.alert = 'Installments adjusted. The default due dates has been provided.'
     else
-      flash.alert = 'Installment could not be saved. Please refer to the pattern below the form. Remember that decimals are not accepted and that the total of the installments must equal 100.'
+      flash.alert = 'Installment could not be saved. Please refer to the pattern below the form.'
     end
   end
 end

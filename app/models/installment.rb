@@ -1,6 +1,6 @@
 class Installment < ApplicationRecord
     belongs_to :po
-    validates :due_date, presence: true, :on => :update
+    validates :due_date, presence: true
     validates :percentage, presence: true
     validates :percentage, numericality: { in: 1..75 }
     validate :reasonable_installment_due_date, :on => :update
@@ -10,6 +10,21 @@ class Installment < ApplicationRecord
     def reasonable_installment_due_date
         return if self.due_date >= self.po.start_date
         errors.add :due_date, 'must not be before the po start date'
+    end
+
+    def cost
+        cost = 0.0
+        items =  self.po.statements.first.line_items.order(:id)
+        items.each do |item|
+            if item.discounts.any?
+                unless item.calculate_discounts == "Free"
+                    cost = cost + item.calculate_discounts
+                end
+            else
+                cost = cost + item.cost
+            end
+        end
+        return cost * ("0." + self.percentage.to_s).to_f
     end
 
 

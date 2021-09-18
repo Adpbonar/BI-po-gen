@@ -70,3 +70,5 @@ gem "stimulus_reflex", "~> 3.4"
 gem "friendly_id", "~> 5.4"
 
 gem "faker", "~> 2.19"
+
+gem "country_select", "~> 6.0"

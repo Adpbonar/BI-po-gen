@@ -13,7 +13,7 @@ class LineItem < ApplicationRecord
     def calculate_discounts
         cost = self.cost.to_f
         total = 0.to_f
-        self.discounts.each do |off|
+        self.discounts.order(:id).each do |off|
             if off.amount_type == 1
                 total = total + off.amount.to_f 
             elsif off.amount_type == 0

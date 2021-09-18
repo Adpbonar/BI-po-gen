@@ -15,6 +15,7 @@ class StatementsController < ApplicationController
     @installment_info = @statement.po.show_installments
     @discount = Discount.new
     @discounts = @statement.line_items
+    @installments_amounts = @statement.po.installments.order(:id)
   end
 
   # GET /statements/new
@@ -72,5 +73,5 @@ class StatementsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def statement_params
       params.require(:statement).permit(:notes, :terms)
-    end
+    end   
 end

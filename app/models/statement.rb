@@ -2,15 +2,13 @@ class Statement < ApplicationRecord
     belongs_to :po
     has_many :line_items
     has_many :payments
-
-    def associate_formula
-
-    end
-
-    def client_formula
-        # self.line_items.each do 
-        end
         
+
+    def total
+        cost = 0.0
+        self.po.installments.map { |installment| cost = cost + installment.cost }
+        return cost
+    end
 
     def generate_associate_statement
     #     associate_statement = AssociateStatement.new(po_id: self.po.id)

@@ -11,8 +11,8 @@ class Po < ApplicationRecord
     validates :start_date, presence: true
     validates :end_date, presence: true
     validates :service_type, presence: true
-    validates :currency, presence: true
-    validates :tax_amount, numericality: { in: 1..100 }
+    validates :currency, presence: true, :on => :update
+    validates :tax_amount, numericality: { in: 1..100 }, :on => :update
     validates :associate_percentage, numericality: { in: 1..100 }
     validates :founder_percentage, numericality: { in: 1..100 }
     validates_length_of :description, in: 0..600
@@ -21,15 +21,6 @@ class Po < ApplicationRecord
 
     extend FriendlyId
     friendly_id :po_number, use: :slugged
-
-    # set up initial statement and create blank installments for the PO
-		def set_up_po
-			client = GeneralStatement.create(po_id: self.id)
-      (self.number_of_installments).times.each do 
-          installment = Installment.new(po_id: self.id) 
-          installment.save
-      end
-    end
 			
     # Verify organization of email
 		def issued_by
@@ -131,6 +122,17 @@ class Po < ApplicationRecord
             installment.percentage = 20
           end
         installment.save 
+      end
+    end
+
+    # set up initial statement and create blank installments for the PO
+		def set_up_po
+			client = GeneralStatement.create(po_id: self.id)
+      (self.number_of_installments).times.each do 
+          installment = Installment.create(po_id: self.id, due_date: Time.now, percentage: 33.33) 
+      end
+      if self.installments.count == 3
+        self.initilize_default_installments
       end
     end
 

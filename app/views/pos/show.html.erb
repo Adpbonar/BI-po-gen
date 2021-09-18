@@ -1,7 +1,9 @@
 <h1>PO <%= @po.po_number %></h1>
+<p style="text-transform: uppercase;"><b>Status: <%= @po.status %></b></p>
+<p>Service: <%= @po.service_type %></p>
 <p>Approximate completion time: <%= @po.duration %><br />
-<small class="hightlight">From <%= read_date(@po.start_date) %> to <%= read_date(@po.end_date) %></small></p>
-<p><%= @po.issued_by %></p>
+<small class="highlight">From <%= read_date(@po.start_date) %> to <%= read_date(@po.end_date) %></small></p>
+<p>PO <%= @po.issued_by %></p>
 <h2>Add Participants</h2>
 <div class="top-bottom-spacing">
   <%# text_field_tag 'find-participant' %>  
@@ -14,7 +16,7 @@
 <% end %>
 <% @po.installments.order([:id]).each_with_index do |installment, index| %>
     <% if installment.due_date.present? %>
-        <div class="top-bottom-spacing">Installment <%= index + 1 %>: <span class="hightlight"><%= read_date(installment.due_date) %></span> <%= link_to 'Change due date', edit_installment_path(installment), class: 'btn btn-info' %> @ <%= installment.percentage %>%</div>
+        <div class="top-bottom-spacing">Installment <%= index + 1 %>: <span class="highlight"><%= read_date(installment.due_date) %></span>  @ <%= installment.percentage %>%</div><div><%= link_to 'Change due date', edit_installment_path(installment), class: 'btn btn-info' %></div>
     <% else %>
     <div class="top-bottom-spacing">Installment <%= index + 1 %>: <%= link_to 'No Due Date set for installment', edit_installment_path(installment), class: 'btn btn-info' %> @ <%= installment.percentage %>%</div>
     <% end %>
@@ -23,11 +25,11 @@
 <ul>
 <% @po.statements.each do |statement|%> 
     <% if statement.type == 'ClientStatement' %>
-        <li><%= link_to "client statement", statement_path(statement), class: 'default-link`' %></li>
+        <li><%= link_to "client statement".capitalize, statement_path(statement), class: 'default-link`' %></li>
     <% elsif statement.type == 'GeneralStatement' %>
-         <li><%= link_to "general statement", statement_path(statement), class: 'default-link' %></li>
+         <li><%= link_to "general statement".capitalize, statement_path(statement), class: 'default-link' %></li>
     <% else %>
-        <li><%= link_to "associate statement", statement_path(statement), class: 'default-link' %></li>
+        <li><%= link_to "associate statement".capitalize, statement_path(statement), class: 'default-link' %></li>
     <% end %>
 <% end %> 
 </ul>
@@ -35,7 +37,7 @@
 <div class="top-bottom-spacing no-show" id="adjust-installments">
     <h2>Adjust the number and percentage of installments</h2>
     <%= text_field_tag 'set-installment' %>  
-    <small>Adjust number and percentage of installments using the following format "30 30 30 10", where the number is the percentage and the quanity of numbers is the amount of installments.</small>
+    <small>Adjust number and percentage of installments using the following format "30 30 30 10", where the number is the percentage and the quanity of numbers is the amount of installments.  <span class="highlight"><br /><b>Note:</b> that decimals are not accepted and that the total of the installment percentages must equal 100.</span></small>
     <div class="top-bottom-spacing"><%= button_tag 'submit changes', type: "text", pattern: "([0-9]+.{0,1}[0-9]*,{0,1})*[0-9]",  id: "installment-submit", class: 'btn btn-secondary', data: { reflex: "click->InstallmentReflex#change", id: @po.id, installments: "" } %></div>
     </div>
     <%= link_to 'Edit', edit_po_path(@po), class: 'btn btn-warning' %>

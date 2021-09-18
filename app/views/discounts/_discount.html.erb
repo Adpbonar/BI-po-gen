@@ -1,9 +1,9 @@
 <%= turbo_frame_tag dom_id(discount) do %>
     <div>
         <% if discount.amount_type == 0 %>
-        <%= show_currency(discount.line_item.statement.po) %> <%= (discount.line_item.cost * ("0." + (discount.amount).to_s).to_f) %>  off (<%= discount.amount %>%)
+            <%= show_money(discount.line_item.statement, (discount.line_item.cost * ("0." + (discount.amount).to_s).to_f)) %>  off (<%= discount.amount %>%)
         <% else %>
-            <%= show_currency(discount.line_item.statement.po) %> <%= discount.amount %> off
+            <%= show_money(discount.line_item.statement, discount.amount) %> off
         <% end %>
         
         <%= button_tag 'remove', id: "discount-submit#{discount.line_item.id}", class: 'btn btn-danger btn-sm', data: { reflex: "click->DiscountReflex#remove", id: discount.id } %>

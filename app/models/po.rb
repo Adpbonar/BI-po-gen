@@ -112,7 +112,7 @@ class Po < ApplicationRecord
         installments = self.installments
         amount = 0.0
         installments.map { |installment| amount = amount + installment.percentage.to_f }
-        if amount >= 99.0
+        if amount >= 99.0 && amount < 100.01
           installments.each_with_index do |installment, index|
             if index == 0
                 installment.percentage = 60

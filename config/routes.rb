@@ -8,12 +8,12 @@ Rails.application.routes.draw do
   end
 
   resources :statements, except: [ :new, :create, :destroy ] 
-    resources :line_items, except: [ :index, :show ]
   resources :participants
+  resources :line_items, only: [ :new, :create, :edit, :update, :destroy ]
   resources :po_users
-  namespace :form_validations do
-    resources :line_items, only: [:create, :update]
-  end
+  # namespace :form_validations do
+  #   resources :line_items, only: [:create, :update]
+  # end
 
   devise_for :users
   

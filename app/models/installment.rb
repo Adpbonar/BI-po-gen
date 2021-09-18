@@ -7,6 +7,10 @@ class Installment < ApplicationRecord
     validate :installment_total
     # validate :due_date_is_valid_datetime
 
+    def percentage_amount(record1, record2)
+        return (record1.to_i * ("0." + record2.to_s).to_f)
+    end
+
     def installment_total
         unless po.status == "New"
             amount = 0
@@ -33,7 +37,11 @@ class Installment < ApplicationRecord
                     cost = cost + item.calculate_discounts
                 end
             else
-                cost = cost + item.cost
+                if item.type == 'ExpenseItem' && ! item.expense_exempt_from_tax
+                    cost = cost + item.calculate_discounts + percentage_amount(item.cost, item.statement.po.tax_amount)
+                else
+                    cost = cost + item.cost
+                end
             end
         end
         return (cost * ("0." + self.percentage.to_s).to_f).to_d

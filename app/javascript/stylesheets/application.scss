@@ -6,7 +6,12 @@ body {
     padding-top: 2em;
     padding-bottom: 2em;
 }
+
 .po-index {
+    th {
+        text-transform: uppercase;
+    }
+
     tr {
         border-bottom: 1px solid black;
     }
@@ -16,7 +21,8 @@ tr {
     padding: 1em;
 }
 
-td, th {
+td,
+th {
     padding: .5em;
 }
 
@@ -29,7 +35,7 @@ td, th {
 }
 
 .top-bottom-spacing {
-    padding-top: 2em !important; 
+    padding-top: 2em !important;
     padding-bottom: 2em !important;
 }
 
@@ -73,6 +79,10 @@ td, th {
 
 .spaced-out td {
     padding: 1em;
+}
+
+.upcase {
+    text-transform: uppercase;
 }
 
 #participant_country_code {

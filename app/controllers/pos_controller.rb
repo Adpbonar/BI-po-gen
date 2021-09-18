@@ -91,9 +91,15 @@ class PosController < ApplicationController
       else
         unless @po.status == 'Lapsed'
           if @po.statements.first.line_items.any?
-            @po.update(status: 'Items added')
+            @po.update(status: 'Costed')
           end
-          if @po.statements.first.total == 0
+          if @po.statements.first.line_items.any? && @po.po_users.any?
+            @po.update(status: 'Populated')
+          end
+          if @po.statements.first.line_items.any? && @po.po_users.any?
+            @po.update(status: 'Prepared')
+          end
+          if @po.statements.first.subtotal == 0
             @po.update(status: 'Generated')
           end
           if @po.end_date < Time.now

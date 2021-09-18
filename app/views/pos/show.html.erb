@@ -1,15 +1,22 @@
-<h1>PO <%= @po.po_number %></h1>
+<h1>PO <%= @po.po_number %>: <%= @po.title %></h1>
 <p style="text-transform: uppercase;"><b>Status: <%= @po.status %></b></p>
 <p>Service: <%= @po.service_type %></p>
 <p>Approximate completion time: <%= @po.duration %><br />
 <small class="highlight">From <%= read_date(@po.start_date) %> to <%= read_date(@po.end_date) %></small></p>
 <p>PO <%= @po.issued_by %></p>
+<% if @po.description.present? %>
+    <div class="top-bottom-spacing">
+    <p><b>Description</b></p>
+        <%= @po.description %>
+    </div>
+<% end %>
 <h2>Add Participants</h2>
 <div class="top-bottom-spacing">
 </div>
-<p>Service: <%= @po.service_type %></p>
+
+<h2>Installments</h2>
 <% if @po.installments.count == @po.number_of_installments %>
-<div class="top-bottom-spacing">Number of installments: <%= @po.number_of_installments %> (<%= @po.initilize_default_installments %>)  |  PO client currency: <%= show_currency(@po) %></div>
+<div class="upcase">Number of installments: <%= @po.number_of_installments %> (<%= @po.initilize_default_installments %>)  |  PO client currency: <%= show_currency(@po) %>  |  PO value: <%= @po.currency.html_safe.to_s + number_to_currency(@po.statements.first.subtotal).split("$").last %></div>
 <% end %>
 <% @po.installments.order([:id]).each_with_index do |installment, index| %>
     <% if installment.due_date.present? %>
@@ -22,7 +29,7 @@
 <ul>
 <% @po.statements.each do |statement|%> 
     <% if statement.type == 'ClientStatement' %>
-        <li><%= link_to "client statement".capitalize, statement_path(statement), class: 'default-link`' %></li>
+        <li><%= link_to "client statement".capitalize, statement_path(statement), class: 'default-link' %></li>
     <% elsif statement.type == 'GeneralStatement' %>
          <li><%= link_to "general statement".capitalize, statement_path(statement), class: 'default-link' %></li>
     <% else %>

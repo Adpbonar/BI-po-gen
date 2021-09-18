@@ -11,9 +11,9 @@ module ApplicationHelper
     end
 
     # convert precentages
-    def as_percetage(number)
-      self.to_f / n.to_f * 100
-    end
+    def show_percentage_amount(record1, record2)
+      return (record1.to_i * ("0." + record2.to_s).to_f)
+  end
 
     def show_money(record1, record2)
       return record1.po.currency.html_safe.to_s + number_to_currency(record2).split("$").last

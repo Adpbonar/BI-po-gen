@@ -19,9 +19,9 @@
     <div id="counter-container" class="no-show"><small>Description character count: <span id="characterCount">0</span>/600</small></div>
     <%= f.input :company_name %>
     <label>Start Date</label>  
-    <%= f.text_field :start_date, class: 'flatpickr form-control', placeholder: 'select the start date', data: { controller: "flatpickr", flatpickr_enable_time: false, flatpickr_default_date: DateTime.now, flatpickr_date_format: "Y-m-d", flatpickr_min_date: DateTime.now, flatpickr_disable_days_of_week: [0,6] } %>
+    <%= f.text_field :start_date, class: 'flatpickr form-control', placeholder: 'select the start date', data: { controller: "flatpickr", flatpickr_enable_time: false, flatpickr_default_date: Time.zone.now, flatpickr_date_format: "Y-m-d", flatpickr_min_date: Time.zone.now, flatpickr_disable_days_of_week: [0,6] } %>
     <label>End Date</label>
-    <%= f.text_field :end_date, class: 'flatpickr form-control', placeholder: 'select the end date', data: { controller: "flatpickr", flatpickr_enable_time: false, flatpickr_default_date: DateTime.now + 3.weeks, flatpickr_date_format: "Y-m-d", flatpickr_min_date: DateTime.now + 1.days, flatpickr_disable_days_of_week: [0,6] }  %>
+    <%= f.text_field :end_date, class: 'flatpickr form-control', placeholder: 'select the end date', data: { controller: "flatpickr", flatpickr_enable_time: false, flatpickr_default_date: Time.zone.now + 48.hours, flatpickr_date_format: "Y-m-d", flatpickr_min_date: Time.zone.now + 24.hours, flatpickr_disable_days_of_week: [0,6] }  %>
     <%= f.input :service_type, as: :select, collection: Po::TYPE, label: 'Service Type' %>
     <div><%= f.submit class: 'btn btn-primary' %></div>
   <% end %>

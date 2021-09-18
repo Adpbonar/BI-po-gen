@@ -2,7 +2,7 @@ class Installment < ApplicationRecord
     belongs_to :po
     validates :due_date, presence: true
     validates :percentage, presence: true
-    validates :percentage, numericality: { in: 1..75 }
+    validates :percentage, numericality: { in: 1..100 }
     validate :reasonable_installment_due_date, :on => :update
     validate :installment_total
     # validate :due_date_is_valid_datetime

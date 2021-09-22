@@ -19,4 +19,12 @@ module ApplicationHelper
       return record1.po.currency.html_safe.to_s + number_to_currency(record2).split("$").last
     end
 
+    def sanitized_show_money(record1, record2)
+      if record1.po.currency.html_safe.to_s.include?('$')
+        return number_to_currency(record2)
+      else
+        return record1.po.currency.html_safe.to_s + number_to_currency(record2).split("$").last
+      end
+    end
+
 end

@@ -72,3 +72,7 @@ gem "friendly_id", "~> 5.4"
 gem "faker", "~> 2.19"
 
 gem "country_select", "~> 6.0"
+
+gem "wicked_pdf", "~> 2.1"
+
+gem "wkhtmltopdf-binary", "~> 0.12.6"

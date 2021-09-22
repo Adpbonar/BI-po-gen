@@ -56,8 +56,5 @@ document.addEventListener("turbo:load", function () {
           var value = installmentSubmit.setAttribute("data-installments", installmentInput.value);
       });
     }
-    findParticipant.addEventListener("keyup", () => {
-        var value = submitForFindings.setAttribute("data-find", findParticipant.value);
-    });
   });
   

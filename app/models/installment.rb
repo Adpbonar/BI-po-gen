@@ -30,23 +30,29 @@ class Installment < ApplicationRecord
     # Totaling statement line items and costing intallments
     def cost
         cost = 0.0
-        items =  self.po.statements.first.line_items.order(:id)
+        items = self.po.statements.first.line_items.order(:id)
         items.each do |item|
             if item.discounts.any?
                 unless item.calculate_discounts == "Free"
                     cost = cost + item.calculate_discounts
                 end
+        
             else
-                if item.type == 'ExpenseItem' && ! item.expense_exempt_from_tax
-                    cost = cost + item.calculate_discounts + percentage_amount(item.cost, item.statement.po.tax_amount)
-                else
-                    cost = cost + item.cost
-                end
+                cost = cost + item.cost
             end
         end
         return (cost * ("0." + self.percentage.to_s).to_f).to_d
     end
+    
 
+    def total
+        cost = 0.0
+        items = self.po.statements.first.line_items.order(:id)
+        items.each do |item|
+            cost = cost + item.cost
+        end
+        return (cost * ("0." + self.percentage.to_s).to_f).to_d
+    end
 
     # Verify datetime formatting is correct
     def due_date_is_valid_datetime

@@ -13,16 +13,25 @@ class Statement < ApplicationRecord
         return cost.to_d
     end
 
-
-    def expense_tax
-        cost = 0
-        self.line_items.where(type: 'ExpenseItem').map do |expense| 
-            unless expense.expense_exempt_from_tax
-                cost = cost + percentage_amount(expense.cost, expense.statement.po.tax_amount) 
+    def cost
+        cost = 0.0
+        items =  self.po.statements.first.line_items.order(:id)
+        items.each do |item|
+            if item.discounts.any?
+                unless item.calculate_discounts == "Free"
+                    cost = cost + item.calculate_discounts
+                end
+            else
+                if item.type == 'ExpenseItem' && ! item.expense_exempt_from_tax
+                    cost = cost + item.calculate_discounts + percentage_amount(item.cost, item.statement.po.tax_amount)
+                else
+                    cost = cost + item.cost
+                end
             end
         end
-        return cost
+        return (cost * ("0." + self.percentage.to_s).to_f).to_d
     end
+
 
     def generate_associate_statement
     #     associate_statement = AssociateStatement.new(po_id: self.po.id)

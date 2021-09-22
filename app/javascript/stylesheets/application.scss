@@ -5,6 +5,7 @@ body {
     margin-right: 2em;
     padding-top: 2em;
     padding-bottom: 2em;
+    line-height: 1.5;
 }
 
 .po-index {
@@ -112,11 +113,89 @@ th {
     border-top: 2px solid green;
 }
 
+.tax {
+    font-weight: 700;
+    padding: 1em;
+    text-transform: uppercase;
+    font-size: 1.3em;
+}
+
 .green {
     color: green;
     border-bottom: 2px solid green;
+    padding-bottom: .6em;
 }
 
 .extra-padding {
     padding: 1em;
+}
+
+.btn-sm {
+    border-radius: 50%;
+}
+
+.saved-item {
+    cursor: pointer;
+    display: block;
+    border: 2px solid black;
+    border-radius: 2em;
+    padding: 1em;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    width: calc(50% - 50px) !important;
+    text-align: center;
+    font-size: 1.2em;
+    margin-left: auto;
+    margin-right: auto;
+    overflow: hidden;
+    &:hover, &:focus {
+        color: white;
+        background: green;
+        border: 2px solid gray;
+        font-weight: 600;
+    }
+}
+
+.invoice-image h1, .invoice-image img {
+    display: inline;
+    text-transform: uppercase;
+}
+
+.invoice-image img {
+    margin-right: 2em;
+}
+
+@media print {
+    .Print {
+        background-color: white;
+        height: 100%;
+        width: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        margin: 0;
+        padding: 15px;
+        font-size: 14px;
+        line-height: 18px;
+    }
+}
+
+.discount-applied {
+    padding: 2px;
+    margin-bottom: 2px;
+    color: green;
+    border: 1px solid green;
+    width: 170px;
+    border-radius: 25px;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.td-border {
+    border-bottom: 1px solid black;
+    padding: 1em;
+}
+
+.bold {
+    font-weight: 700;
 }

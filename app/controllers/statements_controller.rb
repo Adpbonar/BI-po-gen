@@ -15,7 +15,24 @@ class StatementsController < ApplicationController
     @installment_info = @statement.po.show_installments
     @discount = Discount.new
     @discounts = @statement.line_items
+    @line_items = @statement.line_items.all.order([:type]).order([:id])
     @installments_amounts = @statement.po.installments.order(:id)
+    @saved_items = SavedItem.all.order([:id]).reverse_order
+    respond_to do |format|
+      format.html
+      format.pdf do
+        render pdf: "Bonar Institute",
+        page_size: 'Letter',
+        page_height: '11in',
+        page_width: '8.5in',
+        layout: "statement.html.erb",
+        template: "statements/show.html.erb",
+        orientation: "Portrait",
+        lowquality: false,
+        zoom: 1,
+        dpi: 75
+      end
+    end 
   end
 
   # GET /statements/new
@@ -72,6 +89,6 @@ class StatementsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def statement_params
-      params.require(:statement).permit(:notes, :terms)
+      params.require(:statement).permit(:notes, :terms, :show_detailed)
     end   
 end

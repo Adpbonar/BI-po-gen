@@ -28,6 +28,12 @@ class LineItem < ApplicationRecord
         end
     end
 
+    def saved_item_check
+        unless SavedItem.where(title: self.title, type: 'Saved' + self.type.split("I").first).any?
+            return true
+        end
+    end
+
     TYPE = {
         'Expense': 'ExpenseItem',
         'Service': 'ServiceItem',

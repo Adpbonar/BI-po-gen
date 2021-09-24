@@ -13,6 +13,7 @@ class PosController < ApplicationController
     update_status
     po_issuer = @po.user
     @users = Participant.all
+    @po_users = @po.po_users
   end
 
   # GET /pos/new
@@ -81,7 +82,7 @@ class PosController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def po_params
-      params.require(:po).permit(:po_number, :title, :description, :start_date, :end_date, :tax_amount, :company_name, :number_of_installments, :service_type, :currency, :learning_coordinator)
+      params.require(:po).permit(:po_number, :title, :description, :start_date, :end_date, :tax_amount, :company_name, :number_of_installments, :service_type, :currency, :learning_coordinator, :show_participant)
     end
 
     def update_status

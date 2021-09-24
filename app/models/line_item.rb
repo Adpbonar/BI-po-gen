@@ -1,6 +1,8 @@
 class LineItem < ApplicationRecord
     belongs_to :statement
     has_many :discounts
+    has_many :details
+
     validates :title, presence: true
     validates_length_of :title, in: 1..100
     validates :cost, presence: true

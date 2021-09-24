@@ -1,111 +1,27 @@
-<h1 class="center"><%= @statement.type.split("S").first %> Statement</h1>
+<div class="invoice-image">
+    <%= image_tag 'BonarInstitute-Logo', class: 'top-bottom-spacing', width: '350px' %>   <h1><%= @statement.type.split("S").first %> Statement</h1>
+</div>
 <%= link_to 'back to po', po_path(@statement.po), class: "btn btn-secondary" %>
 <% if @statement.type == "GeneralStatement" %>
     <%= render partial: 'general', statement: @statement %>
 <% end %>
-<% if @statement.type == "ClientStatement" %>
-    <button type="button" onclick="printDiv('Print')" class="btn btn-info">Printer-friendly version</button>
-    <%= link_to 'PDF', statement_path(@statement) + '.pdf', class: 'btn btn-success' %>
-<div id="Print">
-<div class="invoice-image">
-    <%= image_tag 'BonarInstitute-Logo', class: 'top-bottom-spacing', width: '350px' %>   <h1>Invoice</h1>
-</div>
-<hr />
-    <table width="100%">
-        <th style="width: 25%">
-            Item
-        </th>
-        <th style="width: 50%">
-            Description
-        </th>
-        <th style="width: 25%">
-            Price
-        </th>
-        <% if @statement.show_detailed == true %>
-        <% items = '' 
-        @line_items.map { |item| items = 'yes' if item.discounts.any? } %>
-        <th style="width: 25%">
-            <% if items == 'yes' %>
-                Adjustments
-            <% end %>
-        </th>
-        <tbody>
-            <% @line_items.each do |item| %>
-                <tr>
-                    <td style="width: 25%" class="td-border">
-                        <%= item.title %>
-                    </td>
-                    <td style="width: 50%" class="td-border">
-                        <%= item.description %>
-                    </td>
-                    <% if items == 'yes' %>
-                        <td style="width: 12.5%" class="td-border">
-                            <%= sanitized_show_money(@statement, item.cost) %>
-                        </td>
-                        <td style="width: 12.5%;" class="td-border">
-                                <%=sanitize @statement.item_discounts(item) %>
-                                <% item.discounts.each do |discount| %>
-                                    <div class="center"><%= render 'discount', discount: discount %></div>
-                                <% end %>
-                        </td>
-                    <% else %>
-                        <td style="width: 25%" class="td-border">
-                            <%= show_money(@statement, item.cost) %>
-                        </td>
-                    <% end %>
-                </tr>
-            <% end %>
-            <% else %>
-                <tr>
-                <td style="width: 25%" class="td-border">
-                    Professonal Services
-                </td>
-                <td style="width: 50%" class="td-border">
-                    Business & leaderhsip development solutions
-                </td>
-                <% if items == 'yes' %>
-                    <td style="width: 12.5%" class="td-border">
-                        <%= sanitized_show_money(@statement, @statement.no_discount_cost) %>
-                    </td>
-                    <td style="width: 12.5%;" class="td-border">
-                            <%= sanitized_show_money(@statement, @statement.total_discounts) %>
-                    </td>
-                <% else %>
-                    <td style="width: 25%" class="td-border">
-                        <%= sanitized_show_money(@statement, @statement.no_discount_cost) %>
-                    </td>
-                <% end %>
-            </tr>
-            <% end %>
-        </tbody>
-    </table>
-<% end %>
-<div class="top-bottom-spacing">  
-<% if items == 'yes' %>
-    <strong>
-        <p class="upcase">Value of Items: <%= sanitized_show_money(@statement, @statement.no_discount_cost) %></p>
-        <p class="green upcase">Discounts: (<%= sanitized_show_money(@statement, @statement.total_discounts) %>)</p>
-    </strong>
-<% end %>
-    <h3 class="upcase">Subtotal: <%= sanitized_show_money(@statement, @statement.subtotal) %></h3>
-</div>
-<div class="extra-padding">
-    <h2>Installments</h2>
-    <% @installments_amounts.each_with_index do |installment, index| %>
-        <p><b>Installment <%= index + 1 %>:</b> <%= sanitized_show_money(installment, installment.cost) %> due on <b><%= read_date(installment.due_date) %></b>
+<% if @statement.type == "ClientStatement" || @statement.type == "AssociateStatement" %>
+    <%= button_tag class: "btn btn-info", data: { reflex: "click->StatementReflex#toggle", id: @statement.id }  do %>
+        <% if @statement.show_detailed %>
+            Show Less Information
+        <% else %>
+            Show Detailed Information
+        <% end %>
     <% end %>
-    </div>
-</div>
-</div>
+    <%= link_to 'PDF', statement_path(@statement) + '.pdf', class: 'btn btn-success' %>
+    <% end %>
+<div id="Print">
+
+<hr />
+<% if @statement.type == 'ClientStatement' %>
+<%= render partial: 'client', statement: @statement %>
+<% end %>
+    
 <style>
     input { width: 50%; margin-bottom: 2px; }
 </style>
-<script>
-		function printDiv(divName){
-			var printContents = document.getElementById(divName).innerHTML;
-			var originalContents = document.body.innerHTML;
-			document.body.innerHTML = printContents;
-			window.print();
-			document.body.innerHTML = originalContents;
-		}
-	</script>

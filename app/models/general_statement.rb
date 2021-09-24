@@ -1,5 +1,9 @@
 class GeneralStatement < Statement 
 
+    def self.model_name
+        Statement.model_name
+    end
+
     def general_cost
         cost = 0.0
         items =  self.po.statements.first.line_items.order(:id)

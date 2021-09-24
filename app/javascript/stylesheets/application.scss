@@ -137,7 +137,7 @@ th {
 .saved-item {
     cursor: pointer;
     display: block;
-    border: 2px solid black;
+    border: 2px solid white;
     border-radius: 2em;
     padding: 1em;
     margin-top: 1em;
@@ -198,4 +198,132 @@ th {
 
 .bold {
     font-weight: 700;
+}
+
+/* Ethics Modal */
+#ethicsClose {
+    margin-top: 5%;
+    text-align: right;
+    color: black;
+    text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
+    display: block;
+}
+.closeDesign {
+    padding: 4px;
+    border: none !important;
+    border: 0 !important;
+    background: transparent !important;
+}
+h1 {
+    text-align: center;
+    margin-bottom: .5em;
+}
+.center {
+    text-align: center;
+}
+.default {
+    color: white !important;
+}
+.default-link h1 {
+    color: white !important;
+}
+.default-link p, .default-link div {
+    margin-bottom: .5em;
+}
+.ethicsLink {
+    text-align: center;
+    font-size: 2em;
+    line-height: 1.2;
+    cursor: pointer;
+    padding: .3em;
+    border-radius: 25px;
+    border: 2px solid gray;
+    width: 60%;
+    margin-left: auto;
+    margin-right: auto;
+}
+.ethicsLink:hover, .ethicsLink:focus {
+    background-color: #a5a2a2;
+    color: white;
+}
+.overlay {
+    height: auto;
+    width: 80%;
+    height: auto;
+    position: fixed;
+    z-index: 3 !important;
+    top: 10%;
+    bottom: 10%;
+    left: 10%;
+    right: 10%;
+    padding: 2em;
+    color: white !important;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.8);
+    border-radius: 10px;
+    overflow-y: auto;
+    transition: visibility 0s ease-in-out;
+}
+.overlay .left {
+    text-align: left !important;
+    line-height: 1.3;
+}
+.overlay {
+    -ms-overflow-style: none !important;
+    scrollbar-width: none !important;
+}
+.overlay::-webkit-scrollbar {
+    display: none !important;
+}
+
+.overlay-content h1 {
+    font-size: 2rem;
+}
+.overlay-content {
+    position: relative;
+    width: 100%;
+    height: auto;
+    color: white !important;
+    z-index: 3 !important;
+    margin-top: 10px;
+    padding: .2 .5em .2 .5;
+    font-size: 1rem;
+    letter-spacing: 2px;
+}
+.overlay a {
+    padding: 8px;
+    text-decoration: none;
+    color: #ffffff;
+    transition: 0.3s;
+}
+.overlay a:hover, .overlay a:focus {
+    color: #949191;
+}
+.overlay .closebtn {
+    position: fixed;
+    display: block;
+    top: 10px;
+    right: 10px;
+    font-size: 30px;
+    text-decoration: none !important;
+    font-weight: bold;
+    color: black;
+    border-radius: 50%;
+}
+/* Modal customizations for different screen sizes */
+@media screen and (max-height: 450px) {
+    .overlay a {
+        font-size: 20px 
+   }
+    .overlay .closebtn {
+        font-size: 30px;
+        top: 15px;
+        right: 10px;
+        font-weight: bold;
+   }
+}
+
+.form-holder {
+    padding: 1em;
+    background: rgba(255, 255, 255, 0.548);
 }

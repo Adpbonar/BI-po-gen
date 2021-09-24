@@ -7,14 +7,19 @@
       <th colspan="3"></th
     </tr>
   </thead>
-
-  <%= render partial: "participants/listing" %>
- 
+  <% @participants.each do |participant| %>
+      <%= content_tag :tr do %>
+        <%= turbo_frame_tag dom_id(participant) do %>
+        <td  class="participants default-link"><%= link_to participant.name, participant_path(participant) %></td>
+        <td  class="participants default-link"><%= link_to 'edit', edit_participant_path(participant) %></td>
+        <% end %>
+      <% end %>   
+  <% end %>
 </table>
 
 <br>
-<%= turbo_frame_tag 'participant' do %>
+
   <%= link_to 'New Participant', new_participant_path %>
-<% end %>
+
 
 

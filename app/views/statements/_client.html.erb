@@ -1,31 +1,21 @@
-<% if @statement.type == "ClientStatement" %>
-<div class="invoice-image">
-    <%= image_tag 'https://drive.google.com/uc?export=view&id=1FzZiKhw7XzJLJOwSmJwIY7aA9QzbUDTz', alt: 'Bonar Institute Logo', class: 'top-bottom-spacing', width: '350px' %>   <h1>Invoice</h1>
-    <p class="bold">Invoice Number: 
-    <% if @statement.po.po_users.any? %>
-    <% else %>
-        INV-<%= @statement.po.po_number %>-1
-    <% end %>
-</div>
-<hr />
-    <table width="100%" class="td-border">
+<table width="100%">
+        <th style="width: 25%">
+            Item
+        </th>
+        <th style="width: 50%">
+            Description
+        </th>
+        <th style="width: 25%">
+            Price
+        </th>
+        <% items = '' 
+        @line_items.map { |item| items = 'yes' if item.discounts.any? } %>
+        <th style="width: 25%">
+            <% if items == 'yes' %>
+                Adjustments
+            <% end %>
+        </th>
         <tbody>
-            <td style="width: 25%">
-                <b>Item</b>
-            </td>
-            <td style="width: 50%">
-            <b>Description</b>
-            </td>
-            <td style="width: 25%">
-            <b>Price</b>
-            </td>
-    <% items = '' 
-    @line_items.map { |item| items = 'yes' if item.discounts.any? } %>
-    <td style="width: 25%">
-        <% if items == 'yes' %>
-        <b>Adjustments</b>
-        <% end %>
-    </td>
         <% if @statement.show_detailed == true %>
             <% @line_items.each do |item| %>
                 <tr>
@@ -50,8 +40,8 @@
                         </td>
                     <% end %>
                 </tr>
-                <% end %>
-        <% else %>
+            <% end %>
+            <% else %>
                 <tr>
                 <td style="width: 25%" class="td-border">
                     Professonal Services
@@ -64,7 +54,7 @@
                         <%= sanitized_show_money(@statement, @statement.no_discount_cost) %>
                     </td>
                     <td style="width: 12.5%;" class="td-border">
-                            - <%= sanitized_show_money(@statement, @statement.total_discounts) %>
+                            -<%= sanitized_show_money(@statement, @statement.total_discounts) %>
                     </td>
                 <% else %>
                     <td style="width: 25%" class="td-border">
@@ -92,95 +82,4 @@
     <% end %>
     </div>
 </div>
-
-<style>
-@import "bootstrap";
-
-body {
-    margin-left: 2em;
-    margin-right: 2em;
-    padding-top: 2em;
-    padding-bottom: 2em;
-    line-height: 1.5;
-}
-
-
-tr {
-    padding: 1em;
-}
-
-td,
-th {
-    padding: .5em;
-}
-
-#set-installment {
-    width: 100%;
-}
-
-.top-bottom-spacing {
-    padding-top: 2em !important;
-    padding-bottom: 2em !important;
-}
-
-.center {
-    text-align: center;
-}
-
-.upcase {
-    text-transform: uppercase;
-}
-
-.total-box {
-    padding: 1em;
-    border-top: 2px solid green;
-}
-
-.tax {
-    font-weight: 700;
-    padding: 1em;
-    text-transform: uppercase;
-    font-size: 1.3em;
-}
-
-.green {
-    color: green;
-    border-bottom: 2px solid green;
-    padding-bottom: .6em;
-}
-
-.extra-padding {
-    padding: 1em;
-}
-
-.btn-sm {
-    border-radius: 50%;
-}
-
-.invoice-image h1, .invoice-image img {
-    display: inline-block !important;
-    text-transform: uppercase;
-}
-
-.invoice-image img {
-    margin-right: 2em;
-}
-
-.discount-applied {
-    padding: 2px;
-    margin-bottom: 2px;
-    color: green;
-    width: 170px;
-    text-align: center;
-    text-transform: uppercase;
-}
-
-.td-border td {
-    padding: 1em;
-    border-bottom: 0.75pt groove black;
-}
-
-.bold {
-    font-weight: 700;
-}
-</style>
+</div>

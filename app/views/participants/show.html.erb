@@ -1,13 +1,38 @@
 <h1>Participant Managment</h1>
 
-<%= turbo_frame_tag "participant" do %>
-  <p id="notice"><%= notice %></p>
-
   <p>
     <strong>Name:</strong>
     <%= @participant.name %>
   </p>
-
+  <p>
+  <strong>Address:</strong>
+    <%= @participant.address %>
+  </p>
+  <p>
+  <strong>Email:</strong>
+    <%= @participant.emailaddress %>
+  </p>
+  <p>
+  <strong>Phone:</strong>
+    <%= @participant.phone %>
+  </p>
+  <p>
+  <strong>Country code:</strong>
+    <%= @participant.country_code %>
+  </p>
+  <p>
+  <strong>Type:</strong>
+    <%= @participant.type %>
+  </p>
+  <p>
+  <strong>Tax Rate:</strong>
+    <%= @participant.tax_rate %>
+  </p>
+  <% if @participant.type == 'Associate' %>
+  <p>
+    <strong>Tax Rate:</strong>
+    <%= @participant.tax_rate %>
+  </p>
+  <% end %>
   <%= link_to 'Edit', edit_participant_path(@participant) %> |
   <%= link_to 'Back', participants_path %>
-<% end %>

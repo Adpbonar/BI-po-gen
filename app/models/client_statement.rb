@@ -26,17 +26,4 @@ class ClientStatement < Statement
     end
     cost.to_f
   end
-
-  def item_discounts(item)
-    if item.type == 'ServiceItem'
-      discounted_item = LineItem.find(item.id)
-      if discounted_item.discounts.any?
-        if discounted_item.discounts.count == 1
-          return '<div class="discount-applied">Discount Applied</div>'
-        else
-          return '<div class="discount-applied">Discounts Applied</div>'
-        end
-      end
-    end
-  end
 end

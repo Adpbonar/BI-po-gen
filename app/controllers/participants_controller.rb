@@ -4,8 +4,8 @@ class ParticipantsController < ApplicationController
 
   # GET /participants or /participants.json
   def index
-    @associates = Associate.all
-    @participants = Client.all   
+    @associates = Associate.all.order([:id]).reverse_order
+    @participants = Client.all.order([:id]).reverse_order 
   end
 
   # GET /participants/1 or /participants/1.json
@@ -28,7 +28,7 @@ class ParticipantsController < ApplicationController
     respond_to do |format|
       if @participant.save
         format.html { redirect_to @participant, notice: "Participant was successfully created." }
-        format.json { render :show, status: :created, location: @participant }
+        format.json { render :index, status: :created, location: @participant }
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @participant.errors, status: :unprocessable_entity }
@@ -41,7 +41,7 @@ class ParticipantsController < ApplicationController
     respond_to do |format|
       if @participant.update(participant_params)
         format.html { redirect_to @participant, notice: "Participant was successfully updated." }
-        format.json { render :show, status: :ok, location: @participant }
+        format.json { render :index, status: :ok, location: @participant }
       else
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @participant.errors, status: :unprocessable_entity }
@@ -66,6 +66,6 @@ class ParticipantsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def participant_params
-      params.require(:participant).permit(:name, :emailaddress, :address, :pos)
+      params.require(:participant).permit(:name, :emailaddress, :address, :pos, :phone, :country_code, :type)
     end
 end

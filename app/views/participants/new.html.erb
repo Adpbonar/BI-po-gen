@@ -1,5 +1,33 @@
 <h1>New Participant</h1>
 
-<%= render 'form', participant: @participant %>
+<%= form_for(@participant,  :url => participants_path) do |f| %>
+    <% if @participant.errors.any? %>
+    <div id="error_explanation">
+     The following errors prevented this participant from saving
+      <ul>
+      <% @participant.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
 
-<%= link_to 'Back', participants_path %>
+    <div class="form-inputs">
+      <%= f.label 'Name' %>
+      <%= f.text_field :name, class: 'form-control' %>
+      <%= f.label 'Email Address' %>
+      <%= f.text_field :emailaddress, class: 'form-control' %>
+      <%= f.label 'Phone Number' %>
+      <%= f.text_field :phone, class: 'form-control' %>
+      <%= f.label 'Address' %>
+      <%= f.text_area :address, class: 'form-control' %>
+      <%= f.label 'Country' %>
+      <%= f.country_select :country_code, include_blank: '', required: true, priority_countries: ["AU", "CA", "CN", "FR", "DE", "GB", "IN", "JP", "MX", "NZ", "SA", "US"] %>
+      <%= f.select :type, [['Client', 'Client'], ['Associate', 'Associate']], label: 'Role' %>
+    </div>
+
+    <div class="form-actions">
+      <%= f.button :submit, class: "btn btn-primary" %>
+    </div>
+  <% end %>
+  <%= link_to 'back', participants_path, class: 'btn btn-secondary' %>

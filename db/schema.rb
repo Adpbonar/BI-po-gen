@@ -10,10 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_22_005818) do
+ActiveRecord::Schema.define(version: 2021_09_24_093245) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "details", force: :cascade do |t|
+    t.string "title"
+    t.text "description"
+    t.float "hours"
+    t.string "completed_by"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
 
   create_table "discounts", force: :cascade do |t|
     t.integer "amount"
@@ -119,6 +128,7 @@ ActiveRecord::Schema.define(version: 2021_09_22_005818) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "slug"
+    t.boolean "show_participant", default: false
     t.index ["po_number"], name: "index_pos_on_po_number", unique: true
     t.index ["slug"], name: "index_pos_on_slug", unique: true
     t.index ["user_id"], name: "index_pos_on_user_id"
@@ -150,6 +160,7 @@ ActiveRecord::Schema.define(version: 2021_09_22_005818) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "show_detailed", default: false
+    t.boolean "show_programs", default: false
     t.index ["po_id"], name: "index_statements_on_po_id"
   end
 

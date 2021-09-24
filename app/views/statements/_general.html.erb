@@ -1,5 +1,8 @@
 <p class="tax">PO <%= @statement.po.po_number %></p>
 <p class="tax">PO Tax Amount: <%= @statement.po.tax_amount %>%</p>
+<%= content_tag :div, class: 'ethicsLink', data: { reflex: "click->StatementReflex#show", id: @statement.id } do %>
+    Add Programs
+<% end %>
 <h2>Expense Items</h2>
 <% if @expenses.each do |item| %>
     <div>
@@ -115,13 +118,12 @@ none
                 <%= render discount %>
             <% end %>
             <hr />
-            <p class="tax center"><b>Taxes on all services: <%= show_money(@statement, @statement.service_tax) %></b></p>
         </div>
     <% end.any? %>
 <% else %>
     none 
 <% end %>
-
+<p class="tax center"><b>Taxes on all services: <%= show_money(@statement, @statement.service_tax) %></b></p>
 <div class="extra-padding">
     <% if @statement.line_items.any? %>
         <h2 class="center">Installments</h2>
@@ -140,7 +142,17 @@ none
     <% end %>
 </div>
 
-<div style="width: 100%;">
+<% if @statement.show_programs %>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+    <div id="ethics" class="overlay">
+        <div class="overlay-content">
+            <div id="ethicsClose" class="closeContainter">
+                <%= content_tag :span, alt: "close", role: "button", title: "Close", class: "closebtn", data: { reflex: "click->StatementReflex#hide", id: @statement.id } do %>
+                    <div class="closeDesign">×</div>
+                <% end %>
+            </div>
+            <div class="default">
+            <div style="width: 100%;">
 <% unless @saved_items.empty? %>
     <div class="top-bottom-spacing" style="width: 100%;">
         <h4 class="center">Saved Items</h4>
@@ -155,11 +167,19 @@ none
         
         <% end %>
     </div>
+    <div class="form-holder">
     <h4 class="center">Create a new Item</h4>
+    </div>
 <% else %>
-    <h3 class="center">Add Item</h3>                    
+
+    <h3 class="center">Add Item</h3> 
 <% end %>
 </div>
-<div>
+<div class="form-holder">
 <%= render 'line_items/form', line_item: @line_item %>
 </div>
+</div>
+            </div>
+        </div>
+    </div>
+<% end %>

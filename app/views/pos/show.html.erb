@@ -10,9 +10,46 @@
         <%= @po.description %>
     </div>
 <% end %>
-<h2>Add Participants</h2>
 <div class="top-bottom-spacing">
+    <h2>Po Participants</h2>
+    <% @po_users.group_by(&:type_of).each do |type_of, users| %>
+        <h3><%= type_of %>s</h3>
+        <% users.each do |user| %>
+            <span class="upcase"><%= user.participant.name %> (<%= user.participant.type %>)</span>
+        <% end %>
+    <% end %>
 </div>
+<% if @po.show_participant == true %>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <div id="ethics" class="overlay">
+        <div class="overlay-content">
+            <div id="ethicsClose" class="closeContainter">
+                <%= content_tag :span, alt: "close", role: "button", title: "Close", class: "closebtn", data: { reflex: "click->PartitipantReflex#hide", id: @po.id } do %>
+                    <div class="closeDesign">×</div>
+                <% end %>
+            </div>
+            <div class="default-=">
+            <h2>Add Participants</h2>
+            <div class="top-bottom-spacing">
+            <% @users.group_by(&:type_of).each do |type_of, participants| %>
+                <h3 class="center"><%= type_of %>s</h3>
+                    <% participants.each do |participant| %>
+                        <% unless participant.po_users.where(po_id: @po.id).any? %>
+                            <%= content_tag :div, class: 'saved-item', data: { reflex: "click->PartitipantReflex#add", id: participant.id, po: @po.id }  do %>
+                                <%= participant.name %>
+                            <% end %>
+                        <% end %>
+                    <% end %>
+                <% end %>
+            </div>
+            </div>
+        </div>
+    </div>
+<% end %>
+<%= content_tag :div, id:"eLink", role: "button", alt: "Add Participants", class: "ethicsLink", data: { reflex: "click->PartitipantReflex#show", id: @po.id } do %>
+    Add Participants
+<% end %>
+
 
 <h2>Installments</h2>
 <% if @po.installments.count == @po.number_of_installments %>
@@ -50,7 +87,7 @@
     <script>
         var installmentInput = document.getElementById("set-installment");
         $('#set-installment').bind({
-            keydown: function(e) {
+            keydown: function (e) {
                 if (e.shiftKey === true) {
                     if (e.which == 9) {
                         return true;

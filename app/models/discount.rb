@@ -24,7 +24,7 @@ class Discount < ApplicationRecord
   end
 
   def discount_type
-    return if (amount_type > -1 && amount_type < 2) || self.line_item.type != 'ServiceItem'
+    return if ! amount_type.blank? && ((amount_type > -1 && amount_type < 2) || self.line_item.type != 'ServiceItem')
     errors.add :discount_type, 'is not valid'
   end
 

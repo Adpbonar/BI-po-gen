@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_24_093245) do
+ActiveRecord::Schema.define(version: 2021_09_25_211138) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -20,8 +20,10 @@ ActiveRecord::Schema.define(version: 2021_09_24_093245) do
     t.text "description"
     t.float "hours"
     t.string "completed_by"
+    t.integer "line_item_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["line_item_id"], name: "index_details_on_line_item_id"
   end
 
   create_table "discounts", force: :cascade do |t|
@@ -30,6 +32,7 @@ ActiveRecord::Schema.define(version: 2021_09_24_093245) do
     t.bigint "line_item_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["amount_type"], name: "index_discounts_on_amount_type"
     t.index ["line_item_id"], name: "index_discounts_on_line_item_id"
   end
 
@@ -64,6 +67,7 @@ ActiveRecord::Schema.define(version: 2021_09_24_093245) do
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "expense_exempt_from_tax", default: false
     t.index ["statement_id"], name: "index_line_items_on_statement_id"
+    t.index ["type"], name: "index_line_items_on_type"
   end
 
   create_table "participants", force: :cascade do |t|
@@ -88,6 +92,7 @@ ActiveRecord::Schema.define(version: 2021_09_24_093245) do
     t.index ["name_bidx"], name: "index_participants_on_name_bidx", unique: true
     t.index ["phone_bidx"], name: "index_participants_on_phone_bidx", unique: true
     t.index ["po_bidx"], name: "index_participants_on_po_bidx", unique: true
+    t.index ["type"], name: "index_participants_on_type"
   end
 
   create_table "payments", force: :cascade do |t|
@@ -104,6 +109,8 @@ ActiveRecord::Schema.define(version: 2021_09_24_093245) do
     t.integer "participant_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["participant_id"], name: "index_po_users_on_participant_id"
+    t.index ["po_id"], name: "index_po_users_on_po_id"
   end
 
   create_table "pos", force: :cascade do |t|
@@ -134,6 +141,17 @@ ActiveRecord::Schema.define(version: 2021_09_24_093245) do
     t.index ["user_id"], name: "index_pos_on_user_id"
   end
 
+  create_table "saved_details", force: :cascade do |t|
+    t.string "title"
+    t.text "description"
+    t.float "hours"
+    t.string "completed_by"
+    t.integer "saved_item_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["saved_item_id"], name: "index_saved_details_on_saved_item_id"
+  end
+
   create_table "saved_items", force: :cascade do |t|
     t.string "title"
     t.text "description"
@@ -162,6 +180,7 @@ ActiveRecord::Schema.define(version: 2021_09_24_093245) do
     t.boolean "show_detailed", default: false
     t.boolean "show_programs", default: false
     t.index ["po_id"], name: "index_statements_on_po_id"
+    t.index ["type"], name: "index_statements_on_type"
   end
 
   create_table "users", force: :cascade do |t|

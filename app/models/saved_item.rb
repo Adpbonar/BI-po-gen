@@ -1,4 +1,6 @@
 class SavedItem < ApplicationRecord
+    has_many :saved_details
+
     validates :title, presence: true
     validates_length_of :title, in: 1..100
     validates :cost, presence: true

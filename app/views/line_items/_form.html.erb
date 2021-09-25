@@ -22,7 +22,7 @@
   <%= f.input :cost, step: 0.01, data: { action: "form-validation#handleChange" } %>
   <%= f.input :taxable, data: { action: "form-validation#handleChange" }, label: 'Taxable in Canada' %>
   <%= f.input :type, as: :select, collection: LineItem::TYPE, label: 'Item Type', data: { action: "form-validation#handleChange" } %>
-  <span id="tax-exemtion" class="no-show">
+  <span id="tax-exemtion">
   <br />
     <%= f.input :expense_exempt_from_tax, data: { action: "form-validation#handleChange" }, label: 'Tax not paid' %>
   </span>
@@ -37,8 +37,8 @@
 <% end %>
 
 <script>
-   form = document.getElementById("line_item_type");
-   taxExpempt = document.getElementById("tax-exemtion");
+   var form = document.getElementById("line_item_type");
+   var taxExpempt = document.getElementById("tax-exemtion");
    function formClick() {
      form.addEventListener("click", () => {
        if (form.value === 'ExpenseItem') {

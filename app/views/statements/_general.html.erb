@@ -7,7 +7,7 @@
 <% if @expenses.each do |item| %>
     <div>
         <div class="top-bottom-spacing">
-            <p class="upcase" style="font-weight: 700"><%= item.title.capitalize %></p>
+            <p class="upcase" style="font-weight: 700"><%= item.title.capitalize %> | <%= link_to 'Edit', edit_line_item_path(item), class: 'default-link' %></p>
             <table style="border: none !important; width: 100%;">
                 <tbody>
                     <tr class="upcase">
@@ -53,7 +53,7 @@ none
 <% if @services.each do |item| %>
     <div>
         <div class="top-bottom-spacing">
-            <p class="upcase" style="font-weight: 700"><%= item.title.capitalize %></p>
+            <p class="upcase" style="font-weight: 700"><%= item.title.capitalize %> | <%= link_to 'Edit', edit_line_item_path(item), class: 'default-link' %></p>
             <table style="border: none !important; width: 100%;">
                 <tbody>
                     <tr class="upcase">

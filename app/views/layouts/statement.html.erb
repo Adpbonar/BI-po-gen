@@ -1,186 +1,233 @@
-<% if @statement.type == "ClientStatement" %>
-<div class="invoice-image">
-    <%= image_tag 'https://drive.google.com/uc?export=view&id=1FzZiKhw7XzJLJOwSmJwIY7aA9QzbUDTz', alt: 'Bonar Institute Logo', class: 'top-bottom-spacing', width: '350px' %>   <h1>Invoice</h1>
-    <p class="bold">Invoice Number: 
-    <% if @statement.po.po_users.any? %>
-    <% else %>
-        INV-<%= @statement.po.po_number %>-1
-    <% end %>
-</div>
-<hr />
-    <table width="100%" class="td-border">
-        <tbody>
-            <td style="width: 25%">
-                <b>Item</b>
-            </td>
-            <td style="width: 50%">
-            <b>Description</b>
-            </td>
-            <td style="width: 25%">
-            <b>Price</b>
-            </td>
-    <% items = '' 
-    @line_items.map { |item| items = 'yes' if item.discounts.any? } %>
-    <td style="width: 25%">
-        <% if items == 'yes' %>
-        <b>Adjustments</b>
-        <% end %>
-    </td>
-        <% if @statement.show_detailed == true %>
-            <% @line_items.each do |item| %>
-                <tr>
-                    <td style="width: 25%" class="td-border">
-                        <%= item.title %>
-                    </td>
-                    <td style="width: 50%" class="td-border">
-                        <%= item.description %>
-                    </td>
-                    <% if items == 'yes' %>
-                        <td style="width: 12.5%" class="td-border">
-                            <%= sanitized_show_money(@statement, item.cost) %>
+<html>
+    <body>
+        <div class="invoice-image"> 
+            <table width="100%">
+                <tbody>
+                    <tr>
+                        <td style=" width: 50%;">
+                            <%= image_tag 'https://drive.google.com/uc?export=view&id=1FzZiKhw7XzJLJOwSmJwIY7aA9QzbUDTz', alt: 'Bonar Institute Logo', class: 'top-bottom-spacing', width: '350px' %>
                         </td>
-                        <td style="width: 12.5%;" class="td-border">
-                                <% item.discounts.each do |discount| %>
-                                    <div class="center"><%= render 'discount', discount: discount %></div>
-                                <% end %>
+                        <td style=" width: 50%;">
+                            <h1>Invoice</h1>
                         </td>
-                    <% else %>
-                        <td style="width: 25%" class="td-border">
-                            <%= show_money(@statement, item.cost) %>
-                        </td>
-                    <% end %>
-                </tr>
-                <% end %>
-        <% else %>
-                <tr>
-                <td style="width: 25%" class="td-border">
-                    Professonal Services
-                </td>
-                <td style="width: 50%" class="td-border">
-                    Customized business solutions
-                </td>
-                <% if items == 'yes' %>
-                    <td style="width: 12.5%" class="td-border">
-                        <%= sanitized_show_money(@statement, @statement.no_discount_cost) %>
-                    </td>
-                    <td style="width: 12.5%;" class="td-border">
-                            - <%= sanitized_show_money(@statement, @statement.total_discounts) %>
-                    </td>
-                <% else %>
-                    <td style="width: 25%" class="td-border">
-                        <%= sanitized_show_money(@statement, @statement.no_discount_cost) %>
-                    </td>
-                <% end %>
-            </tr>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+            <hr />
+            <p class="bold">Invoice Number: 
+            <% if @statement.po.po_users.any? %>
+            <% else %>
+                INV-<%= @statement.po.po_number %>-1
             <% end %>
-        </tbody>
-    </table>
-<% end %>
-<div class="top-bottom-spacing">  
-<% if items == 'yes' %>
-    <strong>
-        <p class="upcase">Value of Items: <%= sanitized_show_money(@statement, @statement.no_discount_cost) %></p>
-        <p class="green upcase">Discounts: (<%= sanitized_show_money(@statement, @statement.total_discounts) %>)</p>
-    </strong>
-<% end %>
-    <h3 class="upcase">Subtotal: <%= sanitized_show_money(@statement, @statement.subtotal) %></h3>
-</div>
-<div class="extra-padding">
-    <h2>Installments</h2>
-    <% @installments_amounts.each_with_index do |installment, index| %>
-        <p><b>Installment <%= index + 1 %>:</b> <%= sanitized_show_money(installment, installment.cost) %> due on <b><%= read_date(installment.due_date) %></b>
-    <% end %>
-    </div>
-</div>
+            <div class="top-bottom-spacing">
+            <table width="100%">
+                <tbody>
+                    <tr>
+                        <td style=" width: 50%; vertical-align: top;">
+                            <b>From:</b>
+                            <p><%= @statement.company_name %></p>
+                            <p><%=sanitize @statement.company_address %></p>
+                        </td>
+                        <td style=" width: 50%; vertical-align: top;">
+                        <b>To:</b>
+                        <p></p>
+                        <p></p>
+                    </td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+        </div>
+        <% if @statement.type == "ClientStatement" %>
+            <table width="100%">
+                <tbody>
+                    <td style="width: 25%;">
+                        <b>Item</b>
+                    </td>
+                    <td style="width: 50%;">
+                    <b>Description</b>
+                    </td>
+                    <td style="width: 25%;">
+                    <b>Price</b>
+                    </td>
+            <% items = '' 
+            @line_items.map { |item| items = 'yes' if item.discounts.any? } %>
+            <td style="width: 25%">
+                <% if items == 'yes' %>
+                <b>Adjustments</b>
+                <% end %>
+            </td>
+                <% if @statement.show_detailed == true %>
+                    <% @line_items.each do |item| %>
+                        <tr class="td-border">
+                            <td style="width: 25%; vertical-align: top;" class="td-border">
+                                <%= item.title %>
+                            </td>
+                            <td style="width: 50%" class="td-border">
+                                <%=sanitize item.description %>
+                            </td>
+                            <% if items == 'yes' %>
+                                <td style="width: 12.5%; vertical-align: top;" class="td-border">
+                                    <%= sanitized_show_money(@statement, item.cost) %>
+                                </td>
+                                <td style="width: 12.5%; vertical-align: top;" class="td-border">
+                                        <% item.discounts.each do |discount| %>
+                                            <div class="center"><%= render 'discount', discount: discount %></div>
+                                        <% end %>
+                                </td>
+                            <% else %>
+                                <td style="width: 25%; vertical-align: top;" class="td-border">
+                                    <%= show_money(@statement, item.cost) %>
+                                </td>
+                            <% end %>
+                        </tr>
+                        <% end %>
+                <% else %>
+                        <tr>
+                        <td style="width: 25%" class="td-border">
+                            Professonal Services
+                        </td>
+                        <td style="width: 50%" class="td-border">
+                            Customized business solutions
+                        </td>
+                        <% if items == 'yes' %>
+                            <td style="width: 12.5%" class="td-border">
+                                <%= sanitized_show_money(@statement, @statement.no_discount_cost) %>
+                            </td>
+                            <td style="width: 12.5%;" class="td-border">
+                                    - <%= sanitized_show_money(@statement, @statement.total_discounts) %>
+                            </td>
+                        <% else %>
+                            <td style="width: 25%" class="td-border">
+                                <%= sanitized_show_money(@statement, @statement.no_discount_cost) %>
+                            </td>
+                        <% end %>
+                    </tr>
+                    <% end %>
+                </tbody>
+            </table>
+        <% end %>
+        <div class="top-bottom-spacing">  
+        <% if items == 'yes' %>
+            <strong>
+                <p class="upcase">Value of Items: <%= sanitized_show_money(@statement, @statement.no_discount_cost) %></p>
+                <p class="green upcase">Discounts: (<%= sanitized_show_money(@statement, @statement.total_discounts) %>)</p>
+            </strong>
+        <% end %>
+            <h3 class="upcase">Subtotal: <%= sanitized_show_money(@statement, @statement.subtotal) %></h3>
+        </div>
+        <div class="extra-padding">
+            <h2>Installments</h2>
+            <% @installments_amounts.each_with_index do |installment, index| %>
+                <p><b>Installment <%= index + 1 %>:</b> <%= sanitized_show_money(installment, installment.cost) %> due on <b><%= read_date(installment.due_date) %></b>
+            <% end %>
+            </div>
+        </div>
+        <p><%=sanitize @statement.po.issued_by %></p>
+        <p>If you have any questions or concerns, please contact <%= @statement.po.show_coordinator %></p>
+    </body>
+    <style>
+    @import "bootstrap";
 
-<style>
-@import "bootstrap";
+    body {
+        margin-left: 2em;
+        margin-right: 2em;
+        padding-top: 1.5em;
+        padding-bottom: 1.5em;
+        # line-height: 1.5;
+    }
 
-body {
-    margin-left: 2em;
-    margin-right: 2em;
-    padding-top: 2em;
-    padding-bottom: 2em;
-    line-height: 1.5;
-}
+    table, p, span, div {
+        font-size: 20px !important;
+    }
+
+    table {
+        border-collapse: collapse; 
+    }
+
+    table tr:not(:last-child) {
+        border-top: 1px solid #600a15;
+        border-bottom: 1px solid #600a15;
+    }
+
+    .td-border {
+        padding: 1em;
+    }
 
 
-tr {
-    padding: 1em;
-}
+    td {
+        padding: .5em;
+    }
 
-td,
-th {
-    padding: .5em;
-}
+    #set-installment {
+        width: 100%;
+    }
 
-#set-installment {
-    width: 100%;
-}
+    .top-bottom-spacing {
+        padding-top: 1.3em !important;
+        padding-bottom: 1.3em !important;
+    }
 
-.top-bottom-spacing {
-    padding-top: 2em !important;
-    padding-bottom: 2em !important;
-}
+    .center {
+        text-align: center;
+    }
 
-.center {
-    text-align: center;
-}
+    .upcase {
+        text-transform: uppercase;
+    }
 
-.upcase {
-    text-transform: uppercase;
-}
+    .total-box {
+        padding: 1em;
+        border-top: 2px solid green;
+    }
 
-.total-box {
-    padding: 1em;
-    border-top: 2px solid green;
-}
+    .tax {
+        font-weight: 700;
+        padding: 1em;
+        text-transform: uppercase;
+        font-size: 1.3em;
+    }
 
-.tax {
-    font-weight: 700;
-    padding: 1em;
-    text-transform: uppercase;
-    font-size: 1.3em;
-}
+    .green {
+        color: green;
+        border-bottom: 2px solid green;
+        padding-bottom: .6em;
+    }
 
-.green {
-    color: green;
-    border-bottom: 2px solid green;
-    padding-bottom: .6em;
-}
+    .extra-padding {
+        padding: .5em;
+    }
 
-.extra-padding {
-    padding: 1em;
-}
+    .btn-sm {
+        border-radius: 50%;
+    }
 
-.btn-sm {
-    border-radius: 50%;
-}
+    .invoice-image h1, .invoice-image img {
+        display: inline-block !important;
+        text-transform: uppercase;
+    }
 
-.invoice-image h1, .invoice-image img {
-    display: inline-block !important;
-    text-transform: uppercase;
-}
+    .invoice-image img {
+        margin-right: 2em;
+    }
 
-.invoice-image img {
-    margin-right: 2em;
-}
+    .discount-applied {
+        padding: 2px;
+        margin-bottom: 2px;
+        color: green;
+        width: 170px;
+        text-align: center;
+        text-transform: uppercase;
+    }
 
-.discount-applied {
-    padding: 2px;
-    margin-bottom: 2px;
-    color: green;
-    width: 170px;
-    text-align: center;
-    text-transform: uppercase;
-}
+    .td-border td {
+        padding: 1em;
+        
+    }
 
-.td-border td {
-    padding: 1em;
-    border-bottom: 0.75pt groove black;
-}
-
-.bold {
-    font-weight: 700;
-}
-</style>
+    .bold {
+        font-weight: 700;
+    }
+    </style>
+</html>    

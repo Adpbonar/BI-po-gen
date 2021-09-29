@@ -22,6 +22,7 @@ class StatementReflex < ApplicationReflex
     statement = Statement.find(element.dataset[:id])
     if statement.valid?
         statement.update(show_programs: false)
+        morph :page
     end
   end
 end

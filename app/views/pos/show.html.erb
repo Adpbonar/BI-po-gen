@@ -12,10 +12,28 @@
 <% end %>
 <div class="top-bottom-spacing">
     <h2>Po Participants</h2>
+    <div class="top-bottom-spacing">
+        <p><span class="bold">Learning coordinator:</span> <%= @po.show_coordinator %></p>
+        
+        <p><span class="bold">PO initiator:</span> <%= @po.show_found %></p>
+    </div>
     <% @po_users.group_by(&:type_of).each do |type_of, users| %>
         <h3><%= type_of %>s</h3>
         <% users.each do |user| %>
-            <span class="upcase"><%= user.participant.name %> (<%= user.participant.type %>)</span>
+            <div>
+                <span class="upcase"><%= user.participant.name %> (<%= type_of %>)</span>
+                <% if type_of == 'Associate' %>
+                    <% if @po.learning_coordinator.blank? %>
+                        <%= content_tag :button, class: 'btn btn-success', data: { reflex: "click->PartitipantReflex#coordinator", id: @po.id, coordinator: user.participant_id } do %>
+                            make <%= initiator(user.participant.name) %> coordinator
+                        <% end %>
+                    <% elsif @po.learning_coordinator == user.participant_id %>
+                        <%= content_tag :button, class: 'btn btn-danger', data: { reflex: "click->PartitipantReflex#remove_coordinator", id: @po.id } do %>
+                            demote <%= initiator(user.participant.name) %> as coordinator
+                        <% end %>
+                    <% end %>
+                <% end %>
+            </div>
         <% end %>
     <% end %>
 </div>
@@ -28,17 +46,28 @@
                     <div class="closeDesign">×</div>
                 <% end %>
             </div>
-            <div class="default-=">
-            <h2>Add Participants</h2>
+            <div class="default">
+            <h2 class="center">Add Participants</h2>
             <div class="top-bottom-spacing">
             <% @users.group_by(&:type_of).each do |type_of, participants| %>
                 <h3 class="center"><%= type_of %>s</h3>
                     <% participants.each do |participant| %>
-                        <% unless participant.po_users.where(po_id: @po.id).any? %>
                             <%= content_tag :div, class: 'saved-item', data: { reflex: "click->PartitipantReflex#add", id: participant.id, po: @po.id }  do %>
                                 <%= participant.name %>
                             <% end %>
-                        <% end %>
+                            <center>
+                            <% if type_of == 'Associate' %>
+                                <% if @po.found.blank? %>
+                                    <%= content_tag :button, class: 'btn btn-success', data: { reflex: "click->PartitipantReflex#initiator", id: @po.id, coordinator: participant.id } do %>
+                                        Make <%= initiator(participant.name) %> PO initiator
+                                    <% end %>
+                                <% elsif @po.found == participant.id %>
+                                    <%= content_tag :button, class: 'btn btn-danger', data: { reflex: "click->PartitipantReflex#remove_initiator", id: @po.id } do %>
+                                        demote <%= initiator(participant.name) %> from PO initiator role
+                                    <% end %>
+                                <% end %>
+                            <% end %>
+                        </center>
                     <% end %>
                 <% end %>
             </div>

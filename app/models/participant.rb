@@ -1,15 +1,16 @@
 class Participant < ApplicationRecord
-    
     has_many :po_users
 
-    encrypts :emailaddress, :name, :phone, :address
-    encrypts :pos, type: :array
+    encrypts :emailaddress, :name, :address
+    encrypts :phone, type: :integer
+   
+
     blind_index :emailaddress, :name, :phone, :address, :pos
     validates :type, presence: true
     validates :emailaddress, presence: true
-    validates :address, presence: true
-    validates :phone, presence: true
-    validates :country_code, presence: true
+    # validates :address, presence: true
+    # validates :phone, presence: true
+    # validates :country_code, presence: true
     
     broadcasts
 
@@ -28,15 +29,16 @@ class Participant < ApplicationRecord
         if self.is_euro?
             return 'EU'
         elsif self.country_code == "CA"
-            return "CA"
+            return 'CA'
         elsif self.country_code == "GB"
-            return "LB"
+            return 'LB'
         else
-            return "US"
+            return 'US'
         end
     end
 
     def set_po_currency
         
     end
+      
 end

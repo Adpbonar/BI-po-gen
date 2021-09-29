@@ -21,16 +21,24 @@ class StatementsController < ApplicationController
     respond_to do |format|
       format.html
       format.pdf do
-        render pdf: "Bonar Institute",
+        render pdf: "Bonar Institute Invoice" + @statement.po.po_number.to_s ,
         page_size: 'Letter',
         page_height: '11in',
         page_width: '8.5in',
         layout: "statement.html.erb",
         template: "statements/show.html.erb",
         orientation: "Portrait",
+        margin: { 
+          top: '1cm',
+          bottom: '1cm',
+          left:   '1cm',
+          right:  '1cm' 
+        },
         lowquality: false,
         zoom: 1,
-        dpi: 75
+        footer: { 
+          :center => "Bonar Institute Invoice # " + @statement.po.po_number.to_s + "  |  " +'Page: [page] of [topage]' 
+        }       
       end
     end 
   end

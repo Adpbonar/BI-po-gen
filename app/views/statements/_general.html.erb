@@ -82,7 +82,8 @@ none
                 </tbody>
             </table>
             <div><%=sanitize item.description %></div>
-            <% unless item.calculate_discounts == "Free" %>
+            <div>
+            <% unless item.calculate_discounts == "Free" && item == 'ServiceItem' %>
                 <h3 class="center">Add Discount</h3>
                 <%= simple_form_for(@discount) do |f| %>
                     <table style="border: none !important; width: 100%;">
@@ -106,6 +107,7 @@ none
                 <% end %>
             </div>
         <% end %>
+        </div>
             <% item.discounts.each_with_index do |discount, i| %>
                 <% turbo_stream_from discount %>
                 <% if i == 0 %>
@@ -153,11 +155,12 @@ none
             </div>
             <div class="default">
             <div style="width: 100%;">
+            <h1 class="center">Add Programs</h1>
 <% unless @saved_items.empty? %>
     <div class="top-bottom-spacing" style="width: 100%;">
-        <h4 class="center">Saved Items</h4>
+        <h2 class="center">Saved Items</h2>
         <% @saved_items.group_by(&:type_of).each do |type_of, saved_items| %>
-                <h5 class="center"><%= type_of %>s</h2>
+                <h3 class="center"><%= type_of %>s</h3>
             
                     <% saved_items.each do |saved_item| %>
                         <%= content_tag :div, class: 'saved-item', data: { reflex: "click->ItemReflex#add", id: saved_item.id, statement: @statement.id }  do %>
@@ -168,11 +171,11 @@ none
         <% end %>
     </div>
     <div class="form-holder">
-    <h4 class="center">Create a new Item</h4>
+    <h2 class="center">Create a new Item</h2>
     </div>
 <% else %>
 
-    <h3 class="center">Add Item</h3> 
+    <h2 class="center">Add Item</h2> 
 <% end %>
 </div>
 <div class="form-holder">

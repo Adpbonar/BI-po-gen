@@ -8,11 +8,11 @@
 user = User.create(email: "info@bonarinstitute.com", password: "Bi1123581321!")
 
 10.times do
-    Associate.create(name: Faker::Name.unique.name, emailaddress: Faker::Internet.email)
+    Participant.create(name: Faker::Name.unique.name, emailaddress: Faker::Internet.email, type: 'Associate')
 end
 
 10.times do
-    Client.create(name: Faker::Name.unique.name, emailaddress: Faker::Internet.email)
+    Participant.create(name: Faker::Name.unique.name, emailaddress: Faker::Internet.email, type: 'Client')
 end
 
 # Service Items
@@ -49,11 +49,14 @@ SavedService.create(title: "Consulting Engagement: 4 weeks - C-Suite", cost: 600
 
 # Expense Items
 
-SavedExpense.create(title: "EQ360 - Senior Leaders & Entrepreneurs", description: "<p><b>Charged per individual</b></p><p>Icludes:<ul><li>Preperation</li><li>A debrief</li></ul>", cost: 1200, taxable: true)
-SavedExpense.create(title: "EQ360 - C-Suite", description: "<p><b>Charged per individual</b></p><p>Icludes:<ul><li>Preperation</li><li>A debrief</li></ul>", cost: 1500, taxable: true)
+SavedExpense.create(title: "EQ360 - Senior Leaders & Entrepreneurs", description: "<p><b>Charged per individual</b></p><p>Icludes:<ul><li>Preperation</li><li>A debrief</li></ul>", cost: 1200, taxable: true, expense_cost: 325.0)
+SavedExpense.create(title: "EQ360 - C-Suite", description: "<p><b>Charged per individual</b></p><p>Icludes:<ul><li>Preperation</li><li>A debrief</li></ul>", cost: 1500, taxable: true, expense_cost: 325.0)
 
-SavedExpense.create(title: "EQI 2.0 Leadership Report - Senior Leaders & Entrepreneurs", description: "<p>Icludes:<ul><li>Preperation</li><li>A debrief</li></ul>", cost: 1000, taxable: true)
-SavedExpense.create(title: "EQI 2.0 Leadership Report - C-Suite", description: "<p>Icludes:<ul><li>Preperation</li><li>A debrief</li></ul>", cost: 1250, taxable: true)
+SavedExpense.create(title: "EQI 2.0 Leadership Report - Senior Leaders & Entrepreneurs", description: "<p>Icludes:<ul><li>Preperation</li><li>A debrief</li></ul>", cost: 1000, taxable: true, expense_cost: 100.0)
+SavedExpense.create(title: "EQI 2.0 Leadership Report - C-Suite", description: "<p>Icludes:<ul><li>Preperation</li><li>A debrief</li></ul>", cost: 1250, taxable: true, expense_cost: 100.0)
+
+SavedExpense.create(title: "EQI 2.0 Group Report - Senior Leaders & Entrepreneurs", description: "<p>Icludes:<ul><li>Preperation</li><li>A debrief</li></ul>", cost: 1000, taxable: true, expense_cost: 250.0)
+SavedExpense.create(title: "EQI 2.0 Group Report - C-Suite", description: "<p>Icludes:<ul><li>Preperation</li><li>A debrief</li></ul>", cost: 1250, taxable: true, expense_cost: 250.0)
 
 SavedExpense.create(title: "Oral 360 - Senior Leaders & Entrepreneurs", description: "<p>Icludes:<ul><li>Preperation</li><li>A debrief</li></ul>", cost: 1500, taxable: true)
 SavedExpense.create(title: "Oral 360 - C-Suite", description: "<p>Icludes:<ul><li>Preperation</li><li>A debrief</li></ul>", cost: 2000, taxable: true)
@@ -66,3 +69,7 @@ Statement.all.each do |s|
         ExpenseItem.create(statement_id: s.id, title: "Assessments", description: "Assessments for Devan", cost: 2000)
     end
 end
+
+# Company
+
+Company.create(company_name: 'Bonar Institute for Purposeful Leadership Inc.', address: 'C/O James Bonar<br />355 Lyon Street North, Ottawa, ON, Canada<br />K1R 5W8')

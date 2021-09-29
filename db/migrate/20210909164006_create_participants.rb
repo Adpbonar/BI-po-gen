@@ -10,7 +10,6 @@ class CreateParticipants < ActiveRecord::Migration[6.1]
     add_column :participants, :emailaddress_ciphertext, :text
     add_column :participants, :name_ciphertext, :text
     add_column :participants, :phone_ciphertext, :text
-    add_column :participants, :pos_ciphertext, :text
     add_column :participants, :address_ciphertext, :text
     
     
@@ -22,8 +21,6 @@ class CreateParticipants < ActiveRecord::Migration[6.1]
     add_index :participants, :name_bidx, unique: true
     add_column :participants, :phone_bidx, :string
     add_index :participants, :phone_bidx, unique: true
-    add_column :participants, :po_bidx, :string
-    add_index :participants, :po_bidx, unique: true
     add_column :participants, :address_bidx, :string
     add_index :participants, :address_bidx, unique: true
   end

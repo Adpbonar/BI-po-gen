@@ -10,10 +10,11 @@ class CreatePos < ActiveRecord::Migration[6.1]
       t.string :service_type
       t.integer :number_of_installments
       t.string :tax_amount
-      t.string :issued_to
-      t.string :company_name
-      t.integer :learning_coordinator
-      t.string :approved_by
+      t.string :issued_to_ciphertext
+      t.string :company_name_ciphertext
+      t.string :learning_coordinator_ciphertext
+      t.string :found_ciphertext
+      t.string :approved_by_ciphertext
       t.integer :associate_percentage
       t.integer :founder_percentage
       t.float :revenue_share

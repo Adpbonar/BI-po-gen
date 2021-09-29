@@ -23,7 +23,7 @@
                         <%= item.title %>
                     </td>
                     <td style="width: 50%" class="td-border">
-                        <%= item.description %>
+                        <%=sanitize item.description %>
                     </td>
                     <% if items == 'yes' %>
                         <td style="width: 12.5%" class="td-border">
@@ -65,7 +65,7 @@
             <% end %>
         </tbody>
     </table>
-<% end %>
+
 <div class="top-bottom-spacing">  
 <% if items == 'yes' %>
     <strong>

@@ -3,7 +3,9 @@ class Po < ApplicationRecord
     belongs_to :user
 		has_many :installments
 		has_many :po_users
-    serialize :pos
+    encrypts :learning_coordinator, type: :integer
+    encrypts :found, type: :integer
+    encrypts :issued_to, :company_name, :approved_by
 
 		validates :po_number, uniqueness: true
     validates :title, presence: true
@@ -25,7 +27,7 @@ class Po < ApplicationRecord
     # Verify organization of email
 		def issued_by
 			if self.user.email.split('@').last == 'bonarinstitute.com'
-				return "Issued by the Bonar Institute for Purposeful Leadership."
+				return "<b>Issued by:</b> the Bonar Institute for Purposeful Leadership Inc."
 			else
 				errors.add(:issued_by, message: "not valid")
         self.destroy
@@ -133,7 +135,7 @@ class Po < ApplicationRecord
 
     # set up initial statement and create blank installments for the PO
 		def set_up_po
-			GeneralStatement.create(po_id: self.id)
+			GeneralStatement.create(po_id: self.id, company_name: Company.last.company_name, company_address: Company.last.address)
       (self.number_of_installments).times.each do 
           installment = Installment.create(po_id: self.id, due_date: Time.now, percentage: 33.33) 
       end
@@ -164,4 +166,20 @@ class Po < ApplicationRecord
       'Euro': '&euro;',
       'British Pound': '&#163;',
     }
+
+    def show_coordinator
+      unless self.learning_coordinator.blank?
+        participant = Participant.find(self.learning_coordinator)
+        return (participant.name.to_s + " at " + '<a href="mailto:' + participant.emailaddress.to_s + '">' + participant.emailaddress.to_s + '</a>.').html_safe
+      else
+        return ' us at <a href="mailto:info@bonarinstitute.com">info@bonarinstitute.com</a>.'.html_safe
+      end
+    end
+
+    def show_found
+      unless self.found.blank?
+        participant = Participant.find(self.found)
+        return participant.name.to_s + " " + participant.emailaddress.to_s
+      end
+    end
 end

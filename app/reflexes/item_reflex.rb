@@ -4,6 +4,9 @@ class ItemReflex < ApplicationReflex
 
   def remove
     item = LineItem.find(element.dataset[:id])
+    if item.discounts.any?
+      item.discounts.each { |discount| discount.destroy }
+    end
     item.destroy
   end
 
@@ -18,9 +21,9 @@ class ItemReflex < ApplicationReflex
     line_item = LineItem.new(statement_id: statement.id, title: item.title, description: item.description, cost: item.cost, taxable: item.taxable, expense_exempt_from_tax: item.expense_exempt_from_tax, type: type_of)
     if line_item.valid?
       line_item.save
-      flash.alert = 'Item Added'
+      morph :nothing
     else
-      flash.alert = 'Item cound not be saved'
+      flash.alert = 'Item coundn\'t be saved'
     end
   end
 

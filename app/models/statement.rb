@@ -2,6 +2,7 @@ class Statement < ApplicationRecord
     belongs_to :po
     has_many :line_items
     has_many :payments
+    encrypts :participant_address, :participant_name
         
     def percentage_amount(record1, record2)
         return (record1.to_i * ("0." + record2.to_s).to_f)

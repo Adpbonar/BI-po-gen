@@ -24,7 +24,8 @@ class ParticipantsController < ApplicationController
   # POST /participants or /participants.json
   def create
     @participant = Participant.new(participant_params)
-
+    set_up = Array.new
+  
     respond_to do |format|
       if @participant.save
         format.html { redirect_to @participant, notice: "Participant was successfully created." }
@@ -66,6 +67,6 @@ class ParticipantsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def participant_params
-      params.require(:participant).permit(:name, :emailaddress, :address, :pos, :phone, :country_code, :type)
+      params.require(:participant).permit(:name, :emailaddress, :address, :phone, :country_code, :type)
     end
 end

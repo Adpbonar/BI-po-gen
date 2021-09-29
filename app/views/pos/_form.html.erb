@@ -10,13 +10,13 @@
     </div>
   <% end %>
   <div class="description-form" data-controller="countchar" data-countchar-limit="100">
-  <%= f.input :title, maxlength: "100", :input_html => { "data-target": "countchar.title", "data-action": "keyup->countchar#countTitle" } %>
-  <div><small>Title character count: <span data-target="countchar.titleCounter">Type to start counting</span></small></div>
+  <%= f.input :title, maxlength: "100", :input_html => { "autocomplete": "off", "data-target": "countchar.title", "data-action": "keyup->countchar#countTitle" } %>
+  <div><small>Title character count: <span data-target="countchar.titleCounter"><%= @po.description.to_s.size %></span></small></div>
   </div>
   <small id="character-limit" class="no-show"></small>
   <div class="description-form" data-controller="countchar" data-countchar-limit="600">
       <%= f.input :description, placeholder: "Description can\'t be longer that 600 characters", maxlength: "605", :input_html => { "data-target": "countchar.description", "data-action": "keyup->countchar#countCharacters" } %>
-      <div><small>Description character count: <span data-target="countchar.counter">Type to start counting</span></small></div>
+      <div><small>Description character count: <span data-target="countchar.counter"><%= @po.description.to_s.size %></span></small></div>
   </div>
   <%= f.input :company_name %>
   <%= f.input :tax_amount %>

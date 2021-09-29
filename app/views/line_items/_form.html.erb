@@ -14,13 +14,13 @@
   <div class="form-inputs">
   <%= f.input   :statement_id, as: :hidden, :input_html => { :value => @statement.id } %>
   <div class="description-form" data-controller="countchar" data-countchar-limit="100">
-  <%= f.input :title, maxlength: "100", :input_html => { "data-target": "countchar.title", "data-action": "keyup->countchar#countTitle" } %>
-  <div><small>Title character count: <span data-target="countchar.titleCounter">Type to start counting</span></small></div>
+  <%= f.input :title, maxlength: "100", :input_html => { "autocomplete": "off", "data-target": "countchar.title", "data-action": "keyup->countchar#countTitle" } %>
+  <div><small>Title character count: <span data-target="countchar.titleCounter">0</span></small></div>
   </div>
   <small id="character-limit" class="no-show"></small>
   <div class="description-form" data-controller="countchar" data-countchar-limit="350">
       <%= f.input :description, placeholder: "Description can\'t be longer that 350 characters", maxlength: "355", :input_html => { "data-target": "countchar.description", "data-action": "keyup->countchar#countCharacters" } %>
-      <div><small>Description character count: <span data-target="countchar.counter">Type to start counting</span></small></div>
+      <div><small>Description character count: <span data-target="countchar.counter">0</span></small></div>
   </div>
   <%= f.input :cost, step: 0.01, data: { action: "form-validation#handleChange" } %>
   <%= f.input :taxable, data: { action: "form-validation#handleChange" }, label: 'Taxable in Canada' %>

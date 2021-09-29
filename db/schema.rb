@@ -10,10 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_25_211138) do
+ActiveRecord::Schema.define(version: 2021_09_29_163310) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "companies", force: :cascade do |t|
+    t.string "company_name"
+    t.text "address"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
 
   create_table "details", force: :cascade do |t|
     t.string "title"
@@ -66,6 +73,7 @@ ActiveRecord::Schema.define(version: 2021_09_25_211138) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "expense_exempt_from_tax", default: false
+    t.decimal "expense_cost"
     t.index ["statement_id"], name: "index_line_items_on_statement_id"
     t.index ["type"], name: "index_line_items_on_type"
   end
@@ -79,19 +87,16 @@ ActiveRecord::Schema.define(version: 2021_09_25_211138) do
     t.text "emailaddress_ciphertext"
     t.text "name_ciphertext"
     t.text "phone_ciphertext"
-    t.text "pos_ciphertext"
     t.text "address_ciphertext"
     t.string "emailaddress_bidx"
     t.string "name_bidx"
     t.string "phone_bidx"
-    t.string "po_bidx"
     t.string "address_bidx"
     t.string "country_code"
     t.index ["address_bidx"], name: "index_participants_on_address_bidx", unique: true
     t.index ["emailaddress_bidx"], name: "index_participants_on_emailaddress_bidx", unique: true
     t.index ["name_bidx"], name: "index_participants_on_name_bidx", unique: true
     t.index ["phone_bidx"], name: "index_participants_on_phone_bidx", unique: true
-    t.index ["po_bidx"], name: "index_participants_on_po_bidx", unique: true
     t.index ["type"], name: "index_participants_on_type"
   end
 
@@ -123,10 +128,11 @@ ActiveRecord::Schema.define(version: 2021_09_25_211138) do
     t.string "service_type"
     t.integer "number_of_installments"
     t.string "tax_amount"
-    t.string "issued_to"
-    t.string "company_name"
-    t.integer "learning_coordinator"
-    t.string "approved_by"
+    t.string "issued_to_ciphertext"
+    t.string "company_name_ciphertext"
+    t.string "learning_coordinator_ciphertext"
+    t.string "found_ciphertext"
+    t.string "approved_by_ciphertext"
     t.integer "associate_percentage"
     t.integer "founder_percentage"
     t.float "revenue_share"
@@ -161,6 +167,7 @@ ActiveRecord::Schema.define(version: 2021_09_25_211138) do
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "expense_exempt_from_tax", default: false
     t.boolean "taxable", default: true
+    t.decimal "expense_cost"
   end
 
   create_table "statement_notes", force: :cascade do |t|
@@ -179,6 +186,10 @@ ActiveRecord::Schema.define(version: 2021_09_25_211138) do
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "show_detailed", default: false
     t.boolean "show_programs", default: false
+    t.string "company_name"
+    t.text "company_address"
+    t.string "participant_name_ciphertext"
+    t.text "participant_address_ciphertext"
     t.index ["po_id"], name: "index_statements_on_po_id"
     t.index ["type"], name: "index_statements_on_type"
   end

@@ -3,7 +3,7 @@
 <p>Service: <%= @po.service_type %></p>
 <p>Approximate completion time: <%= @po.duration %><br />
 <small class="highlight">From <%= read_date(@po.start_date) %> to <%= read_date(@po.end_date) %></small></p>
-<p>PO <%= @po.issued_by %></p>
+<p>PO <%=sanitize @po.issued_by %></p>
 <% if @po.description.present? %>
     <div class="top-bottom-spacing">
     <p><b>Description</b></p>
@@ -22,7 +22,7 @@
         <% users.each do |user| %>
             <div>
                 <span class="upcase"><%= user.participant.name %> (<%= type_of %>)</span>
-                <% if type_of == 'Associate' %>
+                <% if type_of == 'Associate' && ! @po.locked %>
                     <% if @po.learning_coordinator.blank? %>
                         <%= content_tag :button, class: 'btn btn-success', data: { reflex: "click->PartitipantReflex#coordinator", id: @po.id, coordinator: user.participant_id } do %>
                             make <%= initiator(user.participant.name) %> coordinator
@@ -75,10 +75,11 @@
         </div>
     </div>
 <% end %>
-<%= content_tag :div, id:"eLink", role: "button", alt: "Add Participants", class: "ethicsLink", data: { reflex: "click->PartitipantReflex#show", id: @po.id } do %>
-    Add Participants
+<% unless @po.locked %>
+    <%= content_tag :div, id:"eLink", role: "button", alt: "Add Participants", class: "ethicsLink", data: { reflex: "click->PartitipantReflex#show", id: @po.id } do %>
+        Add Participants
+    <% end %>
 <% end %>
-
 
 <h2>Installments</h2>
 <% if @po.installments.count == @po.number_of_installments %>
@@ -103,13 +104,16 @@
     <% end %>
 <% end %> 
 </ul>
-<center><button id="show-button" class="btn btn-warning">Adjust installments</button><button id="hide-button" class="no-show btn btn-secondary">I changed my mind...</button></center>
-<div class="top-bottom-spacing no-show" id="adjust-installments">
-    <h2>Adjust the number and percentage of installments</h2>
-    <%= text_field_tag 'set-installment' %>  
-    <small>Adjust number and percentage of installments using the following format "30 30 30 10", where the number is the percentage and the quanity of numbers is the amount of installments.  <span class="highlight"><br /><b>Note:</b> that decimals are not accepted and that the total of the installment percentages must equal 100.</span></small>
-    <div class="top-bottom-spacing"><%= button_tag 'submit changes', type: "text", pattern: "([0-9]+.{0,1}[0-9]*,{0,1})*[0-9]",  id: "installment-submit", class: 'btn btn-secondary', data: { reflex: "click->InstallmentReflex#change", id: @po.id, installments: "" } %></div>
+<% unless @po.locked %>
+    <center><button id="show-button" class="btn btn-warning">Adjust installments</button><button id="hide-button" class="no-show btn btn-secondary">I changed my mind...</button></center>
+    <div class="top-bottom-spacing no-show" id="adjust-installments">
+        <h2>Adjust the number and percentage of installments</h2>
+        <%= text_field_tag 'set-installment' %>  
+        <small>Adjust number and percentage of installments using the following format "30 30 30 10", where the number is the percentage and the quanity of numbers is the amount of installments.  <span class="highlight"><br /><b>Note:</b> that decimals are not accepted and that the total of the installment percentages must equal 100.</span></small>
+        <div class="top-bottom-spacing"><%= button_tag 'submit changes', type: "text", pattern: "([0-9]+.{0,1}[0-9]*,{0,1})*[0-9]",  id: "installment-submit", class: 'btn btn-secondary', data: { reflex: "click->InstallmentReflex#change", id: @po.id, installments: "" } %></div>
+        </div>
     </div>
+<% end %>
     <%= link_to 'Edit', edit_po_path(@po), class: 'btn btn-warning' %>
     <%= link_to 'Back', pos_path, class: 'btn btn-secondary' %>
 

@@ -25,10 +25,7 @@
   <%= f.input :cost, step: 0.01, data: { action: "form-validation#handleChange" } %>
   <%= f.input :taxable, data: { action: "form-validation#handleChange" }, label: 'Taxable in Canada' %>
   <%= f.input :type, as: :select, collection: LineItem::TYPE, label: 'Item Type', data: { action: "form-validation#handleChange" } %>
-  <span id="tax-exemtion">
-  <br />
-    <%= f.input :expense_exempt_from_tax, data: { action: "form-validation#handleChange" }, label: 'Tax not paid' %>
-  </span>
+
   </div>
 
   <div class="form-actions">
@@ -38,25 +35,3 @@
       </center>
   </div>
 <% end %>
-
-<script>
-   var form = document.getElementById("line_item_type");
-   var taxExpempt = document.getElementById("tax-exemtion");
-   function formClick() {
-     form.addEventListener("click", () => {
-       if (form.value === 'ExpenseItem') {
-        taxExpempt.classList.remove("no-show");
-       } else {
-        taxExpempt.classList.add("no-show");
-       }
-     })
-   }
-
-   document.addEventListener("turbo:load", function () { 
-    formClick();
-   });
-
-   document.addEventListener("turbo:render", function () { 
-    formClick();
-   });
-</script>

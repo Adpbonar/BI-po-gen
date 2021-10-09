@@ -3,6 +3,10 @@
 class DiscountReflex < ApplicationReflex
   def remove
     item = Discount.find(element.dataset[:id])
-    item.destroy
+    po = item.line_item.statement.po
+    unless po.locked
+      item.destroy
+      po.set_status
+    end
   end
 end

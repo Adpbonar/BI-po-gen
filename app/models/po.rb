@@ -7,7 +7,7 @@ class Po < ApplicationRecord
     encrypts :found, type: :integer
     encrypts :issued_to, :company_name, :approved_by
 
-		validates :po_number, uniqueness: true
+		validates :po_number, presence: true, uniqueness: true
     validates :title, presence: true
     validates_length_of :title, in: 1..100
     validates :start_date, presence: true
@@ -15,8 +15,8 @@ class Po < ApplicationRecord
     validates :service_type, presence: true
     validates :currency, presence: true, :on => :update
     validates :tax_amount, numericality: { in: 1..100 }, :on => :update
-    validates :associate_percentage, numericality: { in: 1..100 }
-    validates :founder_percentage, numericality: { in: 1..100 }
+    validates :associate_percentage, presence: true, numericality: { in: 1..50 }
+    validates :founder_percentage, presence: true, numericality: { in: 1..25 }
     validates_length_of :description, in: 0..600
     validate :in_future, :on => :create
     validate :time_duration
@@ -176,10 +176,63 @@ class Po < ApplicationRecord
       end
     end
 
+    def locked
+      statement = self.statements.first
+      if statement.type == 'GeneralStatement'
+        if statement.status_code == 'A' || statement.status_code == 'L'
+          return true
+        end
+      end
+    end
+
     def show_found
       unless self.found.blank?
         participant = Participant.find(self.found)
         return participant.name.to_s + " " + participant.emailaddress.to_s
+      end
+    end
+
+    def associates
+      Participant.where(type: 'Associate').each do |user|
+        if user.po_users.where(po_id: self.id).any? 
+          return true
+        end
+      end
+    end
+
+    def clients
+      Participant.where(type: 'Client').each do |user|
+        if user.po_users.where(po_id: self.id).any? 
+          return true
+        end
+      end
+    end
+
+    def set_status
+      if self.status == 'New'
+        self.set_up_po
+        self.update(status: "Generated")
+      else
+        unless self.status == 'Lapsed'
+          if self.statements.first.line_items.any?
+            self.update(status: 'Costed')
+          end
+          if self.statements.first.line_items.any? && self.po_users.any?
+            self.update(status: 'Populated')
+          end
+          if self.statements.first.line_items.any? && (clients && associates)
+            self.update(status: 'Prepared')
+          end
+          if self.statements.first.subtotal == 0
+            self.update(status: 'Generated')
+          end
+          if self.end_date < Time.now && (! self.status == "Associate Submitted" || ! self.status == "Submitted")
+            self.update(status: 'Lapsed')
+          end
+        end
+      end
+      if self.statements.where(type: 'AssociateStatement').count >= 1
+        self.update(status: 'Associate Submitted')
       end
     end
 end

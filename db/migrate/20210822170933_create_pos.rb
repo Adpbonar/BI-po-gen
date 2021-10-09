@@ -24,5 +24,11 @@ class CreatePos < ActiveRecord::Migration[6.1]
       t.timestamps
     end
     add_index :pos, :po_number, unique: true
+    add_column :pos, :company_name_bidx, :string
+    add_index :pos, :company_name_bidx
+    add_column :pos, :issued_to_bidx, :string
+    add_index :pos, :issued_to_bidx
+    add_column :pos, :found_bidx, :string
+    add_index :pos, :found_bidx
   end
 end

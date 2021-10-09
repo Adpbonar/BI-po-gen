@@ -1,11 +1,17 @@
 class Participant < ApplicationRecord
     has_many :po_users
+    # validates :phone,:presence => true,
+    #              :numericality => true,
+    #              :length => { :minimum => 10, :maximum => 15 }
+    # validates :emailaddress, presence: true, format: { with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i, message: 'must be a valid format' } 
 
-    encrypts :emailaddress, :name, :address
+    encrypts :emailaddress, :name, :address, :zip, :state, :city, :title, :company
     encrypts :phone, type: :integer
+
+    
    
 
-    blind_index :emailaddress, :name, :phone, :address, :pos
+    # blind_index :emailaddress, :name, :phone, :address, :address, :zip, :state, :city, :title, :company
     validates :type, presence: true
     validates :emailaddress, presence: true
     # validates :address, presence: true

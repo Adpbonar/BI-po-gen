@@ -97,6 +97,6 @@ class StatementsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def statement_params
-      params.require(:statement).permit(:notes, :terms, :show_detailed, :show_programs)
+      params.require(:statement).permit(:company_name, :terms, :show_detailed, :show_programs)
     end   
 end

@@ -14,7 +14,7 @@ class LineItemsController < ApplicationController
     respond_to do |format|
       if @line_item.save
         # format.html { redirect_to statement_path(@line_item.statement_id), notice: "Line item was successfully created." }
-        format.json { render :show, status: :created, location: @line_item }
+          format.json { render :show, status: :created, location: @line_item, notice: 'If it is appropriate don\'t forget to edit the expense to add cost, etc.' }
       else
         string = "<b>Errors:</b><br />"
         @line_item.errors.full_messages.each do |error|

@@ -23,10 +23,12 @@
     </div>
     <%= f.input :cost, step: 0.01, data: { action: "form-validation#handleChange" } %>
     <%= f.input :taxable, data: { action: "form-validation#handleChange" }, label: 'Taxable in Canada' %>
-    <%= f.input :type, as: :select, collection: LineItem::TYPE, label: 'Item Type', data: { action: "form-validation#handleChange" } %>
     <span id="tax-exemtion">
     <br />
-      <%= f.input :expense_exempt_from_tax, data: { action: "form-validation#handleChange" }, label: 'Tax not paid' %>
+    <% if @line_item.type =="ExpenseItem" %>
+      <%= f.input :expense_exempt_from_tax, label: 'Tax not paid' %>
+      <%= f.input :expense_cost, label: 'How much did this cost?' %>
+    <% end %>
     </span>
     </div>
   

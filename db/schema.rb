@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_29_163310) do
+ActiveRecord::Schema.define(version: 2021_10_03_171221) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -93,11 +93,24 @@ ActiveRecord::Schema.define(version: 2021_09_29_163310) do
     t.string "phone_bidx"
     t.string "address_bidx"
     t.string "country_code"
+    t.text "title_ciphertext"
+    t.text "city_ciphertext"
+    t.text "state_ciphertext"
+    t.text "zip_ciphertext"
+    t.text "company_ciphertext"
+    t.string "company_bidx"
+    t.string "city_bidx"
+    t.string "state_bidx"
+    t.string "zip_bidx"
     t.index ["address_bidx"], name: "index_participants_on_address_bidx", unique: true
+    t.index ["city_bidx"], name: "index_participants_on_city_bidx"
+    t.index ["company_bidx"], name: "index_participants_on_company_bidx"
     t.index ["emailaddress_bidx"], name: "index_participants_on_emailaddress_bidx", unique: true
     t.index ["name_bidx"], name: "index_participants_on_name_bidx", unique: true
     t.index ["phone_bidx"], name: "index_participants_on_phone_bidx", unique: true
+    t.index ["state_bidx"], name: "index_participants_on_state_bidx"
     t.index ["type"], name: "index_participants_on_type"
+    t.index ["zip_bidx"], name: "index_participants_on_zip_bidx"
   end
 
   create_table "payments", force: :cascade do |t|
@@ -140,8 +153,15 @@ ActiveRecord::Schema.define(version: 2021_09_29_163310) do
     t.string "currency"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "company_name_bidx"
+    t.string "issued_to_bidx"
+    t.string "found_bidx"
     t.string "slug"
     t.boolean "show_participant", default: false
+    t.string "issue_code"
+    t.index ["company_name_bidx"], name: "index_pos_on_company_name_bidx"
+    t.index ["found_bidx"], name: "index_pos_on_found_bidx"
+    t.index ["issued_to_bidx"], name: "index_pos_on_issued_to_bidx"
     t.index ["po_number"], name: "index_pos_on_po_number", unique: true
     t.index ["slug"], name: "index_pos_on_slug", unique: true
     t.index ["user_id"], name: "index_pos_on_user_id"
@@ -190,6 +210,9 @@ ActiveRecord::Schema.define(version: 2021_09_29_163310) do
     t.text "company_address"
     t.string "participant_name_ciphertext"
     t.text "participant_address_ciphertext"
+    t.decimal "total"
+    t.string "invoice_number"
+    t.string "status_code"
     t.index ["po_id"], name: "index_statements_on_po_id"
     t.index ["type"], name: "index_statements_on_type"
   end

@@ -1,13 +1,24 @@
 <p class="tax">PO <%= @statement.po.po_number %></p>
 <p class="tax">PO Tax Amount: <%= @statement.po.tax_amount %>%</p>
-<%= content_tag :div, class: 'ethicsLink', data: { reflex: "click->StatementReflex#show", id: @statement.id } do %>
-    Add Programs
+<% unless @statement.locked %>
+    <%= content_tag :div, class: 'ethicsLink', data: { reflex: "click->StatementReflex#show", id: @statement.id } do %>
+        Add Programs
+    <% end %>
+<% end %>
+<% if @statement.po.status == 'Prepared' && @statement.status_code == nil && ! @statement.locked %>
+    <%= content_tag :button, class: 'btn btn-success', data: { reflex: "click->StatementReflex#associates_generate", id: @statement.id } do %>
+        generate associate statements
+    <% end %>
 <% end %>
 <h2>Expense Items</h2>
 <% if @expenses.each do |item| %>
     <div>
         <div class="top-bottom-spacing">
-            <p class="upcase" style="font-weight: 700"><%= item.title.capitalize %> | <%= link_to 'Edit', edit_line_item_path(item), class: 'default-link' %></p>
+            <p class="upcase" style="font-weight: 700"><%= item.title.capitalize %>
+                <% unless @statement.locked %> | 
+                    <%= link_to 'Edit', edit_line_item_path(item), class: 'default-link' %>
+                <% end %>
+            </p>
             <table style="border: none !important; width: 100%;">
                 <tbody>
                     <tr class="upcase">
@@ -32,9 +43,11 @@
                             <p>Discounts: Not available for expenses.</p>
                         </td>
                         <td style="width: 20%;">
-                            <%= button_tag 'X', class: 'btn-danger btn-sm', style: 'position: relative; right: 1em;', data: { reflex: "click->ItemReflex#remove", id: item.id } %>
-                            <% if item.saved_item_check %>
-                                <%= button_tag 'Save', class: 'btn-success btn', style: 'position: relative; right: 1em;', data: { reflex: "click->ItemReflex#save", id: item.id } %>
+                            <% unless @statement.locked %>
+                                <%= button_tag 'X', class: 'btn-danger btn-sm', style: 'position: relative; right: 1em;', data: { reflex: "click->ItemReflex#remove", id: item.id } %>
+                                <% if item.saved_item_check %>
+                                    <%= button_tag 'Save', class: 'btn-success btn', style: 'position: relative; right: 1em;', data: { reflex: "click->ItemReflex#save", id: item.id } %>
+                                <% end %>
                             <% end %>
                         </td>
                     </tr>
@@ -53,7 +66,11 @@ none
 <% if @services.each do |item| %>
     <div>
         <div class="top-bottom-spacing">
-            <p class="upcase" style="font-weight: 700"><%= item.title.capitalize %> | <%= link_to 'Edit', edit_line_item_path(item), class: 'default-link' %></p>
+            <p class="upcase" style="font-weight: 700"><%= item.title.capitalize %>
+                <% unless @statement.locked %> | 
+                    <%= link_to 'Edit', edit_line_item_path(item), class: 'default-link' %>
+                <% end %>
+            </p>
             <table style="border: none !important; width: 100%;">
                 <tbody>
                     <tr class="upcase">
@@ -73,9 +90,11 @@ none
                             <p>Type: Service</p>
                         </td>
                         <td style="width: 25%;">
-                            <%= button_tag 'X', class: 'btn-danger btn-sm', style: 'position: relative; right: 1em;', data: { reflex: "click->ItemReflex#remove", id: item.id } %>
-                            <% if item.saved_item_check %>
-                                <%= button_tag 'Save', class: 'btn-success btn', style: 'position: relative; right: 1em;', data: { reflex: "click->ItemReflex#save", id: item.id } %>
+                            <% unless @statement.locked %>
+                                <%= button_tag 'X', class: 'btn-danger btn-sm', style: 'position: relative; right: 1em;', data: { reflex: "click->ItemReflex#remove", id: item.id } %>
+                                <% if item.saved_item_check %>
+                                    <%= button_tag 'Save', class: 'btn-success btn', style: 'position: relative; right: 1em;', data: { reflex: "click->ItemReflex#save", id: item.id } %>
+                                <% end %>
                             <% end %>
                         </td>                    
                     </tr>
@@ -83,27 +102,29 @@ none
             </table>
             <div><%=sanitize item.description %></div>
             <div>
-            <% unless item.calculate_discounts == "Free" && item == 'ServiceItem' %>
-                <h3 class="center">Add Discount</h3>
-                <%= simple_form_for(@discount) do |f| %>
-                    <table style="border: none !important; width: 100%;">
-                        <tbody>
-                            <tr>
-                                <td style="width: 50%; padding: 1em;">
-                                    <%= f.input :amount %>
-                                </td>
-                                <td style="width: 50%; padding: 1em;">
-                                    <%= f.input :amount_type, as: :select, collection: Discount::TYPE, label: 'Type of Discount' %>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="width: 100%; padding: 1em; text-align:center" colspan="2">
-                                    <%= f.input :line_item_id, as: :hidden, :input_html => { :value => item.id }  %>
-                                    <%= f.submit 'save discount', class: "btn btn-primary" %>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+            <% unless @statement.locked %>
+                <% unless item.calculate_discounts == "Free" && item == 'ServiceItem' %>
+                    <h3 class="center">Add Discount</h3>
+                    <%= simple_form_for(@discount) do |f| %>
+                        <table style="border: none !important; width: 100%;">
+                            <tbody>
+                                <tr>
+                                    <td style="width: 50%; padding: 1em;">
+                                        <%= f.input :amount %>
+                                    </td>
+                                    <td style="width: 50%; padding: 1em;">
+                                        <%= f.input :amount_type, as: :select, collection: Discount::TYPE, label: 'Type of Discount' %>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 100%; padding: 1em; text-align:center" colspan="2">
+                                        <%= f.input :line_item_id, as: :hidden, :input_html => { :value => item.id }  %>
+                                        <%= f.submit 'save discount', class: "btn btn-primary" %>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    <% end %>
                 <% end %>
             </div>
         <% end %>

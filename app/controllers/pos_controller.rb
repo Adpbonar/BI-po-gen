@@ -13,7 +13,7 @@ class PosController < ApplicationController
     update_status
     po_issuer = @po.user
     @users = Participant.all
-    @po_users = @po.po_users
+    @po_users = @po.po_users.uniq
   end
 
   # GET /pos/new
@@ -86,27 +86,6 @@ class PosController < ApplicationController
     end
 
     def update_status
-      if @po.status == 'New'
-        @po.set_up_po
-        @po.update(status: "Generated")
-      else
-        unless @po.status == 'Lapsed'
-          if @po.statements.first.line_items.any?
-            @po.update(status: 'Costed')
-          end
-          if @po.statements.first.line_items.any? && @po.po_users.any?
-            @po.update(status: 'Populated')
-          end
-          if @po.statements.first.line_items.any? && @po.po_users.any?
-            @po.update(status: 'Prepared')
-          end
-          if @po.statements.first.subtotal == 0
-            @po.update(status: 'Generated')
-          end
-          if @po.end_date < Time.now
-            @po.update(status: 'Lapsed')
-          end
-        end
-      end
+      @po.set_status
     end
 end

@@ -16,10 +16,7 @@
         </div>
             <hr />
             <p class="bold">Invoice Number: 
-            <% if @statement.po.po_users.any? %>
-            <% else %>
-                INV-<%= @statement.po.po_number %>-1
-            <% end %>
+            INV-<%= @statement.invoice_number %>
             <div class="top-bottom-spacing">
             <table width="100%">
                 <tbody>
@@ -37,6 +34,7 @@
                     </tr>
                 </tbody>
             </table>
+            <p><span class="bold">Service Category:</span> <%= @statement.po.service_type %></p>
             </div>
         </div>
         <% if @statement.type == "ClientStatement" %>

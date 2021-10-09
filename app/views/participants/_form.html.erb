@@ -19,7 +19,7 @@
       <%= f.label 'Email Address' %>
       <%= f.text_field :emailaddress, class: 'form-control' %>
       <%= f.label 'Phone Number' %>
-      <%= f.text_field :phone, class: 'form-control' %>
+      <%= f.number_field :phone, class: 'form-control', input_html: { type: 'number' } %>
       <%= f.label 'Address' %>
       <%= f.text_area :address, class: 'form-control' %>
       <%= f.label 'Country' %>

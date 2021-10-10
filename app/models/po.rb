@@ -3,6 +3,8 @@ class Po < ApplicationRecord
     belongs_to :user
 		has_many :installments
 		has_many :po_users
+    has_many :groups
+    
     encrypts :learning_coordinator, type: :integer
     encrypts :found, type: :integer
     encrypts :issued_to, :company_name, :approved_by

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_03_171221) do
+ActiveRecord::Schema.define(version: 2021_10_10_210218) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -54,6 +54,14 @@ ActiveRecord::Schema.define(version: 2021_10_03_171221) do
     t.index ["sluggable_type", "sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_type_and_sluggable_id"
   end
 
+  create_table "groups", force: :cascade do |t|
+    t.bigint "po_id"
+    t.integer "bill_to"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["po_id"], name: "index_groups_on_po_id"
+  end
+
   create_table "installments", force: :cascade do |t|
     t.integer "percentage"
     t.datetime "due_date"
@@ -76,6 +84,14 @@ ActiveRecord::Schema.define(version: 2021_10_03_171221) do
     t.decimal "expense_cost"
     t.index ["statement_id"], name: "index_line_items_on_statement_id"
     t.index ["type"], name: "index_line_items_on_type"
+  end
+
+  create_table "members", force: :cascade do |t|
+    t.bigint "group_id", null: false
+    t.integer "po_user"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["group_id"], name: "index_members_on_group_id"
   end
 
   create_table "participants", force: :cascade do |t|
@@ -237,5 +253,6 @@ ActiveRecord::Schema.define(version: 2021_10_03_171221) do
 
   add_foreign_key "discounts", "line_items"
   add_foreign_key "installments", "pos"
+  add_foreign_key "members", "groups"
   add_foreign_key "statement_notes", "statements"
 end

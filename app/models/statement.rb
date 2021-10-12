@@ -51,14 +51,16 @@ class Statement < ApplicationRecord
         ass_users = self.po.po_users
         PoUser.destroy_duplicates_by(:participant_id, :po_id)
         if self.po.status == 'Prepared' && self.po.statements.count == 1 && self.type == 'GeneralStatement' 
-            initiator = Participant.find(self.po.found.to_i)
-            if initiator
-                founder_statement = AssociateStatement.create(po_id: self.po.id, total: percentage_amount(self.subtotal.to_d, self.po.founder_percentage), company_name: initiator.company, participant_name: initiator.name, participant_address: initiator.address, invoice_number: self.po.po_number.to_s + '-I')
-                self.line_items.each do |item|
-                    LineItem.create(statement_id: founder_statement.id, type: item.type, title: item.title, description: item.description, cost: item.cost, taxable: item.taxable, expense_exempt_from_tax: item.expense_exempt_from_tax, expense_cost: item.expense_cost)
-                    if item.discounts.any?
-                        item.discounts.each do |discount|
-                            Discount.create(amount: discount.amount, amount_type: discount.amount_type, line_item_id: discount.line_item_id)
+            unless self.po.found.blank?
+                Participant.find(self.po.found.to_i)
+                if initiator
+                    founder_statement = AssociateStatement.create(po_id: self.po.id, total: percentage_amount(self.subtotal.to_d, self.po.founder_percentage), company_name: initiator.company, participant_name: initiator.name, participant_address: initiator.address, invoice_number: self.po.po_number.to_s + '-I')
+                    self.line_items.each do |item|
+                        LineItem.create(statement_id: founder_statement.id, type: item.type, title: item.title, description: item.description, cost: item.cost, taxable: item.taxable, expense_exempt_from_tax: item.expense_exempt_from_tax, expense_cost: item.expense_cost)
+                        if item.discounts.any?
+                            item.discounts.each do |discount|
+                                Discount.create(amount: discount.amount, amount_type: discount.amount_type, line_item_id: discount.line_item_id)
+                            end
                         end
                     end
                 end
@@ -88,6 +90,7 @@ class Statement < ApplicationRecord
                         end
                     end
                 end
+                StatementMailer.pdf_attachment_method(self).deliver
             end
         end
         if ass_users.count > 0 && self.po.statements.all.where(type: 'AssociateStatement').count >= 1

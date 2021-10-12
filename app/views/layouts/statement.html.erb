@@ -113,7 +113,17 @@
                 <p class="green upcase">Discounts: (<%= sanitized_show_money(@statement, @statement.total_discounts) %>)</p>
             </strong>
         <% end %>
-            <h3 class="upcase">Subtotal: <%= sanitized_show_money(@statement, @statement.subtotal) %></h3>
+            <h3 class="upcase">
+                <% if @statement.type == 'AssociateStatement' %>
+                   Client 
+                <% end %>
+                Subtotal: <%= sanitized_show_money(@statement, @statement.subtotal) %>
+            </h3>
+            <% if @statement.type == 'AssociateStatement' %>
+                <h4>
+                    Associate Total: <%= @statement.total %>
+                </h4>
+            <% end %>
         </div>
         <div class="extra-padding">
             <h2>Installments</h2>

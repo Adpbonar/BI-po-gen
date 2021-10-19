@@ -1,5 +1,5 @@
 class SavedDetail < ApplicationRecord
-    belongs_to saved_item
+    belongs_to :saved_item
 
     validates :title, presence: true
     validates :hours, presence: true

@@ -1,5 +1,5 @@
 <div class="invoice-image">
-    <%= image_tag 'Bonar-Institute-Logo-Primary', alt: 'Bonar Institute Logo', class: 'top-bottom-spacing', width: '350px' %>   <h1><%= @statement.type.split("S").first %> Statement</h1>
+    <%= image_tag 'Bonar-Institute-Logo-Primary.jpg', alt: 'Bonar Institute Logo', class: 'top-bottom-spacing', width: '350px' %>   <h1><%= @statement.type.split("S").first %> Statement</h1>
 </div>
 <%= link_to 'back to po', po_path(@statement.po), class: "btn btn-secondary" %>
 <% if @statement.type == "GeneralStatement" %>

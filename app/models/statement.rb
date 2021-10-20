@@ -52,7 +52,7 @@ class Statement < ApplicationRecord
         PoUser.destroy_duplicates_by(:participant_id, :po_id)
         if self.po.status == 'Prepared' && self.po.statements.count == 1 && self.type == 'GeneralStatement' 
             unless self.po.found.blank?
-                Participant.find(self.po.found.to_i)
+                initiator = Participant.find(self.po.found.to_i)
                 if initiator
                     founder_statement = AssociateStatement.create(po_id: self.po.id, total: percentage_amount(self.subtotal.to_d, self.po.founder_percentage), company_name: initiator.company, participant_name: initiator.name, participant_address: initiator.address, invoice_number: self.po.po_number.to_s + '-I')
                     self.line_items.each do |item|

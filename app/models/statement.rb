@@ -89,8 +89,9 @@ class Statement < ApplicationRecord
                             end
                         end
                     end
+                    
                 end
-                StatementMailer.pdf_attachment_method(associate_statement).deliver
+                StatementMailer.pdf_attachment.deliver
             end
         end
         if ass_users.count > 0 && self.po.statements.all.where(type: 'AssociateStatement').count >= 1

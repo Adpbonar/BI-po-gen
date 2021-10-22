@@ -100,7 +100,6 @@ class Statement < ApplicationRecord
     end
 
     def generate_client_statement
-        
         if ass_users.count > 0 && self.po.statements.all.where(type: 'ClientStatement').count >= 1
             self.po.update(status: 'All Statements Submitted')
             self.update(status_code: 'L')

@@ -1,8 +1,10 @@
 <div class="invoice-image">
     <%= image_tag 'Bonar-Institute-Logo-Primary.jpg', alt: 'Bonar Institute Logo', class: 'top-bottom-spacing', width: '350px' %>   
-    <h1> Statement</h1>
+    <h1><%= @statement.type.split("S").first %> Statement</h1>
 </div>
-<%= link_to 'back to po', po_path(@statement.po), class: "btn btn-secondary" %>
+<% unless @statement.po.status == 'Prepared' %>
+    <%= link_to 'back to po', po_path(@statement.po), class: "btn btn-secondary" %>
+<% end %>
 <% if @statement.type == "GeneralStatement" %>
     <%= render partial: 'general', statement: @statement %>
 <% end %>
@@ -14,7 +16,7 @@
             Show Detailed Information
         <% end %>
     <% end %>
-    <%= link_to 'PDF', statement_path(@statement) + '.pdf', class: 'btn btn-success' %>
+    <%= link_to 'PDF', statement_url(@statement) + '.pdf', class: 'btn btn-success' %>
     <% end %>
 <div id="Print">
 

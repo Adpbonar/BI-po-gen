@@ -1,5 +1,15 @@
 <html>
     <body>
+    <% 
+
+        def statement_money(record1, record2)
+            if record1.po.currency.html_safe.to_s.include?('$')
+            return number_to_currency(record2)
+            else
+            return record1.po.currency.html_safe.to_s + number_to_currency(record2).split("$").last
+            end
+        end
+      %>
         <div class="invoice-image"> 
             <table width="100%">
                 <tbody>
@@ -67,7 +77,7 @@
                             </td>
                             <% if items == 'yes' %>
                                 <td style="width: 12.5%; vertical-align: top;" class="td-border">
-                                    <%= sanitized_show_money(@statement, item.cost) %>
+                                    <%= statement_money(@statement, item.cost) %>
                                 </td>
                                 <td style="width: 12.5%; vertical-align: top;" class="td-border">
                                         <% item.discounts.each do |discount| %>
@@ -76,7 +86,7 @@
                                 </td>
                             <% else %>
                                 <td style="width: 25%; vertical-align: top;" class="td-border">
-                                    <%= show_money(@statement, item.cost) %>
+                                    <%= statement_money(@statement, item.cost) %>
                                 </td>
                             <% end %>
                         </tr>
@@ -91,14 +101,14 @@
                         </td>
                         <% if items == 'yes' %>
                             <td style="width: 12.5%" class="td-border">
-                                <%= sanitized_show_money(@statement, @statement.no_discount_cost) %>
+                                <%= statement_money(@statement, @statement.no_discount_cost) %>
                             </td>
                             <td style="width: 12.5%;" class="td-border">
-                                    - <%= sanitized_show_money(@statement, @statement.total_discounts) %>
+                                    - <%= statement_money(@statement, @statement.total_discounts) %>
                             </td>
                         <% else %>
                             <td style="width: 25%" class="td-border">
-                                <%= sanitized_show_money(@statement, @statement.no_discount_cost) %>
+                                <%= statement_money(@statement, @statement.no_discount_cost) %>
                             </td>
                         <% end %>
                     </tr>
@@ -109,15 +119,15 @@
         <div class="top-bottom-spacing">  
         <% if items == 'yes' %>
             <strong>
-                <p class="upcase">Value of Items: <%= sanitized_show_money(@statement, @statement.no_discount_cost) %></p>
-                <p class="green upcase">Discounts: (<%= sanitized_show_money(@statement, @statement.total_discounts) %>)</p>
+                <p class="upcase">Value of Items: <%= statement_money(@statement, @statement.no_discount_cost) %></p>
+                <p class="green upcase">Discounts: (<%= statement_money(@statement, @statement.total_discounts) %>)</p>
             </strong>
         <% end %>
             <h3 class="upcase">
                 <% if @statement.type == 'AssociateStatement' %>
                    Client 
                 <% end %>
-                Subtotal: <%= sanitized_show_money(@statement, @statement.subtotal) %>
+                Subtotal: <%= statement_money(@statement, @statement.subtotal) %>
             </h3>
             <% if @statement.type == 'AssociateStatement' %>
                 <h4>
@@ -127,8 +137,8 @@
         </div>
         <div class="extra-padding">
             <h2>Installments</h2>
-            <% @installments_amounts.each_with_index do |installment, index| %>
-                <p><b>Installment <%= index + 1 %>:</b> <%= sanitized_show_money(installment, installment.cost) %> due on <b><%= read_date(installment.due_date) %></b>
+            <% @statement.po.installments.order(:id).each_with_index do |installment, index| %>
+                <p><b>Installment <%= index + 1 %>:</b> <%= statement_money(installment, installment.cost) %> due on <b><%= installment.due_date.strftime("%B %e, %Y") %></b>
             <% end %>
             </div>
         </div>

@@ -50,8 +50,7 @@ class Statement < ApplicationRecord
     def generate_associate_statement
         ass_users = self.po.po_users
         PoUser.destroy_duplicates_by(:participant_id, :po_id)
-        if self.po.status == 'Prepared' && self.po.statements.count == 1 
-            # && self.type == 'GeneralStatement' 
+        if self.po.status == 'Prepared' && self.po.statements.count == 1 && self.type == 'GeneralStatement' 
             unless self.po.found.blank?
                 initiator = Participant.find(self.po.found.to_i)
                 if initiator

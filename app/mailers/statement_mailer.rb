@@ -28,7 +28,7 @@ class StatementMailer < ApplicationMailer
                     lowquality: false,
                     zoom: 1,
                     footer: { 
-                    :center => "Bonar Institute Invoice # " + @statement.po.invoice_number.to_s + "  |  " +'Page: [page] of [topage]' 
+                    :center => "Bonar Institute Invoice # " + @statement.invoice_number.to_s + "  |  " +'Page: [page] of [topage]' 
                     }       
                 )
             )

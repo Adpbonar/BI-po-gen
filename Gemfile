@@ -76,3 +76,11 @@ gem "country_select", "~> 6.0"
 gem "wicked_pdf", "~> 2.1"
 
 gem "wkhtmltopdf-binary", "~> 0.12.6"
+
+gem "administrate", "~> 0.16.0"
+
+gem 'rubyzip', '>= 1.2.1'
+
+gem 'axlsx', git: 'https://github.com/randym/axlsx.git', ref: 'c8ac844'
+
+gem 'axlsx_rails'

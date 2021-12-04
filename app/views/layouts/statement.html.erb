@@ -138,7 +138,6 @@
         <div class="extra-padding">
             <h2>Installments</h2>
             <% @statement.po.installments.order(:id).each_with_index do |installment, index| %>
-                rai
                 <p><b>Installment <%= index + 1 %>:</b> <%= statement_money(installment, installment.cost) %> due on <b><%= installment.due_date.strftime("%B %e, %Y") %></b>
             <% end %>
             </div>

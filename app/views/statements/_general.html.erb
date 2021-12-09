@@ -1,33 +1,30 @@
-<p class="tax">PO <%= @statement.po.po_number %></p>
-<p class="tax">PO Tax Amount: <%= @statement.po.tax_amount %>%</p>
-<% unless @statement.locked %>
-    <%= content_tag :div, class: 'ethicsLink', data: { reflex: "click->StatementReflex#show", id: @statement.id } do %>
-        Add Programs
-    <% end %>
-<% end %>
-<% if @statement.po.status == 'Prepared' && @statement.status_code == nil && ! @statement.locked %>
+<div statement data-reflex-root="[statement]">
+    <p class="tax">PO <%= @statement.po.po_number %></p>
+    <p class="tax">PO Tax Amount: <%= @statement.po.tax_amount %>%</p>
+
+    <% if @statement.po.status == 'Prepared' && @statement.status_code == nil && ! @statement.locked %>
     <%= content_tag :button, class: 'btn btn-success', data: { reflex: "click->StatementReflex#associates_generate", id: @statement.id } do %>
-        generate associate statements
+    generate associate statements
     <% end %>
-<% end %>
-<h2>Expense Items</h2>
-<% if @expenses.each do |item| %>
+    <% end %>
+    <h2>Expense Items</h2>
+    <% if @expenses.each do |item| %>
     <div>
         <div class="top-bottom-spacing">
             <p class="upcase" style="font-weight: 700"><%= item.title.capitalize %>
-                <% unless @statement.locked %> | 
-                    <%= link_to 'Edit', edit_line_item_path(item), class: 'default-link' %>
+                <% unless @statement.locked %> |
+                <%= link_to 'Edit', edit_line_item_path(item), class: 'default-link' %>
                 <% end %>
             </p>
             <table style="border: none !important; width: 100%;">
                 <tbody>
                     <tr class="upcase">
                         <td style="width: 20%;">
-                            <p>Price: 
+                            <p>Price:
                                 <% if ! item.expense_exempt_from_tax %>
-                                    <%= show_money(item.statement, item.cost).to_s + ' + tax ' + @statement.po.tax_amount.to_s + '% ' + show_money(item.statement, (item.cost + show_percentage_amount(item.cost, @statement.po.tax_amount))).to_s %>
+                                <%= show_money(item.statement, item.cost).to_s + ' + tax ' + @statement.po.tax_amount.to_s + '% ' + show_money(item.statement, (item.cost + show_percentage_amount(item.cost, @statement.po.tax_amount))).to_s %>
                                 <% else %>
-                                    <%= show_money(item.statement, item.cost) %>
+                                <%= show_money(item.statement, item.cost) %>
                                 <% end %>
                             </p>
                         </td>
@@ -44,10 +41,10 @@
                         </td>
                         <td style="width: 20%;">
                             <% unless @statement.locked %>
-                                <%= button_tag 'X', class: 'btn-danger btn-sm', style: 'position: relative; right: 1em;', data: { reflex: "click->ItemReflex#remove", id: item.id } %>
-                                <% if item.saved_item_check %>
-                                    <%= button_tag 'Save', class: 'btn-success btn', style: 'position: relative; right: 1em;', data: { reflex: "click->ItemReflex#save", id: item.id } %>
-                                <% end %>
+                            <%= button_tag 'X', class: 'btn-danger btn-sm', style: 'position: relative; right: 1em;', data: { reflex: "click->ItemReflex#remove", id: item.id } %>
+                            <% if item.saved_item_check %>
+                            <%= button_tag 'Save', class: 'btn-success btn', style: 'position: relative; right: 1em;', data: { reflex: "click->ItemReflex#save", id: item.id } %>
+                            <% end %>
                             <% end %>
                         </td>
                     </tr>
@@ -57,31 +54,32 @@
             <hr />
         </div>
     </div>
-<% end.any? %>
-<% else %>
-none
-<% end %>
-<p class="tax center"><b>Taxes on all expenses: <%= show_money(@statement, @statement.expense_tax) %></b></p>
-<h2>Services</h2>
-<% if @services.each do |item| %>
+    <% end.any? %>
+    <% else %>
+    none
+    <% end %>
+    <p class="tax center"><b>Taxes on all expenses: <%= show_money(@statement, @statement.expense_tax) %></b></p>
+    <h2>Services</h2>
+    <% if @services.each do |item| %>
     <div>
         <div class="top-bottom-spacing">
             <p class="upcase" style="font-weight: 700"><%= item.title.capitalize %>
-                <% unless @statement.locked %> | 
-                    <%= link_to 'Edit', edit_line_item_path(item), class: 'default-link' %>
+                <% unless @statement.locked %> |
+                <%= link_to 'Edit', edit_line_item_path(item), class: 'default-link' %>
                 <% end %>
             </p>
             <table style="border: none !important; width: 100%;">
                 <tbody>
                     <tr class="upcase">
                         <td style="width: 25%;">
-                        <p>
-                            <% unless item.discounts.any? %>
+                            <p>
+                                <% unless item.discounts.any? %>
                                 Price: <%= show_money(item.statement, item.cost) %>
-                            <% else %>
-                                <span style="text-decoration: line-through;">Original Price: <%= show_money(item.statement, item.cost) %>
-                            <% end %>
-                        </p>
+                                <% else %>
+                                <span style="text-decoration: line-through;">Original Price:
+                                    <%= show_money(item.statement, item.cost) %>
+                                    <% end %>
+                            </p>
                         </td>
                         <td style="width: 25%;">
                             <p>Customer Tax: <%= item.taxable %></p>
@@ -91,119 +89,140 @@ none
                         </td>
                         <td style="width: 25%;">
                             <% unless @statement.locked %>
-                                <%= button_tag 'X', class: 'btn-danger btn-sm', style: 'position: relative; right: 1em;', data: { reflex: "click->ItemReflex#remove", id: item.id } %>
-                                <% if item.saved_item_check %>
-                                    <%= button_tag 'Save', class: 'btn-success btn', style: 'position: relative; right: 1em;', data: { reflex: "click->ItemReflex#save", id: item.id } %>
-                                <% end %>
+                            <%= button_tag 'X', class: 'btn-danger btn-sm', style: 'position: relative; right: 1em;', data: { reflex: "click->ItemReflex#remove", id: item.id } %>
+                            <% if item.saved_item_check %>
+                            <%= button_tag 'Save', class: 'btn-success btn', style: 'position: relative; right: 1em;', data: { reflex: "click->ItemReflex#save", id: item.id } %>
                             <% end %>
-                        </td>                    
+                            <% end %>
+                        </td>
                     </tr>
                 </tbody>
             </table>
             <div><%=sanitize item.description %></div>
             <div>
-            <% unless @statement.locked %>
+                <% unless @statement.locked %>
                 <% unless item.calculate_discounts == "Free" && item == 'ServiceItem' %>
-                    <h3 class="center">Add Discount</h3>
-                    <%= simple_form_for(@discount) do |f| %>
-                        <table style="border: none !important; width: 100%;">
-                            <tbody>
-                                <tr>
-                                    <td style="width: 50%; padding: 1em;">
-                                        <%= f.input :amount %>
-                                    </td>
-                                    <td style="width: 50%; padding: 1em;">
-                                        <%= f.input :amount_type, as: :select, collection: Discount::TYPE, label: 'Type of Discount' %>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="width: 100%; padding: 1em; text-align:center" colspan="2">
-                                        <%= f.input :line_item_id, as: :hidden, :input_html => { :value => item.id }  %>
-                                        <%= f.submit 'save discount', class: "btn btn-primary" %>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    <% end %>
+                <h3 class="center">Add Discount</h3>
+                <%= simple_form_for(@discount) do |f| %>
+                <table style="border: none !important; width: 100%;">
+                    <tbody>
+                        <tr>
+                            <td style="width: 50%; padding: 1em;">
+                                <%= f.input :amount %>
+                            </td>
+                            <td style="width: 50%; padding: 1em;">
+                                <%= f.input :amount_type, as: :select, collection: Discount::TYPE, label: 'Type of Discount' %>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 100%; padding: 1em; text-align:center" colspan="2">
+                                <%= f.input :line_item_id, as: :hidden, :input_html => { :value => item.id }  %>
+                                <%= f.submit 'save discount', class: "btn btn-primary" %>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <% end %>
                 <% end %>
             </div>
-        <% end %>
+            <% end %>
         </div>
+        <div>
             <% item.discounts.each_with_index do |discount, i| %>
-                <% turbo_stream_from discount %>
-                <% if i == 0 %>
-                    <% unless discount.line_item.calculate_discounts == "Free" %>
-                        <div class="top-bottom-spacing"><p><b>New Price:</b></p> <%= show_money(discount.line_item.statement, discount.line_item.calculate_discounts) %></p></div>
-                    <% else %>
-                        <div class="top-bottom-spacing"><p><b>New Price:</b></p><%= discount.line_item.calculate_discounts %></p></div>
-                    <% end %>
-                <% end %>
-                <%= render discount %>
-            <% end %>
-            <hr />
-        </div>
-    <% end.any? %>
-<% else %>
-    none 
-<% end %>
-<p class="tax center"><b>Taxes on all services: <%= show_money(@statement, @statement.service_tax) %></b></p>
-<div class="extra-padding">
-    <% if @statement.line_items.any? %>
-        <h2 class="center">Installments</h2>
-        <p class="center">Installment Percentage Breakdown: <%= @installment_info %>  | Currency: <%= show_currency(@statement.po) %></p>
-        <div class="extra-padding">
-            <% @installments_amounts.each_with_index do |installment, index| %>
-                <p><b>Installment <%= index + 1 %>:</b> <span class="highlight"><%= show_money(installment, installment.cost) %></span> due on <b><%= read_date(installment.due_date) %></b>
-            <% end %>
-            <h3 class="upcase total-box"><span class="green">Subtotal:</span> <%= show_money(@statement, @statement.subtotal) %></h3> 
-            <p class="tax">+ Applicable Tax: <%= show_money(@statement, @statement.tax) %>
-            <h3 class="upcase total-box"><span class="green">Total:</span> <%= show_money(@statement, (@statement.subtotal + @statement.tax)) %></h3>
-        </div>
-    <% else %>
-        <h2 class="center">No cost for this statement yet...</h2>
-        <p class="center">Get started by adding an item.</p>
-    <% end %>
-</div>
-
-<% if @statement.show_programs %>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-    <div id="ethics" class="overlay">
-        <div class="overlay-content">
-            <div id="ethicsClose" class="closeContainter">
-                <%= content_tag :span, alt: "close", role: "button", title: "Close", class: "closebtn", data: { reflex: "click->StatementReflex#hide", id: @statement.id } do %>
-                    <div class="closeDesign">×</div>
-                <% end %>
+            <% turbo_stream_from discount %>
+            <% if i == 0 %>
+            <% unless discount.line_item.calculate_discounts == "Free" %>
+            <div class="top-bottom-spacing">
+                <p><b>New Price:</b></p>
+                <%= show_money(discount.line_item.statement, discount.line_item.calculate_discounts) %></p>
             </div>
-            <div class="default">
-            <div style="width: 100%;">
-            <h1 class="center">Add Programs</h1>
-<% unless @saved_items.empty? %>
-    <div class="top-bottom-spacing" style="width: 100%;">
-        <h2 class="center">Saved Items</h2>
-        <% @saved_items.group_by(&:type_of).each do |type_of, saved_items| %>
-                <h3 class="center"><%= type_of %>s</h3>
-            
-                    <% saved_items.each do |saved_item| %>
-                        <%= content_tag :div, class: 'saved-item', data: { reflex: "click->ItemReflex#add", id: saved_item.id, statement: @statement.id }  do %>
-                            <%= saved_item.title %>
-                        <% end %>
-                <% end %>
-        
+            <% else %>
+            <div class="top-bottom-spacing">
+                <p><b>New Price:</b></p><%= discount.line_item.calculate_discounts %></p>
+            </div>
+            <% end %>
+            <% end %>
+        </div>
+        <%= render discount %>
         <% end %>
+        <hr />
     </div>
-    <div class="form-holder">
-    <h2 class="center">Create a new Item</h2>
-    </div>
-<% else %>
+    <% end.any? %>
+    <% else %>
+    none
+    <% end %>
 
-    <h2 class="center">Add Item</h2> 
-<% end %>
-</div>
-<div class="form-holder">
-<%= render 'line_items/form', line_item: @line_item %>
-</div>
-</div>
+    <p class="tax center"><b>Taxes on all services: <%= show_money(@statement, @statement.service_tax) %></b></p>
+    <div>
+        <div class="extra-padding">
+            <div>
+                <% if @statement.line_items.any? %>
+                <h2 class="center">Installments</h2>
+                <p class="center">Installment Percentage Breakdown: <%= @installment_info %> | Currency:
+                    <%= show_currency(@statement.po) %></p>
+                <div class="extra-padding">
+                    <% @installments_amounts.each_with_index do |installment, index| %>
+                    <p><b>Installment <%= index + 1 %>:</b> <span
+                            class="highlight"><%= show_money(installment, installment.cost) %></span> due on
+                        <b><%= read_date(installment.due_date) %></b></p>
+                    <% end %>
+                    <h3 class="upcase total-box"><span class="green">Subtotal:</span>
+                        <%= show_money(@statement, @statement.subtotal) %></h3>
+                    <p class="tax">+ Applicable Tax: <%= show_money(@statement, @statement.tax) %></p>
+                    <h3 class="upcase total-box"><span class="green">Total:</span>
+                        <%= show_money(@statement, (@statement.subtotal + @statement.tax)) %></h3>
+                </div>
+                <% else %>
+                <h2 class="center">No cost for this statement yet...</h2>
+                <p class="center">Get started by adding an item.</p>
+                <% end %>
             </div>
         </div>
     </div>
-<% end %>
+</div>
+</div>
+<div class="search">
+    <h1>Add a saved program</h1>
+    <center>
+        <div style="margin-bottom: 1em;"><%= form_with url: search_programs_path, method: :get  do |form| %>
+            <%= form.text_field :q, placeholder: 'Start typing', id: 'program-search', data: { behavior: "autocomplete" } %>
+            <% end %>
+        </div>
+    </center>
+</div>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<div id="ethics" class="overlay">
+    <div id="done" class="btn btn-success" style="display: none;">Done Adding</div>
+    <div class="default">
+        <div style="width: 100%;">
+            <div class="overlay-content">
+
+                <% unless @saved_items.empty? %>
+                <div class="top-bottom-spacing" style="width: 100%;">
+                    <% @saved_items.group_by(&:type_of).each do |type_of, saved_items| %>
+                    <h3 class="center"><%= type_of %>s</h3>
+                    <p class="center">Click to add <u>saved <%= type_of.downcase %></u> after selecting from the
+                        search dropdown above.</center>
+                        <% saved_items.each do |saved_item| %>
+                        <%= content_tag :div, class: 'saved-item', id: saved_item.title.split(" ").join.downcase.to_s.gsub!(/[^0-9A-Za-z]/, ''), style: 'display: none;', data: { reflex: "click->ItemReflex#add", id: saved_item.id, statement: @statement.id }  do %>
+                        <%= saved_item.title %>
+                        <% end %>
+                        <% end %>
+
+                        <% end %>
+                </div>
+                <div class="form-holder">
+                    <h2 class="center">Create a new Item</h2>
+                </div>
+                <% else %>
+
+                <h2 class="center">Add Item</h2>
+                <% end %>
+            </div>
+            <div class="form-holder">
+                <%= render 'line_items/form', line_item: @line_item %>
+            </div>
+        </div>
+    </div>
+</div>
+</div>

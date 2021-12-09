@@ -38,7 +38,7 @@ class StatementReflex < ApplicationReflex
     unless po.locked
       if statement.valid?
           statement.update(show_programs: false)
-          morph :page
+          morph :nothing
       end
       po.set_status
     end

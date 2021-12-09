@@ -28,6 +28,14 @@ class Discount < ApplicationRecord
     errors.add :discount_type, 'is not valid'
   end
 
+  def type_of_discount
+    if self.discount_type == 0
+      return self.amount.to_s + 'percent'
+    else
+      return 'amount: ' + self.amount.to_s
+    end
+  end
+
   TYPE = {
         'Amount': '1',
         'Percentage': '0',

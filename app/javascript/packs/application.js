@@ -14,6 +14,7 @@ import "@hotwired/turbo-rails"
 import "controllers"
 
 require("flatpickr/dist/flatpickr.css")
+require("easy-autocomplete")
 
 Rails.start()
 ActiveStorage.start()
@@ -56,5 +57,5 @@ document.addEventListener("turbo:load", function () {
           var value = installmentSubmit.setAttribute("data-installments", installmentInput.value);
       });
     }
+
   });
-  

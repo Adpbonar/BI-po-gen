@@ -1,6 +1,7 @@
 class LineItemsController < ApplicationController
   before_action :set_line_item, only: %i[ edit update destroy ]
   before_action :authenticate_user!
+  before_action :force_json, only: :search_programs
 
   # GET /line_items/new
   def new
@@ -57,7 +58,16 @@ class LineItemsController < ApplicationController
     end
   end
 
+  def search_programs
+    @r = SavedItem.ransack(title_cont: params[:q]).result(distinct: true)
+  end
+
   private
+
+    def force_json
+      request.format = :json
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_line_item
       @line_item = LineItem.find(params[:id])

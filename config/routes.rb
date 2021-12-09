@@ -45,6 +45,8 @@ Rails.application.routes.draw do
   # end
 
   devise_for :users
+
+  get :search_programs, controller: :line_items
   
 end
   

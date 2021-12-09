@@ -28,3 +28,62 @@
 <style>
     input { width: 50%; margin-bottom: 2px; }
 </style>
+
+
+<script>
+document.addEventListener("turbo:load", function () {
+    var list = ""
+    $input = $("[data-behavior='autocomplete']")
+    $('#program-search').keydown(function (event) {
+        if (event.which === 13 || event.keyCode === 13) {
+            event.preventDefault();
+            return false;
+        }
+        else return true;
+    });
+    var options = {
+    getValue: "name",
+    url: function(phrase) {
+        return "/search_programs.json?q=" + phrase;
+    },
+    categories: [
+        {
+        listLocation: "saved_items",
+        header: "<strong>Programs</strong>",
+        },
+    ],
+    list: {
+        onChooseEvent: function() {
+        var url = $input.getSelectedItemData().url
+        $input.val("")
+        Turbo.visit(url)
+        $(url).css("display", "block");
+        $(url).css("background-color", "green");
+        setTimeout(function(){ 
+            window.history.replaceState({}, document.title, window.location.href.split('#')[0]);
+        }, 100);
+        setTimeout(function(){ 
+            $(url).css("background-color", "transparent");
+        }, 2500);
+
+$(url).click(function() {
+    $(url).css("display", "none");
+    list = "added"
+    console.log(list)
+    if (! list == "") {
+        $("#done").css("display", "block");
+    }
+    
+});
+        }
+    }
+    }
+    $input.easyAutocomplete(options)
+
+});   
+
+
+    $("#done").click(function() {
+        location.reload();
+});
+</script>

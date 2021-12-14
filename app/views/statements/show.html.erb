@@ -1,89 +1,83 @@
 <div class="invoice-image">
-    <%= image_tag 'Bonar-Institute-Logo-Primary.jpg', alt: 'Bonar Institute Logo', class: 'top-bottom-spacing', width: '350px' %>   
-    <h1><%= @statement.type.split("S").first %> Statement</h1>
+  <%= image_tag 'Bonar-Institute-Logo-Primary.jpg', alt: 'Bonar Institute Logo', class: 'top-bottom-spacing', width: '350px' %>
+  <h1><%= @statement.type.split("S").first %> Statement</h1>
 </div>
 <% unless @statement.po.status == 'Prepared' %>
-    <%= link_to 'back to po', po_path(@statement.po), class: "btn btn-secondary" %>
+  <%= link_to 'back to po', po_path(@statement.po), class: "btn btn-secondary" %>
 <% end %>
 <% if @statement.type == "GeneralStatement" %>
-    <%= render partial: 'general', statement: @statement %>
+  <%= render partial: 'general', statement: @statement %>
 <% end %>
 <% if @statement.type == "ClientStatement" || @statement.type == "AssociateStatement" %>
-    <%= button_tag class: "btn btn-info", data: { reflex: "click->StatementReflex#toggle", id: @statement.id }  do %>
-        <% if @statement.show_detailed %>
-            Show Less Information
-        <% else %>
-            Show Detailed Information
-        <% end %>
+  <%= button_tag class: "btn btn-info", data: { reflex: "click->StatementReflex#toggle", id: @statement.id }  do %>
+    <% if @statement.show_detailed %>
+      Show Less Information
+    <% else %>
+      Show Detailed Information
     <% end %>
-    <%= link_to 'PDF', statement_url(@statement) + '.pdf', class: 'btn btn-success' %>
-    <% end %>
-<div id="Print">
-
-<hr />
-<% if @statement.type == 'ClientStatement' %>
-<%= render partial: 'client', statement: @statement %>
+  <% end %>
+  <%= link_to 'PDF', statement_url(@statement) + '.pdf', class: 'btn btn-success' %>
 <% end %>
-    
-<style>
+<div id="Print">
+  <hr />
+  <% if @statement.type == 'ClientStatement' %>
+    <%= render partial: 'client', statement: @statement %>
+  <% end %>
+  <style>
     input { width: 50%; margin-bottom: 2px; }
-</style>
-
-
-<script>
-document.addEventListener("turbo:load", function () {
-    var list = ""
-    $input = $("[data-behavior='autocomplete']")
-    $('#program-search').keydown(function (event) {
-        if (event.which === 13 || event.keyCode === 13) {
-            event.preventDefault();
-            return false;
-        }
-        else return true;
-    });
-    var options = {
-    getValue: "name",
-    url: function(phrase) {
-        return "/search_programs.json?q=" + phrase;
-    },
-    categories: [
-        {
-        listLocation: "saved_items",
-        header: "<strong>Programs</strong>",
+  </style>
+  <script>
+    document.addEventListener("turbo:load", function () {
+        var list = ""
+        $input = $("[data-behavior='autocomplete']")
+        $('#program-search').keydown(function (event) {
+            if (event.which === 13 || event.keyCode === 13) {
+                event.preventDefault();
+                return false;
+            }
+            else return true;
+        });
+        var options = {
+        getValue: "name",
+        url: function(phrase) {
+            return "/search_programs.json?q=" + phrase;
         },
-    ],
-    list: {
-        onChooseEvent: function() {
-        var url = $input.getSelectedItemData().url
-        $input.val("")
-        Turbo.visit(url)
-        $(url).css("display", "block");
-        $(url).css("background-color", "green");
-        setTimeout(function(){ 
+        categories: [
+            {
+            listLocation: "saved_items",
+            header: "<strong>Programs</strong>",
+            },
+        ],
+        list: {
+            onChooseEvent: function() {
+            var url = $input.getSelectedItemData().url
+            $input.val("")
+            Turbo.visit(url)
+            $(url).css("display", "block");
+            $(url).css("background-color", "green");
             window.history.replaceState({}, document.title, window.location.href.split('#')[0]);
-        }, 100);
-        setTimeout(function(){ 
-            $(url).css("background-color", "transparent");
-        }, 2500);
+            setTimeout(function(){
+                $(url).css("background-color", "transparent");
+            }, 2500);
 
-$(url).click(function() {
-    $(url).css("display", "none");
-    list = "added"
-    console.log(list)
-    if (! list == "") {
-        $("#done").css("display", "block");
-    }
-    
-});
+    $(url).click(function() {
+        $(url).css("display", "none");
+        list = "added"
+        console.log(list)
+        if (! list == "") {
+            $("#done").css("display", "block");
         }
-    }
-    }
-    $input.easyAutocomplete(options)
 
-});   
+    });
+            }
+        }
+        }
+        $input.easyAutocomplete(options)
+
+    });
 
 
-    $("#done").click(function() {
-        location.reload();
-});
-</script>
+        $("#done").click(function() {
+            location.reload();
+    });
+  </script>

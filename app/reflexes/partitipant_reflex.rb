@@ -73,6 +73,7 @@ class PartitipantReflex  < ApplicationReflex
                 po.update(found: nil)
             end
             po.set_status
+           
         end
     end
 end

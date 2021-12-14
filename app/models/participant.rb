@@ -31,6 +31,17 @@ class Participant < ApplicationRecord
         self.type
     end
 
+
+    def member_name
+        initiator = self.name.split(" ")
+        return initiator.join(" ").split(".").last.split(" ").first
+    end
+
+
+    def first_letter
+        self.member_name.split("").first.upcase
+    end
+
     def set_currency
         if self.is_euro?
             return 'EU'
@@ -45,6 +56,5 @@ class Participant < ApplicationRecord
 
     def set_po_currency
         
-    end
-      
+    end      
 end

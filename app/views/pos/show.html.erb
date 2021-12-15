@@ -103,7 +103,7 @@
         <div class="top-bottom-spacing">
           <% @users.group_by(&:type_of).each do |type_of, participants| %>
             <h3 id="<%= type_of %>" class="center"><%= type_of %>s <button id="<%= type_of %>-button"
-                            class="btn btn-success rounded">Go to <%= type_switch(type_of) %>s</button></h3>
+                            class="contact-button btn-sm">Go to <%= type_switch(type_of) %>s</button></h3>
             <script>
               $("#<%= type_of %>-button").click(function () {
                   $('html, body').animate({

@@ -9,7 +9,7 @@ class PartitipantReflex  < ApplicationReflex
                 user.save
                 PoUser.destroy_duplicates_by(:participant_id, :po_id)
             end
-            morph :nothing
+            # morph :nothing
             po.set_status
         end
     end

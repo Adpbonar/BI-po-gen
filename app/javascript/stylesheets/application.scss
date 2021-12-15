@@ -354,7 +354,7 @@ h1 {
     border: 1px solid white;
     border-radius: 4px;
     text-align: center;
-    &:hover {
+    &:hover, &:focus {
         background-color: green;
     }
 }
@@ -389,4 +389,11 @@ h1 {
 .rounded {
     border-radius: 15%;
     padding: .2em;
+}
+
+.contacts {
+    color: white !important;
+    &:hover, &:focus {
+        color: white !important;
+    }
 }

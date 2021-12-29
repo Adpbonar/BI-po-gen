@@ -58,4 +58,8 @@ class Installment < ApplicationRecord
     def due_date_is_valid_datetime
         errors.add(:due_date, 'must be a valid datetime') if ((DateTime.parse(due_date) rescue ArgumentError) == ArgumentError)
       end
+
+      def date 
+        return self.due_date.strftime("%b %e, %Y")
+      end
 end

@@ -11,6 +11,7 @@ import "bootstrap"
 import "packs/counter"
 import "../stylesheets/application"
 import "@hotwired/turbo-rails"
+import "chartkick/chart.js"
 import "controllers"
 
 require("flatpickr/dist/flatpickr.css")

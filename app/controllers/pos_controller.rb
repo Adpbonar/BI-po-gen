@@ -2,6 +2,7 @@ class PosController < ApplicationController
   before_action :set_po, only: %i[ show edit update destroy ]
   before_action :authenticate_user!
   after_action :update_status, only: :show
+  before_action :force_json, only: :pdf_chart
 
   # GET /pos or /pos.json
   def index
@@ -71,6 +72,10 @@ class PosController < ApplicationController
       format.json { head :no_content }
       format.turbo_stream { }
     end
+  end
+
+  def pdf_chart
+    @data = Installment.all
   end
 
   private

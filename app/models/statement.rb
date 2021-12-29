@@ -105,4 +105,18 @@ class Statement < ApplicationRecord
             self.update(status_code: 'L')
         end
     end
+
+    def pdf_installment_chart
+        installments = Array.new
+        self.po.installments.order(:position).each do |portion|
+            temp = Array.new
+            installment =  'Installment ' + portion.position.to_s
+            value = portion.percentage
+            temp << installment
+            temp << value
+            temp.join
+            installments << temp
+        end
+        return installments.to_s
+    end
 end

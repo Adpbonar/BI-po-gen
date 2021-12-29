@@ -115,19 +115,24 @@ class Po < ApplicationRecord
       def initilize_default_installments
         installments = self.installments
         amount = 0.0
+        position = 0
         installments.map { |installment| amount = amount + installment.percentage.to_f }
         if amount >= 99.0 && amount < 100.01
           installments.each_with_index do |installment, index|
+            position = position + 1 
             if index == 0
                 installment.percentage = 60
                 installment.due_date = self.start_date
+                installment.position = position
             elsif index == 2
                 installment.due_date = self.end_date
                 installment.percentage = 20
+                installment.position = position
             else
               new_date = ((self.end_date.to_i - self.start_date.to_i) / 2)
               installment.due_date = self.start_date + new_date
               installment.percentage = 20
+              installment.position = position
             end
           installment.save 
         end

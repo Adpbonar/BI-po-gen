@@ -36,10 +36,10 @@ class InstallmentReflex < ApplicationReflex
       date = ((po.end_date.to_i - po.start_date.to_i) / num).round.abs
       multiple_installments.each_with_index do |installment, i| 
         if i == 0
-          portion = Installment.new(po_id: po.id, percentage: installment, due_date: po.start_date)
+          portion = Installment.new(po_id: po.id, percentage: installment, due_date: po.start_date, position: i.to_i + 1)
         else
           new_due_date = date_collector[-1] + date
-          portion = Installment.new(po_id: po.id, percentage: installment, due_date: new_due_date)
+          portion = Installment.new(po_id: po.id, percentage: installment, due_date: new_due_date, position: i.to_i + 1)
         end
         portion.save 
         date_collector << portion.due_date

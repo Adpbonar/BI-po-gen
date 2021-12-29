@@ -1,5 +1,5 @@
 <html>
-    <body>
+  <body>
     <% 
 
         def statement_money(record1, record2)
@@ -10,142 +10,148 @@
             end
         end
       %>
-        <div class="invoice-image"> 
-            <table width="100%">
-                <tbody>
-                    <tr>
-                        <td style=" width: 50%;">
-                            <%= image_tag 'https://drive.google.com/uc?export=view&id=1FzZiKhw7XzJLJOwSmJwIY7aA9QzbUDTz', alt: 'Bonar Institute Logo', class: 'top-bottom-spacing', width: '350px' %>
-                        </td>
-                        <td style=" width: 50%;">
-                            <h1>Invoice</h1>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-            <hr />
-            <p class="bold">Invoice Number: 
-            INV-<%= @statement.invoice_number %>
-            <div class="top-bottom-spacing">
-            <table width="100%">
-                <tbody>
-                    <tr>
-                        <td style=" width: 50%; vertical-align: top;">
-                            <b>From:</b>
-                            <p><%= @statement.company_name %></p>
-                            <p><%=sanitize @statement.company_address %></p>
-                        </td>
-                        <td style=" width: 50%; vertical-align: top;">
-                        <b>To:</b>
-                        <p></p>
-                        <p></p>
-                    </td>
-                    </tr>
-                </tbody>
-            </table>
-            <p><span class="bold">Service Category:</span> <%= @statement.po.service_type %></p>
-            </div>
-        </div>
-        <% if @statement.type == "ClientStatement" %>
-            <table width="100%">
-                <tbody>
-                    <td style="width: 25%;">
-                        <b>Item</b>
-                    </td>
-                    <td style="width: 50%;">
-                    <b>Description</b>
-                    </td>
-                    <td style="width: 25%;">
-                    <b>Price</b>
-                    </td>
-            <% items = '' 
-            @line_items.map { |item| items = 'yes' if item.discounts.any? } %>
-            <td style="width: 25%">
-                <% if items == 'yes' %>
-                <b>Adjustments</b>
-                <% end %>
+    <div class="invoice-image">
+      <table width="100%">
+        <tbody>
+          <tr>
+            <td style=" width: 50%;">
+              <%= image_tag 'https://drive.google.com/uc?export=view&id=1FzZiKhw7XzJLJOwSmJwIY7aA9QzbUDTz', alt: 'Bonar Institute Logo', class: 'top-bottom-spacing', width: '350px' %>
             </td>
-                <% if @statement.show_detailed == true %>
-                    <% @line_items.each do |item| %>
-                        <tr class="td-border">
-                            <td style="width: 25%; vertical-align: top;" class="td-border">
-                                <%= item.title %>
-                            </td>
-                            <td style="width: 50%" class="td-border">
-                                <%=sanitize item.description %>
-                            </td>
-                            <% if items == 'yes' %>
-                                <td style="width: 12.5%; vertical-align: top;" class="td-border">
-                                    <%= statement_money(@statement, item.cost) %>
-                                </td>
-                                <td style="width: 12.5%; vertical-align: top;" class="td-border">
-                                        <% item.discounts.each do |discount| %>
-                                            <div class="center"><%= render 'discount', discount: discount %></div>
-                                        <% end %>
-                                </td>
-                            <% else %>
-                                <td style="width: 25%; vertical-align: top;" class="td-border">
-                                    <%= statement_money(@statement, item.cost) %>
-                                </td>
-                            <% end %>
-                        </tr>
-                        <% end %>
-                <% else %>
-                        <tr>
-                        <td style="width: 25%" class="td-border">
-                            Professonal Services
-                        </td>
-                        <td style="width: 50%" class="td-border">
-                            Customized business solutions
-                        </td>
-                        <% if items == 'yes' %>
-                            <td style="width: 12.5%" class="td-border">
-                                <%= statement_money(@statement, @statement.no_discount_cost) %>
-                            </td>
-                            <td style="width: 12.5%;" class="td-border">
-                                    - <%= statement_money(@statement, @statement.total_discounts) %>
-                            </td>
-                        <% else %>
-                            <td style="width: 25%" class="td-border">
-                                <%= statement_money(@statement, @statement.no_discount_cost) %>
-                            </td>
-                        <% end %>
-                    </tr>
+            <td style=" width: 50%;">
+              <h1>Invoice</h1>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <hr />
+    <p class="bold">Invoice Number: 
+      INV-<%= @statement.invoice_number %>
+      <div class="top-bottom-spacing">
+        <table width="100%">
+          <tbody>
+            <tr>
+              <td style=" width: 50%; vertical-align: top;">
+                <b>From:</b>
+                <p><%= @statement.company_name %></p>
+                <p><%=sanitize @statement.company_address %></p>
+              </td>
+              <td style=" width: 50%; vertical-align: top;">
+                <b>To:</b>
+                <p></p>
+                <p></p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <p><span class="bold">Service Category:</span> <%= @statement.po.service_type %></p>
+      </div>
+    </div>
+    <% if @statement.type == "ClientStatement" %>
+      <table width="100%">
+        <tbody>
+          <td style="width: 25%;">
+            <b>Item</b>
+          </td>
+          <td style="width: 50%;">
+            <b>Description</b>
+          </td>
+          <td style="width: 25%;">
+            <b>Price</b>
+          </td>
+          <% items = '' 
+            @line_items.map { |item| items = 'yes' if item.discounts.any? } %>
+          <td style="width: 25%">
+            <% if items == 'yes' %>
+              <b>Adjustments</b>
+            <% end %>
+          </td>
+          <% if @statement.show_detailed == true %>
+            <% @line_items.each do |item| %>
+              <tr class="td-border">
+                <td style="width: 25%; vertical-align: top;" class="td-border">
+                  <%= item.title %>
+                </td>
+                <td style="width: 50%" class="td-border">
+                  <%=sanitize item.description %>
+                </td>
+                <% if items == 'yes' %>
+                  <td style="width: 12.5%; vertical-align: top;" class="td-border">
+                    <%= statement_money(@statement, item.cost) %>
+                  </td>
+                  <td style="width: 12.5%; vertical-align: top;" class="td-border">
+                    <% item.discounts.each do |discount| %>
+                      <div class="center"><%= render 'discount', discount: discount %></div>
                     <% end %>
-                </tbody>
-            </table>
-        <% end %>
-        <div class="top-bottom-spacing">  
-        <% if items == 'yes' %>
-            <strong>
-                <p class="upcase">Value of Items: <%= statement_money(@statement, @statement.no_discount_cost) %></p>
-                <p class="green upcase">Discounts: (<%= statement_money(@statement, @statement.total_discounts) %>)</p>
-            </strong>
-        <% end %>
-            <h3 class="upcase">
-                <% if @statement.type == 'AssociateStatement' %>
-                   Client 
+                  </td>
+                <% else %>
+                  <td style="width: 25%; vertical-align: top;" class="td-border">
+                    <%= statement_money(@statement, item.cost) %>
+                  </td>
                 <% end %>
-                Subtotal: <%= statement_money(@statement, @statement.subtotal) %>
-            </h3>
-            <% if @statement.type == 'AssociateStatement' %>
-                <h4>
-                    Associate Total: <%= @statement.total %>
-                </h4>
+              </tr>
             <% end %>
-        </div>
-        <div class="extra-padding">
-            <h2>Installments</h2>
-            <% @statement.po.installments.order(:id).each_with_index do |installment, index| %>
-                <p><b>Installment <%= index + 1 %>:</b> <%= statement_money(installment, installment.cost) %> due on <b><%= installment.due_date.strftime("%B %e, %Y") %></b>
-            <% end %>
-            </div>
-        </div>
-        <p><%=sanitize @statement.po.issued_by %></p>
-        <p>If you have any questions or concerns, please contact <%= @statement.po.show_coordinator %></p>
-    </body>
-    <style>
+          <% else %>
+            <tr>
+              <td style="width: 25%" class="td-border">
+                Professonal Services
+              </td>
+              <td style="width: 50%" class="td-border">
+                Customized business solutions
+              </td>
+              <% if items == 'yes' %>
+                <td style="width: 12.5%" class="td-border">
+                  <%= statement_money(@statement, @statement.no_discount_cost) %>
+                </td>
+                <td style="width: 12.5%;" class="td-border">
+                  - <%= statement_money(@statement, @statement.total_discounts) %>
+                </td>
+              <% else %>
+                <td style="width: 25%" class="td-border">
+                  <%= statement_money(@statement, @statement.no_discount_cost) %>
+                </td>
+              <% end %>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% end %>
+    <div class="top-bottom-spacing">
+      <% if items == 'yes' %>
+        <strong>
+          <p class="upcase">Value of Items: <%= statement_money(@statement, @statement.no_discount_cost) %></p>
+          <p class="green upcase">Discounts: (<%= statement_money(@statement, @statement.total_discounts) %>)</p>
+        </strong>
+      <% end %>
+      <h3 class="upcase">
+        <% if @statement.type == 'AssociateStatement' %>
+          Client 
+        <% end %>
+        Subtotal: <%= statement_money(@statement, @statement.subtotal) %>
+      </h3>
+      <% if @statement.type == 'AssociateStatement' %>
+        <h4>
+          Associate Total: <%= @statement.total %>
+        </h4>
+      <% end %>
+    </div>
+    <div class="extra-padding">
+      <h2>Installment Information</h2>
+            <h3>Amounts & Due Dates</h3>
+              <% @installments_amounts.each do |installment| %>
+                <p><b>Installment <%= installment.position %>:</b> <%= statement_money(installment, installment.cost) %> due on <b><%= installment.due_date.strftime("%B %e, %Y") %></b>
+                <% end %>
+              <h3>Installment Breakdown</h3>
+                <div style="width: 50%; margin-left: auto; margin-right:auto;">
+                  <canvas id="chartContainer" width="400" height="250" alt="Installment Breakdown Pie Chart" title="Installment Pie Chart"></canvas>
+                </div>
+              
+      </div>
+    </div>
+    <p><%= sanitize @statement.po.issued_by %></p>
+    <p>If you have any questions or concerns, please contact <%= @statement.po.show_coordinator %></p>
+  </body>
+  <style>
     @import "bootstrap";
 
     body {
@@ -161,7 +167,7 @@
     }
 
     table {
-        border-collapse: collapse; 
+        border-collapse: collapse;
     }
 
     table tr:not(:last-child) {
@@ -241,11 +247,74 @@
 
     .td-border td {
         padding: 1em;
-        
+
     }
 
     .bold {
         font-weight: 700;
     }
-    </style>
-</html>    
+
+    #chartContainer {
+    width: 100%;
+    height: auto;
+    }
+  </style>
+  <script>
+    function drawPieChart(data, colors) {
+        var canvas = document.getElementById("chartContainer");
+        var context = canvas.getContext("2d");
+
+        // get length of data array
+        var dataLength = data.length;
+        // declare variable to store the total of all values
+        var total = 0;
+
+        // calculate total
+        for (var i = 0; i < dataLength; i++) {
+            // add data value to total
+            total += data[i][1];
+        }
+
+        // declare X and Y coordinates of the mid-point and radius
+        var x = 100;
+        var y = 100;
+        var radius = 100;
+
+        // declare starting point (right of circle)
+        var startingPoint = 0;
+
+        for (var i = 0; i < dataLength; i++) {
+            // calculate percent of total for current value
+            var percent = data[i][1] * 100 / total;
+
+            // calculate end point using the percentage (2 is the final point for the chart)
+            var endPoint = startingPoint + (2 / 100 * percent);
+
+            // draw chart segment for current element
+            context.beginPath();
+            // select corresponding color
+            context.fillStyle = colors[i];
+            context.moveTo(x, y);
+            context.arc(x, y, radius, startingPoint * Math.PI, endPoint * Math.PI);
+            context.fill();
+
+            // starting point for next element
+            startingPoint = endPoint;
+
+            // draw labels for each element
+            context.rect(220, 25 * i, 15, 15);
+            context.fill();
+            context.fillStyle = "black";
+            context.fillText(data[i][0] + " (" + data[i][1] + "%)", 245, 25 * i + 15);
+        }
+
+
+    }
+
+    var data = <%= sanitize @pdf_chart_data %> ;
+    var colors = ["#00876c", "#6aaa96", "#aecdc2", "#f1f1f1", "#f0b8b8", "#e67f83", "#d43d51", "#ffa600", "#ff7c43", "#f95d6a", "#d45087", "#a05195", "#665191", "#2f4b7c", "#003f5c"];
+
+    // using the function
+    drawPieChart(data, colors);
+  </script>
+</html>

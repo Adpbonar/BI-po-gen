@@ -23,10 +23,13 @@
   <% if @statement.type == 'ClientStatement' %>
     <%= render partial: 'client', statement: @statement %>
   <% end %>
+  <%= pie_chart @installments_amounts.group(:position).count, donut: true, legend: true %>
   <style>
     input { width: 50%; margin-bottom: 2px; }
   </style>
   <script>
+
+ 
     document.addEventListener("turbo:load", function () {
         var list = ""
         $input = $("[data-behavior='autocomplete']")
@@ -80,4 +83,5 @@
         $("#done").click(function() {
             location.reload();
     });
+
   </script>

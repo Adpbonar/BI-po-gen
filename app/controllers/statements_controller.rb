@@ -16,8 +16,9 @@ class StatementsController < ApplicationController
     @discount = Discount.new
     @discounts = @statement.line_items
     @line_items = @statement.line_items.all.order([:type]).order([:id])
-    @installments_amounts = @statement.po.installments.order(:id)
+    @installments_amounts = @statement.po.installments.order(:position)
     @saved_items = SavedItem.all.order([:id]).reverse_order
+    @pdf_chart_data = @statement.pdf_installment_chart
     respond_to do |format|
       format.html
       format.pdf do

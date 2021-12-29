@@ -160,8 +160,8 @@
         <p class="center">Installment Percentage Breakdown: <%= @installment_info %> | Currency:
           <%= show_currency(@statement.po) %></p>
         <div class="extra-padding">
-          <% @installments_amounts.each_with_index do |installment, index| %>
-            <p><b>Installment <%= index + 1 %>:</b> <span
+          <% @installments_amounts.each do |installment| %>
+            <p><b>Installment <%= installment.position %>:</b> <span
                             class="highlight"><%= show_money(installment, installment.cost) %></span> due on
               <b><%= read_date(installment.due_date) %></b></p>
           <% end %>

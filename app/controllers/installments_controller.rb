@@ -27,6 +27,6 @@ class InstallmentsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def installment_params
-      params.require(:installment).permit(:percentage, :due_date)
+      params.require(:installment).permit(:percentage, :due_date, position)
     end
 end

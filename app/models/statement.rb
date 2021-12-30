@@ -117,6 +117,6 @@ class Statement < ApplicationRecord
             temp.join
             installments << temp
         end
-        return installments.to_s
+        return installments
     end
 end

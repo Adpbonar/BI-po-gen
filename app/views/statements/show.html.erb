@@ -23,7 +23,7 @@
   <% if @statement.type == 'ClientStatement' %>
     <%= render partial: 'client', statement: @statement %>
   <% end %>
-  <%= pie_chart @installments_amounts.group(:position).count, donut: true, legend: true %>
+  <%= pie_chart @pdf_chart_data, donut: true, legend: true, title: "Installment Percentages" %>
   <style>
     input { width: 50%; margin-bottom: 2px; }
   </style>

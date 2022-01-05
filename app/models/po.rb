@@ -46,6 +46,15 @@ class Po < ApplicationRecord
         end
     end
 
+    def options(record)
+      company = Company.first
+      if ! company.company_options.to_s.blank? && company.company_options[:user] == record
+        return company.company_options
+      else
+        errors.add :company_options, 'not set.'
+      end
+    end
+
     # estimate time to complete po
     def duration
         start_time = self.start_date

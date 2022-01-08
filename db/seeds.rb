@@ -61,14 +61,14 @@ SavedExpense.create(title: "EQI 2.0 Group Report - C-Suite", description: "<p>Ic
 SavedExpense.create(title: "Oral 360 - Senior Leaders & Entrepreneurs", description: "<p>Icludes:<ul><li>Preperation</li><li>A debrief</li></ul>", cost: 1500, taxable: true)
 SavedExpense.create(title: "Oral 360 - C-Suite", description: "<p>Icludes:<ul><li>Preperation</li><li>A debrief</li></ul>", cost: 2000, taxable: true)
 
-Statement.all.each do |s|
-    2.times do 
-        ServiceItem.create(statement_id: s.id, title: "Coaching", description: "Coaching for Devan", cost: 2000)
-    end
-    2.times do 
-        ExpenseItem.create(statement_id: s.id, title: "Assessments", description: "Assessments for Devan", cost: 2000)
-    end
-end
+# Statement.all.each do |s|
+#     2.times do 
+#         ServiceItem.create(statement_id: s.id, title: "Coaching", description: "Coaching for Devan", cost: 2000)
+#     end
+#     2.times do 
+#         ExpenseItem.create(statement_id: s.id, title: "Assessments", description: "Assessments for Devan", cost: 2000)
+#     end
+# end
 
 # Company
 

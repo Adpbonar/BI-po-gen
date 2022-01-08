@@ -17,13 +17,11 @@ Rails.application.routes.draw do
   resources :participants
   resources :line_items, only: [ :new, :create, :edit, :update, :destroy ]
   resources :po_users
-  # namespace :form_validations do
-  #   resources :line_items, only: [:create, :update]
-  # end
 
   devise_for :users
 
   get :search_programs, controller: :line_items
+  get :home, controller: :static_pages
   
 end
   

@@ -33,7 +33,7 @@ class PosController < ApplicationController
     @po.po_number = @po.set_po_number
     @po.associate_percentage = @po.options[:associate_percentage]
     @po.founder_percentage = @po.options[:business_finder]
-    @po.revenue_share = @po.options[:revenue_save]
+    @po.revenue_share = @po.options[:revenue_share]
     @po.number_of_installments = @po.options[:initial_installments].split(",").length
     @po.tax_amount = @po.options[:tax_rate]
     @po.currency = @po.options[:currency]

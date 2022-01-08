@@ -156,7 +156,7 @@ class Po < ApplicationRecord
       (self.number_of_installments).times.each do 
           installment = Installment.create(po_id: self.id, due_date: Time.now, percentage: 33.33) 
       end
-      if self.installments.count == 3
+      if self.installments.count == self.options[:initial_installments].split(",").length
         self.initilize_default_installments
       end
     end
@@ -187,9 +187,9 @@ class Po < ApplicationRecord
     def show_coordinator
       unless self.learning_coordinator.blank?
         participant = Participant.find(self.learning_coordinator)
-        return (participant.name.to_s + " at " + '<a href="mailto:' + participant.emailaddress.to_s + '">' + participant.emailaddress.to_s + '</a>.').html_safe
+        return (participant.name.to_s + ", " + '<a href="mailto:' + participant.emailaddress.to_s + '">' + participant.emailaddress.to_s + '</a>').html_safe
       else
-        return ' us at <a href="mailto:info@bonarinstitute.com">info@bonarinstitute.com</a>.'.html_safe
+        return 'Bonar Institute for Purposeful Leadership, <a href="mailto:info@bonarinstitute.com">info@bonarinstitute.com</a>'.html_safe
       end
     end
 

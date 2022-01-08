@@ -31,12 +31,12 @@ class PosController < ApplicationController
     @po = Po.new(po_params)
     @po.user = current_user
     @po.po_number = @po.set_po_number
-    @po.associate_percentage = 50
-    @po.founder_percentage = 10
-    @po.revenue_share = 7.5
-    @po.number_of_installments = 3
-    @po.tax_amount = 13
-    @po.currency = 'CA $' 
+    @po.associate_percentage = @po.options[:associate_percentage]
+    @po.founder_percentage = @po.options[:business_finder]
+    @po.revenue_share = @po.options[:revenue_save]
+    @po.number_of_installments = @po.options[:initial_installments].split(",").length
+    @po.tax_amount = @po.options[:tax_rate]
+    @po.currency = @po.options[:currency]
     @po.status = 'New' 
     respond_to do |format|
       if @po.save
@@ -72,10 +72,6 @@ class PosController < ApplicationController
       format.json { head :no_content }
       format.turbo_stream { }
     end
-  end
-
-  def pdf_chart
-    @data = Installment.all
   end
 
   private

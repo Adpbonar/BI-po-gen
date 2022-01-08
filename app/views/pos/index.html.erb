@@ -13,9 +13,7 @@
   </thead>
 
   <tbody>
-    <% @pos.each do |po| %>
-    <%= po.options(current_user.id)[:associate_percentage] %>
-    
+    <% @pos.each do |po| %>    
         <%= content_tag :tr, id: dom_id(po) do %>
           <td><%= po.title %></td>
           <td><%= po.description %></td>

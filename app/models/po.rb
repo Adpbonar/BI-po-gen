@@ -46,9 +46,9 @@ class Po < ApplicationRecord
         end
     end
 
-    def options(record)
+    def options
       company = Company.first
-      if ! company.company_options.to_s.blank? && company.company_options[:user] == record
+      if ! company.company_options.to_s.blank? 
         return company.company_options
       else
         errors.add :company_options, 'not set.'
@@ -122,6 +122,7 @@ class Po < ApplicationRecord
 
       # Add default settings to the PO installments created earlier
       def initilize_default_installments
+        defaults = self.options[:initial_installments].split(",")
         installments = self.installments
         amount = 0.0
         position = 0
@@ -130,17 +131,17 @@ class Po < ApplicationRecord
           installments.each_with_index do |installment, index|
             position = position + 1 
             if index == 0
-                installment.percentage = 60
+                installment.percentage = defaults[0].to_i
                 installment.due_date = self.start_date
                 installment.position = position
             elsif index == 2
                 installment.due_date = self.end_date
-                installment.percentage = 20
+                installment.percentage = defaults[1].to_i
                 installment.position = position
             else
               new_date = ((self.end_date.to_i - self.start_date.to_i) / 2)
               installment.due_date = self.start_date + new_date
-              installment.percentage = 20
+              installment.percentage = defaults[2].to_i
               installment.position = position
             end
           installment.save 

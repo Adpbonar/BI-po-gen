@@ -5,7 +5,7 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
-user = User.create(email: "info@bonarinstitute.com", password: "Bi1123581321!")
+# user = User.create(email: "info@bonarinstitute.com", password: "Bi1123581321!")
 
 10.times do
     Participant.create(name: Faker::Name.unique.name, emailaddress: Faker::Internet.email, type: 'Associate')
@@ -61,15 +61,3 @@ SavedExpense.create(title: "EQI 2.0 Group Report - C-Suite", description: "<p>Ic
 SavedExpense.create(title: "Oral 360 - Senior Leaders & Entrepreneurs", description: "<p>Icludes:<ul><li>Preperation</li><li>A debrief</li></ul>", cost: 1500, taxable: true)
 SavedExpense.create(title: "Oral 360 - C-Suite", description: "<p>Icludes:<ul><li>Preperation</li><li>A debrief</li></ul>", cost: 2000, taxable: true)
 
-# Statement.all.each do |s|
-#     2.times do 
-#         ServiceItem.create(statement_id: s.id, title: "Coaching", description: "Coaching for Devan", cost: 2000)
-#     end
-#     2.times do 
-#         ExpenseItem.create(statement_id: s.id, title: "Assessments", description: "Assessments for Devan", cost: 2000)
-#     end
-# end
-
-# Company
-
-Company.create(company_name: 'Bonar Institute for Purposeful Leadership Inc.', address: 'C/O James Bonar<br />355 Lyon Street North, Ottawa, ON, Canada<br />K1R 5W8')

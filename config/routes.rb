@@ -1,32 +1,9 @@
 Rails.application.routes.draw do
   namespace :admin do
-      resources :users
-      resources :line_items
-      resources :expense_items
-      resources :service_items
-      resources :pos
-      resources :participants
-      resources :associates
-      resources :clients
-      resources :installments
       resources :saved_items
-      resources :saved_services
-      resources :saved_expenses
-      resources :statements
-      resources :associate_statements
-      resources :general_statements
-      resources :client_statements
-      resources :payments
-      resources :groups
-      resources :po_users
-      resources :details
-      resources :statement_notes
       resources :companies
-      resources :members
-      resources :saved_details
-      resources :discounts
 
-      root to: "users#index"
+      root to: "saved_items#index"
     end
   resources :discounts, only: [ :new, :create, :destroy ]
   resources :installments

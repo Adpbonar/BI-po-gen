@@ -47,7 +47,6 @@ Rails.application.routes.draw do
   devise_for :users
 
   get :search_programs, controller: :line_items
-  get :pdf_chart, controller: :pos
   
 end
   

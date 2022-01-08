@@ -18,7 +18,6 @@ class Participant < ApplicationRecord
     # validates :phone, presence: true
     # validates :country_code, presence: true
     
-    broadcasts
 
     def is_euro?
         eu = ["AT", "BE", "CY", "DE", "EE", "IE", "EL", "ES", "FR", "FI", "IT", "MT", "LV", "LT", "LU", "NL", "PT", "SK", "SI"]

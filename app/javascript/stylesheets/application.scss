@@ -78,13 +78,29 @@ th {
     text-decoration: none !important;
     padding: .25rem;
     margin: .2em;
-    &:hover, &:focus {
+
+    &:hover,
+    &:focus {
         border-bottom: 3px solid grey !important;
         font-weight: 500;
     }
 }
 
-nav, .navbar-light, .bg-light {
+.scroll-btn {
+    cursor: pointer;
+    margin-left: 1em;
+
+    &:hover,
+    &:focus {
+        background-color: green;
+        border-radius: 25%;
+        border: 2px solid white;
+    }
+}
+
+nav,
+.navbar-light,
+.bg-light {
     background-color: transparent !important;
     background: transparent !important;
 }
@@ -159,14 +175,17 @@ nav, .navbar-light, .bg-light {
     margin-left: auto;
     margin-right: auto;
     overflow: hidden;
-    &:hover, &:focus {
+
+    &:hover,
+    &:focus {
         color: white;
         border: 2px solid gray;
         font-weight: 600;
     }
 }
 
-.invoice-image h1, .invoice-image img {
+.invoice-image h1,
+.invoice-image img {
     display: inline;
     text-transform: uppercase;
 }
@@ -219,28 +238,36 @@ nav, .navbar-light, .bg-light {
     display: block;
     width: 100%;
 }
+
 .closeDesign {
     padding: 4px;
     border: none !important;
     border: 0 !important;
     background: transparent !important;
 }
+
 h1 {
     text-align: center;
     margin-bottom: .5em;
 }
+
 .center {
     text-align: center;
 }
+
 .default {
     color: white !important;
 }
+
 .default-link h1 {
     color: white !important;
 }
-.default-link p, .default-link div {
+
+.default-link p,
+.default-link div {
     margin-bottom: .5em;
 }
+
 .ethicsLink {
     text-align: center;
     font-size: 2em;
@@ -253,10 +280,13 @@ h1 {
     margin-left: auto;
     margin-right: auto;
 }
-.ethicsLink:hover, .ethicsLink:focus {
+
+.ethicsLink:hover,
+.ethicsLink:focus {
     background-color: #a5a2a2;
     color: white;
 }
+
 .overlay {
     height: auto;
     width: 80%;
@@ -273,14 +303,17 @@ h1 {
     margin-left: auto;
     margin-right: auto;
 }
+
 .overlay .left {
     text-align: left !important;
     line-height: 1.3;
 }
+
 .overlay {
     -ms-overflow-style: none !important;
     scrollbar-width: none !important;
 }
+
 .overlay::-webkit-scrollbar {
     display: none !important;
 }
@@ -288,6 +321,7 @@ h1 {
 .overlay-content h1 {
     font-size: 2rem;
 }
+
 .overlay-content {
     position: relative;
     width: 100%;
@@ -299,15 +333,19 @@ h1 {
     font-size: 1rem;
     letter-spacing: 2px;
 }
+
 .overlay a {
     padding: 8px;
     text-decoration: none;
     color: #ffffff;
     transition: 0.3s;
 }
-.overlay a:hover, .overlay a:focus {
+
+.overlay a:hover,
+.overlay a:focus {
     color: #949191;
 }
+
 .overlay .closebtn {
     position: fixed;
     top: 10px;
@@ -322,21 +360,22 @@ h1 {
 .overlay .search {
     position: fixed;
     margin-bottom: 1em !important;
-    width: 40% !important; 
-    
+    width: 40% !important;
+
 }
 
 /* Modal customizations for different screen sizes */
 @media screen and (max-height: 450px) {
     .overlay a {
-        font-size: 20px 
-   }
+        font-size: 20px
+    }
+
     .overlay .closebtn {
         font-size: 30px;
         top: 15px;
         right: 10px;
         font-weight: bold;
-   }
+    }
 }
 
 .form-holder {
@@ -353,7 +392,7 @@ h1 {
 
 .removal {
     color: red;
-    font-weight: 600; 
+    font-weight: 600;
 }
 
 .contact-button {
@@ -364,7 +403,9 @@ h1 {
     border: 1px solid white;
     border-radius: 4px;
     text-align: center;
-    &:hover, &:focus {
+
+    &:hover,
+    &:focus {
         background-color: green;
     }
 }
@@ -376,12 +417,13 @@ h1 {
 
 .bigger-side {
     width: 89%;
-    vertical-align: top; 
+    vertical-align: top;
 }
 
 .smaller-side {
     width: 10%;
-    vertical-align: top; 
+    vertical-align: top;
+
     div {
         padding: .5rem;
     }
@@ -403,7 +445,9 @@ h1 {
 
 .contacts {
     color: white !important;
-    &:hover, &:focus {
+
+    &:hover,
+    &:focus {
         color: white !important;
     }
 }

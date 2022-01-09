@@ -46,22 +46,33 @@
     </div>
   </div>
   <h2>Installments</h2>
-  <% if @po.installments.count == @po.number_of_installments %>
-    <div class="upcase">Number of installments: <%= @po.number_of_installments %>
-      (<%= @po.initilize_default_installments %>) | PO client currency: <%= show_currency(@po) %> | PO value:
-      <%= @po.currency.html_safe.to_s + number_to_currency(@po.statements.first.subtotal).split("$").last %></div>
-  <% end %>
-  <% @po.installments.order([:id]).each_with_index do |installment, index| %>
-    <% if installment.due_date.present? %>
-      <div class="top-bottom-spacing">Installment <%= index + 1 %>: <span
+  <table style="width: 100%; margin: 1em;">
+    <tbody>
+      <tr>
+        <td>
+          <% if @po.installments.count == @po.number_of_installments %>
+            <div class="upcase">Number of installments: <%= @po.number_of_installments %>
+              (<%= @po.initilize_default_installments %>) | PO client currency: <%= show_currency(@po) %> | PO value:
+              <%= @po.currency.html_safe.to_s + number_to_currency(@po.statements.first.subtotal).split("$").last %></div>
+          <% end %>
+          <% @po.installments.order([:id]).each_with_index do |installment, index| %>
+            <% if installment.due_date.present? %>
+              <div class="top-bottom-spacing">Installment <%= index + 1 %>: <span
             class="highlight"><%= read_date(installment.due_date) %></span> @ <%= installment.percentage %>%</div>
-      <div><%= link_to 'Change due date', edit_installment_path(installment), class: 'btn btn-info' %></div>
-    <% else %>
-      <div class="top-bottom-spacing">Installment <%= index + 1 %>:
-        <%= link_to 'No Due Date set for installment', edit_installment_path(installment), class: 'btn btn-info' %> @
-        <%= installment.percentage %>%</div>
-    <% end %>
-  <% end %>
+              <div><%= link_to 'Change due date', edit_installment_path(installment), class: 'btn btn-info' %></div>
+            <% else %>
+              <div class="top-bottom-spacing">Installment <%= index + 1 %>:
+                <%= link_to 'No Due Date set for installment', edit_installment_path(installment), class: 'btn btn-info' %> @
+                <%= installment.percentage %>%</div>
+            <% end %>
+          <% end %>
+        </td>
+        <td>
+          <%= pie_chart @pdf_chart_data, donut: true, legend: true, title: "Installment Percentages"  %>
+        </td>
+      </tr>
+    </tbody>
+  </table>
   <h2>Statements</h2>
   <ul>
     <% @po.statements.each do |statement|%>
@@ -137,8 +148,15 @@
             </div>
             <div class="side-by-side bigger-side">
               <% participants.group_by(&:first_letter).sort.each do |first_letter, participants| %>
-                <div class="align-right" id="<%= type_of %>-<%= first_letter %>"><b><%= first_letter %></b>
+                <div class="align-right scroll-btn" id="<%= type_of %>-<%= first_letter %>"><b><%= first_letter %></b>
                 </div>
+                <script>
+                  $("#<%= type_of%>-<%= first_letter[0] %>").click(function () {
+                      $('html, body').animate({
+                          scrollTop: $("#<%= type_of%>-<%= first_letter[0] %>").offset().top
+                      }, 500);
+                  });
+                </script>
                 <hr />
                 <div>
                   <% participants.sort.each do |participant| %>

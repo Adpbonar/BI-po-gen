@@ -157,6 +157,7 @@
     <div>
       <% if @statement.line_items.any? %>
         <h2 class="center">Installments</h2>
+        <%= pie_chart @pdf_chart_data, donut: true, legend: true, title: "Installment Percentages" %>
         <p class="center">Installment Percentage Breakdown: <%= @installment_info %> | Currency:
           <%= show_currency(@statement.po) %></p>
         <div class="extra-padding">

@@ -15,6 +15,7 @@ class PosController < ApplicationController
     po_issuer = @po.user
     @users = Participant.all
     @po_users = @po.po_users.uniq
+    @pdf_chart_data = @po.statements.first.pdf_installment_chart
   end
 
   # GET /pos/new

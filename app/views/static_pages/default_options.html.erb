@@ -1,5 +1,5 @@
 <% if current_user.id == @options[:user] %>
-<h1>Edit Default Options</h1>
+<h1>Default Options</h1>
 <div class="current-options">
   <% @options.each do |key, value| %>
     <% key = key.capitalize %>
@@ -31,6 +31,8 @@
     <br />
   <% end %>
 </div>
+<hr />
+<h1>Edit Default Options</h1>
   <br />
   <h2>Change the percentage breakdown of the 3 default installments</h2>
   <strong>Edit Default Installment 1:</strong> &nbsp;<%= text_field_tag 'installment-1' %>&nbsp;

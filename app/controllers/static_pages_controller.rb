@@ -1,9 +1,14 @@
 class StaticPagesController < ApplicationController
-    before_action :authenticate_user!, only: :home
-    before_action :user_check, only: :home
+    before_action :authenticate_user!, only: :default_options
 
-    def home
-        @options = Company.first.company_options
+    def default_options
+        if user_check
+            @options = Company.first.company_options
+            @company = Company.first
+            @installments = @options[:initial_installments].split(",")
+        else
+            render plain: "Unauthorized", status: :unauthorized
+        end
     end
 
     private

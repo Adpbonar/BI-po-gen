@@ -21,7 +21,7 @@ Rails.application.routes.draw do
   devise_for :users
 
   get :search_programs, controller: :line_items
-  get :home, controller: :static_pages
+  get :default_options, controller: :static_pages, path: 'defaults'
   
 end
   

@@ -11,6 +11,9 @@ class InstallmentReflex < ApplicationReflex
     array = string.split(" ").map(&:to_i) 
     array.each do |number| 
       n = number.to_i 
+      if n == 0
+        return false
+      end
       total = total + n
     end
     if total == 100

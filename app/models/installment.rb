@@ -15,7 +15,12 @@ class Installment < ApplicationRecord
         unless po.status == "New"
             amount = 0
             installments = Installment.all.where(po_id: self.po_id)
-            installments.each { |installment| amount = amount + installment.percentage }
+            installments.each do |installment| 
+                amount = amount + installment.percentage 
+                if installment.percentage == 0 
+                    return errors.add :installment, 'cannot be 0'
+                end
+            end
             return if amount.to_i < 100 || amount.to_i > 100
             errors.add :installment_percentages, 'must equal 100'
         end

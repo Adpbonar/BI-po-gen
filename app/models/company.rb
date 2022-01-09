@@ -6,7 +6,7 @@ class Company < ApplicationRecord
     validate :options_length
 
     def options_length
-        if company_options.values.length != 7
+        if company_options.values.length != 8
             errors.add :company_options, 'not set.'
         end
     end

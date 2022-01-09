@@ -3,15 +3,14 @@ Rails.application.routes.draw do
   devise_for :users
 
   namespace :admin do
-      resources :saved_items
-      resources :companies
-
+      resources :companies, only: [ :index, :show, :edit, :update ]
+      resources :saved_items, except: [ :new ]
+          
       root to: "companies#index"
     end
     
   resources :discounts, only: [ :new, :create, :destroy ]
   resources :installments
-  resources :saved_items
   root to: 'pos#index'
   resources :pos do
     resources :installements, except: [ :new, :create ]
@@ -26,4 +25,3 @@ Rails.application.routes.draw do
   get :default_options, controller: :static_pages, path: 'defaults'
   
 end
-  

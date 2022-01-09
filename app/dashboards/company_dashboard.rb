@@ -10,8 +10,11 @@ class CompanyDashboard < Administrate::BaseDashboard
   ATTRIBUTE_TYPES = {
     id: Field::Number,
     company_name: Field::String,
-    address: Field::Text,
-    created_at: Field::DateTime,
+    address: TrixField,
+    default_associate_note: TrixField,
+    default_client_note: TrixField,
+    default_associate_terms: TrixField,
+    default_client_terms: TrixField,
     updated_at: Field::DateTime,
   }.freeze
 
@@ -24,7 +27,7 @@ class CompanyDashboard < Administrate::BaseDashboard
     id
     company_name
     address
-    created_at
+    updated_at
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
@@ -33,7 +36,10 @@ class CompanyDashboard < Administrate::BaseDashboard
     id
     company_name
     address
-    created_at
+    default_associate_note
+    default_associate_terms
+    default_client_note
+    default_client_terms
     updated_at
   ].freeze
 
@@ -43,6 +49,10 @@ class CompanyDashboard < Administrate::BaseDashboard
   FORM_ATTRIBUTES = %i[
     company_name
     address
+    default_associate_note
+    default_associate_terms
+    default_client_note
+    default_client_terms
   ].freeze
 
   # COLLECTION_FILTERS

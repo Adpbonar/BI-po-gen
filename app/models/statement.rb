@@ -2,6 +2,7 @@ class Statement < ApplicationRecord
     belongs_to :po
     has_many :line_items
     has_many :payments
+    has_one :statement_note
     encrypts :participant_address, :participant_name
     encrypts :statement_participant, type: :integer
 

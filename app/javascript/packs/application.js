@@ -82,3 +82,5 @@ document.addEventListener("turbo:load", function () {
         var value = defualtOptionsSubmit.setAttribute("data-share", associateInput.value);
     });
 });
+require("trix")
+require("@rails/actiontext")

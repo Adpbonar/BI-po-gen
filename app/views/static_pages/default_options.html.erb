@@ -53,6 +53,7 @@
   <br />
   <%= button_tag 'submit new default Settings', type: "text",  id: "default-option-submit", class: 'btn btn-secondary', data: { reflex: "click->DefaultReflex#change_default_options", id: @company.id, tax: @options[:tax_rate].to_s, finder: @options[:business_finder].to_s, share: @options[:revenue_share].to_s, work: @options[:associate_percentage].to_s } %>
   <br />
+
   <script>
     var installment1Input = document.getElementById("installment-1");
     var installment2Input = document.getElementById("installment-2");

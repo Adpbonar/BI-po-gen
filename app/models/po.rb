@@ -27,9 +27,15 @@ class Po < ApplicationRecord
     friendly_id :po_number, use: :slugged
 			
     # Verify organization of email
+    def isolate_user
+      unless self.user.email.include?("info@")
+        return self.user.email.split("@").first.to_s + " from "
+      end
+    end
+
 		def issued_by
 			if self.user.email.split('@').last == 'bonarinstitute.com'
-				return "<b>Issued by:</b> the Bonar Institute for Purposeful Leadership Inc."
+				return "<b>Issued by:</b> #{isolate_user} the Bonar Institute for Purposeful Leadership Inc."
 			else
 				errors.add(:issued_by, message: "not valid")
         self.destroy
@@ -46,6 +52,7 @@ class Po < ApplicationRecord
         end
     end
 
+    # Add default options to new POs
     def options
       company = Company.first
       if ! company.company_options.to_s.blank? 
@@ -187,7 +194,7 @@ class Po < ApplicationRecord
     def show_coordinator
       unless self.learning_coordinator.blank?
         participant = Participant.find(self.learning_coordinator)
-        return (participant.name.to_s + ", " + '<a href="mailto:' + participant.emailaddress.to_s + '">' + participant.emailaddress.to_s + '</a>').html_safe
+        return (participant.name.to_s + ", " + '<a class="default-link" href="mailto:' + participant.emailaddress.to_s + '">' + participant.emailaddress.to_s + '</a>').html_safe
       else
         return 'Bonar Institute for Purposeful Leadership, <a href="mailto:info@bonarinstitute.com">info@bonarinstitute.com</a>'.html_safe
       end

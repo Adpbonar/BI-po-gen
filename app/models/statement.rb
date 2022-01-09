@@ -114,7 +114,6 @@ class Statement < ApplicationRecord
             value = portion.percentage
             temp << installment
             temp << value
-            temp.join
             installments << temp
         end
         return installments

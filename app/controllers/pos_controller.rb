@@ -65,13 +65,15 @@ class PosController < ApplicationController
   # DELETE /pos/1 or /pos/1.json
   def destroy
     @po.installments.destroy_all
+    
     @po.statements.destroy_all
     @po.destroy
     respond_to do |format|
-      format.html { redirect_to pos_url, notice: "Po was successfully destroyed." }
+      format.html { redirect_to pos_path, notice: "Po was successfully destroyed." }
       format.json { head :no_content }
       format.turbo_stream { }
     end
+    redirect_to pos_path
   end
 
   private

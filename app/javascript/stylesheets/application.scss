@@ -74,9 +74,19 @@ th {
 
 .default-link {
     color: navy !important;
-    border-bottom: 1px solid grey !important;
+    border-bottom: 1px solid grey;
     text-decoration: none !important;
     padding: .25rem;
+    margin: .2em;
+    &:hover, &:focus {
+        border-bottom: 3px solid grey !important;
+        font-weight: 500;
+    }
+}
+
+nav, .navbar-light, .bg-light {
+    background-color: transparent !important;
+    background: transparent !important;
 }
 
 .spaced-out td {

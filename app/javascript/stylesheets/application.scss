@@ -1,5 +1,14 @@
+@import "trix";
 @import "bootstrap";
 @import 'easy-autocomplete/dist/easy-autocomplete';
+
+.trix-button--icon-code,
+.trix-button-group--file-tools,
+.trix-button--icon-heading-1,
+.trix-button--icon-quote, 
+.trix-button--icon-strike {
+  display: none !important;
+}
 
 body {
     margin-left: 2em;

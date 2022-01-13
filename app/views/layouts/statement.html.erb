@@ -1,7 +1,9 @@
 <html>
+  <head>
+    <meta charset="utf-8">
+  </head>
   <body>
     <% 
-
         def statement_money(record1, record2)
             if record1.po.currency.html_safe.to_s.include?('$')
             return number_to_currency(record2)
@@ -18,7 +20,11 @@
               <%= image_tag 'https://drive.google.com/uc?export=view&id=1FzZiKhw7XzJLJOwSmJwIY7aA9QzbUDTz', alt: 'Bonar Institute Logo', class: 'top-bottom-spacing', width: '350px' %>
             </td>
             <td style=" width: 50%;">
-              <h1>Invoice</h1>
+              <% if @statement.client %>
+                <h1>Invoice</h1>
+              <% else %>
+                <h1>Invoice Request</h1>
+              <% end %>
             </td>
           </tr>
         </tbody>
@@ -26,20 +32,19 @@
     </div>
     <hr />
     <p class="bold">Invoice Number: 
-      INV-<%= @statement.invoice_number %>
+      <%= @statement.invoice_number %>
       <div class="top-bottom-spacing">
         <table width="100%">
           <tbody>
             <tr>
               <td style=" width: 50%; vertical-align: top;">
                 <b>From:</b>
-                <p><%= @statement.company_name %></p>
-                <p><%=sanitize @statement.company_address %></p>
+                <p><%= @company_info.company_name %></p>
               </td>
               <td style=" width: 50%; vertical-align: top;">
                 <b>To:</b>
-                <p></p>
-                <p></p>
+                <p><%= @statement.participant_name %></p>
+                <p><%= @statement.participant_address %></p>
               </td>
             </tr>
           </tbody>
@@ -47,7 +52,7 @@
         <p><span class="bold">Service Category:</span> <%= @statement.po.service_type %></p>
       </div>
     </div>
-    <% if @statement.type == "ClientStatement" %>
+    <% if @statement.client %>
       <table width="100%">
         <tbody>
           <td style="width: 25%;">
@@ -116,7 +121,7 @@
         </tbody>
       </table>
     <% end %>
-    <div class="top-bottom-spacing">
+    <div>
       <% if items == 'yes' %>
         <strong>
           <p class="upcase">Value of Items: <%= statement_money(@statement, @statement.no_discount_cost) %></p>
@@ -124,204 +129,237 @@
         </strong>
       <% end %>
       <h3 class="upcase">
-        <% if @statement.type == 'AssociateStatement' %>
+        <% if @statement.associate %>
           Client 
         <% end %>
         Subtotal: <%= statement_money(@statement, @statement.subtotal) %>
       </h3>
-      <% if @statement.type == 'AssociateStatement' %>
-        <h4>
-          Associate Total: <%= @statement.total %>
-        </h4>
+      <% if @statement.associate %>
+        <h3>
+          Your Total: <%= statement_money(@statement, @statement.percentage_amount(@statement.subtotal, @statement.percentage)) %>
+        </h3>
+        <b>Your percentage per our agreement is: <%= @statement.percentage %></b><br />
+        Number of associates that participated with this PO: <%= @statement.number_participating_associates %><br />
+        <br />
       <% end %>
     </div>
-    <div class="extra-padding">
+    <div>
       <h2>Payment Information</h2>
-      <h3>Installment Breakdown</h3>
+      <h3>Payment Breakdown</h3>
       <div style="width: 50%; margin-left: auto; margin-right:auto;">
         <canvas id="chartContainer" width="400" height="250" alt="Installment Breakdown Pie Chart" title="Installment Pie Chart"></canvas>
       </div>
+      <div class="page-break"></div>
       <h4>Amounts & Due Dates</h4>
       <% @installments_amounts.each do |installment| %>
-        <p><b>Installment <%= installment.position %>:</b> <%= statement_money(installment, installment.cost) %> due on <b><%= installment.due_date.strftime("%B %e, %Y") %></b>
+        <% if @statement.client %>
+          <p><b>Payment <%= installment.position %>:</b> <%= statement_money(installment, installment.cost) %> due on <b><%= installment.due_date.strftime("%B %e, %Y") %></b>
+          <% else %>
+            <p><b>Payment <%= installment.position %>:</b> <%= statement_money(installment, @statement.percentage_amount(installment.cost, @statement.percentage)) %> to be made on or after <b><%= installment.due_date.strftime("%B %e, %Y") %></b><sup>*</sup>
+            <% end %>
+          <% end %>
+          <% if @statement.associate %>
+            <br />
+            <br />
+            <small>* Dependent upon receipt of client insallment amount.</small>
+          <% end %>
+        </div>
+      </div>
+      <br />
+      <div>
+        <% if @statement.associate %>
+          <h3>How te Associate Toal is calculated?</h3>
+          We subtracted expenses (assessment, presentation costs, etc.) from the Client Subtotal shown above. We then calculated the percentage amount using the agreed associate percentage of <%= @company[:associate_percentage] %>% and the new Client Subtotal and devided it by the number of associates that participated in the po, which led to the above total amount owed to you shown above.
         <% end %>
       </div>
-    </div>
-    <p><%= sanitize @statement.po.issued_by %></p>
-    <p>If you have any questions or concerns, please contact <span><%= @statement.po.show_coordinator %></span></p>
-  </body>
-  <style>
-    @import "bootstrap";
+      <div class="default-link">
+        <h2>Notes</h2>
+        <p class="default-link"><%= sanitize @statement.statement_note.notes %></p>
+        <h2>Terms & Conditions</h2>
+        <p><%= sanitize @statement.statement_note.terms %></a>
+        <br />
+        <hr />
+        <p><%= sanitize @statement.po.issued_by %></p>
+        <p>If you have any questions or concerns, please contact <span><%= @statement.po.show_coordinator %></span>.</p>
+      </div>
+    </body>
+    <style>
+      @import "bootstrap";
 
-    body {
-        margin-left: 2em;
-        margin-right: 2em;
-        padding-top: 1.5em;
-        padding-bottom: 1.5em;
-        # line-height: 1.5;
-    }
-
-    table, p, span, div {
-        font-size: 20px !important;
-    }
-
-    table {
-        border-collapse: collapse;
-    }
-
-    table tr:not(:last-child) {
-        border-top: 1px solid #600a15;
-        border-bottom: 1px solid #600a15;
-    }
-
-    .td-border {
-        padding: 1em;
-    }
-
-
-    td {
-        padding: .5em;
-    }
-
-    #set-installment {
-        width: 100%;
-    }
-
-    .top-bottom-spacing {
-        padding-top: 1.3em !important;
-        padding-bottom: 1.3em !important;
-    }
-
-    .center {
-        text-align: center;
-    }
-
-    .upcase {
-        text-transform: uppercase;
-    }
-
-    .total-box {
-        padding: 1em;
-        border-top: 2px solid green;
-    }
-
-    .tax {
-        font-weight: 700;
-        padding: 1em;
-        text-transform: uppercase;
-        font-size: 1.3em;
-    }
-
-    .green {
-        color: green;
-        border-bottom: 2px solid green;
-        padding-bottom: .6em;
-    }
-
-    .extra-padding {
-        padding: .5em;
-    }
-
-    .btn-sm {
-        border-radius: 50%;
-    }
-
-    .invoice-image h1, .invoice-image img {
-        display: inline-block !important;
-        text-transform: uppercase;
-    }
-
-    .invoice-image img {
-        margin-right: 2em;
-    }
-
-    .discount-applied {
-        padding: 2px;
-        margin-bottom: 2px;
-        color: green;
-        width: 170px;
-        text-align: center;
-        text-transform: uppercase;
-    }
-
-    .td-border td {
-        padding: 1em;
-
-    }
-
-    .bold {
-        font-weight: 700;
-    }
-
-    #chartContainer {
-    width: 100%;
-    height: auto;
-    }
-
-    .default-link {
-    color: navy !important;
-    border-bottom: 1px solid grey;
-    text-decoration: none !important;
-    padding: .25rem;
-    margin: .2em;
+      body {
+          margin-left: 2em;
+          margin-right: 2em;
+          padding-top: 1.5em;
+          padding-bottom: 1.5em;
+          # line-height: 1.5;
       }
-  </style>
-  <script>
-    function drawPieChart(data, colors) {
-        var canvas = document.getElementById("chartContainer");
-        var context = canvas.getContext("2d");
 
-        // get length of data array
-        var dataLength = data.length;
-        // declare variable to store the total of all values
-        var total = 0;
+      .page-break {
+      display:block;
+      clear:both;
+      page-break-after:always;
+      }
 
-        // calculate total
-        for (var i = 0; i < dataLength; i++) {
-            // add data value to total
-            total += data[i][1];
+      table, p, span, div {
+          font-size: 20px !important;
+      }
+
+      table {
+          border-collapse: collapse;
+      }
+
+      table tr:not(:last-child) {
+          border-top: 1px solid #600a15;
+          border-bottom: 1px solid #600a15;
+      }
+
+      .td-border {
+          padding: 1em;
+      }
+
+
+      td {
+          padding: .5em;
+      }
+
+      #set-installment {
+          width: 100%;
+      }
+
+      .top-bottom-spacing {
+          padding-top: 1.3em !important;
+          padding-bottom: 1.3em !important;
+      }
+
+      .center {
+          text-align: center;
+      }
+
+      .upcase {
+          text-transform: uppercase;
+      }
+
+      .total-box {
+          padding: 1em;
+          border-top: 2px solid green;
+      }
+
+      .tax {
+          font-weight: 700;
+          padding: 1em;
+          text-transform: uppercase;
+          font-size: 1.3em;
+      }
+
+      .green {
+          color: green;
+          border-bottom: 2px solid green;
+          padding-bottom: .6em;
+      }
+
+      .extra-padding {
+          padding: .5em;
+      }
+
+      .btn-sm {
+          border-radius: 50%;
+      }
+
+      .invoice-image h1, .invoice-image img {
+          display: inline-block !important;
+          text-transform: uppercase;
+      }
+
+      .invoice-image img {
+          margin-right: 2em;
+      }
+
+      .discount-applied {
+          padding: 2px;
+          margin-bottom: 2px;
+          color: green;
+          width: 170px;
+          text-align: center;
+          text-transform: uppercase;
+      }
+
+      .td-border td {
+          padding: 1em;
+
+      }
+
+      .bold {
+          font-weight: 700;
+      }
+
+      #chartContainer {
+      width: 100%;
+      height: auto;
+      }
+
+      .default-link a {
+      color: navy !important;
+      border-bottom: 1px solid grey;
+      text-decoration: none !important;
+      margin: .2rem;
         }
+    </style>
+    <script>
+      function drawPieChart(data, colors) {
+          var canvas = document.getElementById("chartContainer");
+          var context = canvas.getContext("2d");
 
-        // declare X and Y coordinates of the mid-point and radius
-        var x = 100;
-        var y = 100;
-        var radius = 100;
+          // get length of data array
+          var dataLength = data.length;
+          // declare variable to store the total of all values
+          var total = 0;
 
-        // declare starting point (right of circle)
-        var startingPoint = 0;
+          // calculate total
+          for (var i = 0; i < dataLength; i++) {
+              // add data value to total
+              total += data[i][1];
+          }
 
-        for (var i = 0; i < dataLength; i++) {
-            // calculate percent of total for current value
-            var percent = data[i][1] * 100 / total;
+          // declare X and Y coordinates of the mid-point and radius
+          var x = 100;
+          var y = 100;
+          var radius = 100;
 
-            // calculate end point using the percentage (2 is the final point for the chart)
-            var endPoint = startingPoint + (2 / 100 * percent);
+          // declare starting point (right of circle)
+          var startingPoint = 0;
 
-            // draw chart segment for current element
-            context.beginPath();
-            // select corresponding color
-            context.fillStyle = colors[i];
-            context.moveTo(x, y);
-            context.arc(x, y, radius, startingPoint * Math.PI, endPoint * Math.PI);
-            context.fill();
+          for (var i = 0; i < dataLength; i++) {
+              // calculate percent of total for current value
+              var percent = data[i][1] * 100 / total;
 
-            // starting point for next element
-            startingPoint = endPoint;
+              // calculate end point using the percentage (2 is the final point for the chart)
+              var endPoint = startingPoint + (2 / 100 * percent);
 
-            // draw labels for each element
-            context.rect(220, 25 * i, 15, 15);
-            context.fill();
-            context.fillStyle = "black";
-            context.fillText(data[i][0] + " (" + data[i][1] + "%)", 245, 25 * i + 15);
-        }
+              // draw chart segment for current element
+              context.beginPath();
+              // select corresponding color
+              context.fillStyle = colors[i];
+              context.moveTo(x, y);
+              context.arc(x, y, radius, startingPoint * Math.PI, endPoint * Math.PI);
+              context.fill();
+
+              // starting point for next element
+              startingPoint = endPoint;
+
+              // draw labels for each element
+              context.rect(220, 25 * i, 15, 15);
+              context.fill();
+              context.fillStyle = "black";
+              context.fillText(data[i][0] + " (" + data[i][1] + "%)", 245, 25 * i + 15);
+          }
 
 
-    }
+      }
 
-    var data = <%= sanitize @pdf_chart_data.to_s %> ;
-    var colors = <%= sanitize @statement.colors.to_s %>;
+      var data = <%= sanitize @pdf_chart_data.to_s %> ;
+      var colors = <%= sanitize @statement.colors.to_s %>;
 
-    // using the function
-    drawPieChart(data, colors);
-  </script>
-</html>
+      // using the function
+      drawPieChart(data, colors);
+    </script>
+  </html>

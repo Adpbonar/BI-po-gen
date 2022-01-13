@@ -11,7 +11,7 @@ class SavedItem < ApplicationRecord
     def self.model_name
         return super if self == SavedItem
         SavedItem.model_name
-      end
+    end
 
     def type_of
         self.type.split("d").last

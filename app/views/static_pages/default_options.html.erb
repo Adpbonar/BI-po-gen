@@ -1,38 +1,40 @@
 <% if current_user.id == @options[:user] %>
-<h1>Default Options</h1>
-<div class="current-options">
-  <% @options.each do |key, value| %>
-    <% key = key.capitalize %>
-    <% if key.to_s.include?("_") %>
-      <b><%= key.to_s.gsub!(/_/, ' ') %>:</b>
-    <% else %>
-      <% if key.to_s == 'User' %>
-        <b>User:</b> <%= User.find(value).email %>
-      <% else %>
-        <b><%= key %>:</b>
-      <% end %>
-    <% end %>
-    <% if key.to_s.include?("Initial") %>
-      <% @installments.each_with_index do |portion, index| %>
-        <% unless index == 2 %>
-          <%= portion.to_s + "%, " %>
+  <div data-reflex-root="[options]">
+    <h1>Default Options</h1>
+    <div options class="current-options">
+      <% @options.each do |key, value| %>
+        <% key = key.capitalize %>
+        <% if key.to_s.include?("_") %>
+          <b><%= key.to_s.gsub!(/_/, ' ') %>:</b>
         <% else %>
-          <%= portion.to_s + "%" %>
+          <% if key.to_s == 'User' %>
+            <b>User:</b> <%= User.find(value).email %>
+          <% else %>
+            <b><%= key %>:</b>
+          <% end %>
         <% end %>
+        <% if key.to_s.include?("Initial") %>
+          <% @installments.each_with_index do |portion, index| %>
+            <% unless index == 2 %>
+              <%= portion.to_s + "%, " %>
+            <% else %>
+              <%= portion.to_s + "%" %>
+            <% end %>
+          <% end %>
+        <% end %>
+        <% if value.is_a?(Integer) || value.is_a?(Float) %>
+          <% unless key.to_s == 'User' %>
+            <%= value.to_s + "%"%>
+          <% end %>
+        <% elsif ! key.to_s == "User" || ! key.to_s.include?("Initial") %>
+          <%= value %>
+        <% end %>
+        <br />
       <% end %>
-    <% end %>
-    <% if value.is_a?(Integer) || value.is_a?(Float) %>
-      <% unless key.to_s == 'User' %>
-        <%= value.to_s + "%"%>
-      <% end %>
-    <% elsif ! key.to_s == "User" || ! key.to_s.include?("Initial") %>
-      <%= value %>
-    <% end %>
-    <br />
-  <% end %>
-</div>
-<hr />
-<h1>Edit Default Options</h1>
+    </div>
+  </div>
+  <hr />
+  <h1>Edit Default Options</h1>
   <br />
   <h2>Change the percentage breakdown of the 3 default installments</h2>
   <strong>Edit Default Installment 1:</strong> &nbsp;<%= text_field_tag 'installment-1' %>&nbsp;
@@ -53,7 +55,6 @@
   <br />
   <%= button_tag 'submit new default Settings', type: "text",  id: "default-option-submit", class: 'btn btn-secondary', data: { reflex: "click->DefaultReflex#change_default_options", id: @company.id, tax: @options[:tax_rate].to_s, finder: @options[:business_finder].to_s, share: @options[:revenue_share].to_s, work: @options[:associate_percentage].to_s } %>
   <br />
-
   <script>
     var installment1Input = document.getElementById("installment-1");
     var installment2Input = document.getElementById("installment-2");
@@ -72,6 +73,9 @@
             }
             return false;
           }
+           if (e.which == 190) {
+            return true
+            }
           if (e.which > 57) {
             return false;
           }
@@ -81,8 +85,7 @@
           return true;
         }
       });
-      $(record).attr("maxlength", 2);
-      $(record).attr("value", val);
+      $(record).attr("maxlength", 4);
     }
 
     noLetters(installment1Input, "")

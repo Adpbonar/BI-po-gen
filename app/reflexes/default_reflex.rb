@@ -32,7 +32,7 @@ class DefaultReflex < ApplicationReflex
           new_default_installments = string
           company.company_options[:initial_installments] = new_default_installments
           if company.save
-                flash.alert = 'Default installments updated'
+            flash.alert = 'Default installments updated'
           else
             flash.alert = 'Default installments not updated'
           end

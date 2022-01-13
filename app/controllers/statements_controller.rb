@@ -19,10 +19,13 @@ class StatementsController < ApplicationController
     @installments_amounts = @statement.po.installments.order(:position)
     @saved_items = SavedItem.all.order([:id]).reverse_order
     @pdf_chart_data = @statement.pdf_installment_chart
+    @note = @statement.statement_note
+    @company_info = Company.first
+    @company = @company_info.company_options
     respond_to do |format|
       format.html
       format.pdf do
-        render pdf: "Bonar Institute Invoice" + @statement.po.po_number.to_s ,
+        render pdf: "Bonar Institute Invoice: " + @statement.invoice_number.to_s,
         page_size: 'Letter',
         page_height: '11in',
         page_width: '8.5in',
@@ -38,7 +41,7 @@ class StatementsController < ApplicationController
         lowquality: false,
         zoom: 1,
         footer: { 
-          :center => "Bonar Institute Invoice # " + @statement.po.po_number.to_s + "  |  " +'Page: [page] of [topage]' 
+          :center => "Bonar Institute " + @statement.invoice_number.to_s + "  |  " +'Page: [page] of [topage]' 
         }       
       end
     end 

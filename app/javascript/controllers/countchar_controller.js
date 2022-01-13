@@ -9,11 +9,14 @@ export default class extends Controller {
     if (characters >= Number(this.data.get('limit')) + 1) {
       counterDisplay.style.color = 'black'
       counterDisplay.style.backgroundColor = 'white';
+      counterDisplay.style.pading = '.25em';
       counterDisplay.style.textDecoration = 'line-through'
     } else {
       counterDisplay.style.color = 'blue'
       counterDisplay.style.backgroundColor = 'white';
       counterDisplay.style.textDecoration = 'none'
+      counterDisplay.style.pading = '.25em';
+      counterDisplay.style.borderRadius = '25%';
     }
   }
 
@@ -24,10 +27,13 @@ export default class extends Controller {
     if (characters >= Number(this.data.get('limit'))) {
       counterDisplay.style.color = 'black'
       counterDisplay.style.backgroundColor = 'white';
+      counterDisplay.style.pading = '.25em';
       counterDisplay.innerText = 'LIMIT REACHED';
     } else {
       counterDisplay.style.color = 'blue'
       counterDisplay.style.backgroundColor = 'white';
+      counterDisplay.style.pading = '.25em';
+      counterDisplay.style.borderRadius = '25%';
     }
   }
 }

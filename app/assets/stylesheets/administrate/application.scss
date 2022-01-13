@@ -30,3 +30,11 @@
 @import "components/search";
 
 @import "utilities/text-color";
+
+.trix-button--icon-code,
+.trix-button-group--file-tools,
+.trix-button--icon-heading-1,
+.trix-button--icon-quote, 
+.trix-button--icon-strike {
+  display: none !important;
+}

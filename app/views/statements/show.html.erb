@@ -15,7 +15,7 @@
     <% else %>
       Show Detailed Information
     <% end %>
-  <% end %>
+  <% end %>  
   <%= link_to 'PDF', statement_url(@statement) + '.pdf', class: 'btn btn-success' %>
 <% end %>
 <div id="Print">
@@ -23,12 +23,24 @@
   <% if @statement.type == 'ClientStatement' %>
     <%= render partial: 'client', statement: @statement %>
   <% end %>
+  <% unless @statement.type == "GeneralStatement" %>
+  <h2>Notes</h2>
+  <%= form_for(@note) do |f| %>
+  <%= f.hidden_field :notes, id: "notes"  %>
+  <trix-editor input="notes"></trix-editor>
+  <center><%= f.submit 'update notes', class: 'btn btn-success' %></center>
+  <% end %>
+  <h2>Terms & Conditions</h2>
+  <%= form_for(@note) do |f| %>
+  <%= f.hidden_field :terms, id: "terms"  %>
+  <trix-editor input="terms"></trix-editor>
+  <center><%= f.submit 'update terms & conditions', class: 'btn btn-success' %></center>
+  <% end %>
+  <% end %>
   <style>
     input { width: 50%; margin-bottom: 2px; }
   </style>
   <script>
-
- 
     document.addEventListener("turbo:load", function () {
         var list = ""
         $input = $("[data-behavior='autocomplete']")

@@ -24,10 +24,14 @@ class Statement < ApplicationRecord
       end
         
     def percentage_amount(record1, record2)
-        if record2.to_s.split(".").first.size < 2
-            return (record1.to_i * ("0.0" + record2.to_s.split(".").join).to_f)
+        if record2.to_s.split(".").to_s[0] == "0" || record2.to_s[0] == "."
+            return (record1.to_i * ("0." + record2.to_s.split(".").last.to_s).to_f)
         else
-            return (record1.to_i * ("0." + record2.to_s).to_f)
+            if record2.to_s.split(".").first.size < 2
+                return (record1.to_i * ("0.0" + record2.to_s.split(".").join).to_f)
+            else
+                return (record1.to_i * ("0." + record2.to_s).to_f)
+            end
         end
     end
 

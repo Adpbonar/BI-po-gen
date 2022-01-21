@@ -27,9 +27,7 @@ class StatementMailer < ApplicationMailer
                     },
                     lowquality: false,
                     zoom: 1,
-                    footer: { 
-                    :center => "Bonar Institute Invoice # " + @statement.invoice_number.to_s + "  |  " +'Page: [page] of [topage]' 
-                    }       
+                    footer: { content: render_to_string('pdffooter') }       
                 )
             )
         mail(to: 'info@bonarinstitute.com', subject: 'Your PDF is attached')

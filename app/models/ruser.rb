@@ -1,0 +1,2 @@
+class Ruser < ApplicationRecord
+end

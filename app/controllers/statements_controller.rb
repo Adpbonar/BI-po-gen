@@ -40,9 +40,7 @@ class StatementsController < ApplicationController
         },
         lowquality: false,
         zoom: 1,
-        footer: { 
-          :center => "Bonar Institute " + @statement.invoice_number.to_s + "  |  " +'Page: [page] of [topage]' 
-        }       
+        footer: { content: render_to_string('pdffooter')}       
       end
     end 
   end

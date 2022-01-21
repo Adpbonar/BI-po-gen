@@ -1,6 +1,8 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <%= javascript_include_tag "http://code.jquery.com/jquery-1.10.0.min.js" %>
+    <%= javascript_include_tag "http://code.jquery.com/ui/1.10.3/jquery-ui.min.js" %>
   </head>
   <body>
     <% 
@@ -10,6 +12,18 @@
             else
             return record1.po.currency.html_safe.to_s + number_to_currency(record2).split("$").last
             end
+        end
+
+        def expenses
+          expenses = 0.0
+          @statement.line_items.where(type: "ExpenseItem").all.each do |exp|
+          if exp.expense_exempt_from_tax
+            expenses = expenses + exp.expense_cost
+            else
+            expenses = expenses + exp.expense_cost + @statement.percentage_amount(exp_expense_cost, @statement.po.tax_amount)
+            end
+          end
+          return expenses
         end
       %>
     <div class="invoice-image">
@@ -145,18 +159,28 @@
     </div>
     <div>
       <h2>Payment Information</h2>
+      <% unless @statement.po.installments.count == 1 %>
       <h3>Payment Breakdown</h3>
       <div style="width: 50%; margin-left: auto; margin-right:auto;">
         <canvas id="chartContainer" width="400" height="250" alt="Installment Breakdown Pie Chart" title="Installment Pie Chart"></canvas>
       </div>
       <div class="page-break"></div>
       <h4>Amounts & Due Dates</h4>
+      <% end %>
+      <% if @statement.po.installments.count != 1 %>
       <% @installments_amounts.each do |installment| %>
         <% if @statement.client %>
           <p><b>Payment <%= installment.position %>:</b> <%= statement_money(installment, installment.cost) %> due on <b><%= installment.due_date.strftime("%B %e, %Y") %></b>
           <% else %>
             <p><b>Payment <%= installment.position %>:</b> <%= statement_money(installment, @statement.percentage_amount(installment.cost, @statement.percentage)) %> to be made on or after <b><%= installment.due_date.strftime("%B %e, %Y") %></b><sup>*</sup>
             <% end %>
+          <% end %>
+          <% else %>
+        <% if @statement.client %>
+          <b>Payment of <%= statement_money(@statement.po.installments.first, @statement.po.installments.first.cost) %> due on <%= @statement.po.installments.first.due_date.strftime("%B %e, %Y") %></b>
+          <% else %>
+          <b>Payment of <%= statement_money(@statement.po.installments.first, @statement.percentage_amount(@statement.po.installments.first.cost, @statement.percentage)) %> due on or after <%= @statement.po.installments.first.due_date.strftime("%B %e, %Y") %></b></b><sup>*</sup>
+          <% end %>
           <% end %>
           <% if @statement.associate %>
             <br />
@@ -168,8 +192,46 @@
       <br />
       <div>
         <% if @statement.associate %>
-          <h3>How te Associate Toal is calculated?</h3>
-          We subtracted expenses (assessment, presentation costs, etc.) from the Client Subtotal shown above. We then calculated the percentage amount using the agreed associate percentage of <%= @company[:associate_percentage] %>% and the new Client Subtotal and devided it by the number of associates that participated in the po, which led to the above total amount owed to you shown above.
+          <div class="calculator-box">
+            <h3>How te Associate Toal is calculated?</h3>
+            <h4>Variables</h4>
+            <table style="width: 100%">
+              <tbody>
+                <tr>
+                  <td>
+                    <strong>Client Amount:</strong>
+                    <td><%= statement_money(@statement, @statement.subtotal) %></td>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <strong>Associate Percentage:</strong>
+                    <td><%= @statement.percentage %>% </td>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <strong>Expenses:</strong>
+                    <td>Costs related to assessments, presentations, etc. (<%=statement_money(@statement, expenses) %>)</td>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <strong>Associates:</strong>
+                    <td>The number of associates that participated in this PO (<%= @statement.number_participating_associates %>).</td>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <strong>Your Total:</strong>
+                    <td><%= statement_money(@statement, @statement.percentage_amount(@statement.subtotal, @statement.percentage)) %></td>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <h4>The Formula</h4>
+            <p>((Client Amount x Associate Percentage) - Expenses) &#247; Associates = Your Totoal</p>
+          </div>
         <% end %>
       </div>
       <div class="default-link">
@@ -180,7 +242,9 @@
         <br />
         <hr />
         <p><%= sanitize @statement.po.issued_by %></p>
-        <p>If you have any questions or concerns, please contact <span><%= @statement.po.show_coordinator %></span>.</p>
+        <p>
+          If you have any questions or concerns, please contact <span><%= @statement.po.show_coordinator %></span>.
+        </p>
       </div>
     </body>
     <style>
@@ -303,6 +367,14 @@
       text-decoration: none !important;
       margin: .2rem;
         }
+
+        .calculator-box {
+        border: 2px solid green;
+        border-radius: 25px;
+        padding-left: 2em;
+        padding-right: 2em;
+        padding-bottom: 2em;
+      }
     </style>
     <script>
       function drawPieChart(data, colors) {

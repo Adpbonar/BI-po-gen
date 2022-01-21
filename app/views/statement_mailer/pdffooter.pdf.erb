@@ -1,0 +1,57 @@
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <%= javascript_include_tag "http://code.jquery.com/jquery-1.10.0.min.js" %>
+  <%= javascript_include_tag "http://code.jquery.com/ui/1.10.3/jquery-ui.min.js" %>
+  <script>
+    function number_pages() {
+      var vars = {};
+      var x = document.location.search.substring(1).split('&');
+      for (var i in x) {
+        var z = x[i].split('=', 2);
+        vars[z[0]] = unescape(z[1]);
+      }
+      var x = ['frompage', 'topage', 'page', 'webpage', 'section', 'subsection', 'subsubsection'];
+      for (var i in x) {
+        var y = document.getElementsByClassName(x[i]);
+        for (var j = 0; j < y.length; ++j) y[j].textContent = vars[x[i]];
+
+      }
+    }
+ 
+
+  </script>
+</head>
+<body onload="number_pages()">
+  <div class="footer-container">
+    <br />
+    <div class="page-footer">
+      <center><span><%= sanitize '<span class="red">Confidential</span>   Bonar Institute ' + @statement.kind? + ': <span class="bold">' + @statement.invoice_number.to_s + "</span>  |  " %></span>Page <span class="page bold"></span> of <span class="topage bold"></span></center>
+    </div>
+  </div>
+</body>
+<style>
+  .page-footer {
+    border-top: 2px solid green !important;
+    padding-top: 10px !important;
+  }
+
+  .footer-container {
+    line-height: .5;
+  }
+
+  .bold {
+    font-weight: bold;
+  }
+
+  .red {
+    font-weight: bold;
+    color: red;
+    text-transform: uppercase;
+    text-align: center;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    margin: 2px;
+    height: 50px;
+    border-bottom: 2px solid red;
+  }
+</style>

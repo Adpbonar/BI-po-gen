@@ -23,7 +23,7 @@
   <% if @statement.type == 'ClientStatement' %>
     <%= render partial: 'client', statement: @statement %>
   <% end %>
-  <% unless @statement.type == "GeneralStatement" %>
+  <% unless @statement.type == "GeneralStatement" || @note == nil %>
   <h2>Notes</h2>
   <%= form_for(@note) do |f| %>
   <%= f.hidden_field :notes, id: "notes"  %>

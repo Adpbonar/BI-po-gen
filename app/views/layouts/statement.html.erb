@@ -148,7 +148,7 @@
         <h3>
           Your Total: <%= statement_money(@statement, @statement.percentage_amount(@statement.subtotal, @statement.percentage)) %>
         </h3>
-        <b>Your percentage per our agreement is: <%= @statement.percentage %></b><br />
+        <b>Associate Percentage: <%= @statement.percentage %></b><br />
         Number of associates that participated with this PO: <%= @statement.number_participating_associates %><br />
         <br />
       <% end %>
@@ -181,7 +181,7 @@
           <% if @statement.associate %>
             <br />
             <br />
-            <small>* Dependent upon receipt of client insallment amount.</small>
+            <small>* Dependent upon receipt of client installment amount.</small>
           <% end %>
         </div>
       </div>
@@ -189,44 +189,47 @@
       <div>
         <% if @statement.associate %>
           <div class="calculator-box">
-            <h3>How te Associate Toal is calculated?</h3>
-            <h4>Variables</h4>
-            <table style="width: 100%">
+            <h3>How the Associate Toal is calculated?</h3>
+            <table style="width: 100%; border: 1px solid black;">
               <tbody>
+              <th colspan="2" style="padding: 1em;">
+              <strong>Variables</strong>
+              </th>
                 <tr>
                   <td>
                     <strong>Client Amount:</strong>
-                    <td><%= statement_money(@statement, @statement.subtotal) %></td>
+                    <td>is the Client Subtotal for this PO (<%= statement_money(@statement, @statement.subtotal) %>)</td>
                   </td>
                 </tr>
                 <tr>
                   <td>
                     <strong>Associate Percentage:</strong>
-                    <td><%= @statement.percentage %>% </td>
+                    <td>is the Associate Percentage, as per Bonar Institute Associates Aggreement (<%= @statement.percentage %>%)</td>
                   </td>
                 </tr>
                 <tr>
                   <td>
                     <strong>Expenses:</strong>
-                    <td>Costs related to assessments, presentations, etc. (<%=statement_money(@statement, expenses) %>)</td>
+                    <td>is the costs related to assessments, presentations, etc. (<%=statement_money(@statement, expenses) %>)</td>
                   </td>
                 </tr>
                 <tr>
                   <td>
                     <strong>Associates:</strong>
-                    <td>The number of associates that participated in this PO (<%= @statement.number_participating_associates %>).</td>
+                    <td>is the number of associates that participated in this PO (<%= @statement.number_participating_associates %>).</td>
                   </td>
                 </tr>
                 <tr>
                   <td>
                     <strong>Your Total:</strong>
-                    <td><%= statement_money(@statement, @statement.percentage_amount(@statement.subtotal, @statement.percentage)) %></td>
+                    <td>is your portion of Client Total (<%= statement_money(@statement, @statement.percentage_amount(@statement.subtotal, @statement.percentage)) %>)</td>
                   </td>
                 </tr>
               </tbody>
             </table>
-            <h4>The Formula</h4>
-            <p>((Client Amount x Associate Percentage) - Expenses) &#247; Associates = Your Totoal</p>
+            <div class="formula"><p><b>The Formula</b></p>
+            <span>((<b>Client Amount</b> x 0.(<b>Associate Percentage</b>)) - <b>Expenses</b>) &#247; <b>Associates</b> = <b>Your Totoal</b></span>
+          </div>
           </div>
         <% end %>
       </div>
@@ -247,129 +250,151 @@
       @import "bootstrap";
 
       body {
-          margin-left: 2em;
-          margin-right: 2em;
-          padding-top: 1.5em;
-          padding-bottom: 1.5em;
-          # line-height: 1.5;
+        margin-left: 2em;
+        margin-right: 2em;
+        padding-top: 1.5em;
+        padding-bottom: 1.5em;
+        # line-height: 1.5;
       }
 
       .page-break {
-      display:block;
-      clear:both;
-      page-break-after:always;
+        display: block;
+        clear: both;
+        page-break-after: always;
       }
 
-      table, p, span, div {
-          font-size: 20px !important;
+      table,
+      p,
+      span,
+      div {
+        font-size: 20px !important;
       }
 
       table {
-          border-collapse: collapse;
+        border-collapse: collapse;
       }
 
       table tr:not(:last-child) {
-          border-top: 1px solid #600a15;
-          border-bottom: 1px solid #600a15;
+        border-top: 1px solid #600a15;
+        border-bottom: 1px solid #600a15;
       }
 
       .td-border {
-          padding: 1em;
+        padding: 1em;
       }
 
 
       td {
-          padding: .5em;
+        padding: .5em;
       }
 
       #set-installment {
-          width: 100%;
+        width: 100%;
       }
 
       .top-bottom-spacing {
-          padding-top: 1.3em !important;
-          padding-bottom: 1.3em !important;
+        padding-top: 1.3em !important;
+        padding-bottom: 1.3em !important;
       }
 
       .center {
-          text-align: center;
+        text-align: center;
       }
 
       .upcase {
-          text-transform: uppercase;
+        text-transform: uppercase;
       }
 
       .total-box {
-          padding: 1em;
-          border-top: 2px solid green;
+        padding: 1em;
+        border-top: 2px solid green;
       }
 
       .tax {
-          font-weight: 700;
-          padding: 1em;
-          text-transform: uppercase;
-          font-size: 1.3em;
+        font-weight: 700;
+        padding: 1em;
+        text-transform: uppercase;
+        font-size: 1.3em;
       }
 
       .green {
-          color: green;
-          border-bottom: 2px solid green;
-          padding-bottom: .6em;
+        color: green;
+        border-bottom: 2px solid green;
+        padding-bottom: .6em;
       }
 
       .extra-padding {
-          padding: .5em;
+        padding: .5em;
       }
 
       .btn-sm {
-          border-radius: 50%;
+        border-radius: 50%;
       }
 
-      .invoice-image h1, .invoice-image img {
-          display: inline-block !important;
-          text-transform: uppercase;
+      .invoice-image h1,
+      .invoice-image img {
+        display: inline-block !important;
+        text-transform: uppercase;
       }
 
       .invoice-image img {
-          margin-right: 2em;
+        margin-right: 2em;
       }
 
       .discount-applied {
-          padding: 2px;
-          margin-bottom: 2px;
-          color: green;
-          width: 170px;
-          text-align: center;
-          text-transform: uppercase;
+        padding: 2px;
+        margin-bottom: 2px;
+        color: green;
+        width: 170px;
+        text-align: center;
+        text-transform: uppercase;
       }
 
       .td-border td {
-          padding: 1em;
+        padding: 1em;
 
       }
 
       .bold {
-          font-weight: 700;
+        font-weight: 700;
       }
 
       #chartContainer {
-      width: 100%;
-      height: auto;
+        width: 100%;
+        height: auto;
       }
 
       .default-link a {
-      color: navy !important;
-      border-bottom: 1px solid grey;
-      text-decoration: none !important;
-      margin: .2rem;
-        }
+        color: navy !important;
+        border-bottom: 1px solid grey;
+        text-decoration: none !important;
+        margin: .2rem;
+      }
 
-        .calculator-box {
+      .calculator-box {
         border: 2px solid green;
         border-radius: 25px;
         padding-left: 2em;
         padding-right: 2em;
         padding-bottom: 2em;
+      }
+
+      .calculator-box td {
+        font-size: 1rem;
+      }
+
+      .formula {
+        width: 100%;
+        pading: 1em;
+        margin-top: 1em;
+      }
+
+      .formula p {
+        text-align: center;
+      }
+
+      .formula span {
+        font-size: 1rem !important;
       }
     </style>
     <script>

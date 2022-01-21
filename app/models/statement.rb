@@ -80,6 +80,10 @@ class Statement < ApplicationRecord
         return counter.length
     end
 
+    def send_assocate_statements(record)
+        Statement.all.where(type: "AssociateStatement", po_id: record).each {|send| StatementMailer.pdf_attachment(send).deliver}
+    end
+
 
     def generate_associate_statement
         ass_users = self.po.po_users.all
@@ -125,7 +129,6 @@ class Statement < ApplicationRecord
                         end
                     end
                     StatementNote.create(statement_id: associate_statement.id, notes: Company.first.default_associate_note, terms: Company.first.default_associate_terms)
-                    StatementMailer.pdf_attachment(associate_statement).deliver
                 end
             end
             rs_total = (percentage_amount(self.subtotal.to_d, self.po.revenue_share) - expenses)
@@ -141,6 +144,7 @@ class Statement < ApplicationRecord
                 end
                 StatementNote.create(statement_id: share_statement.id, notes: Company.first.default_associate_note, terms: Company.first.default_associate_terms)
             end
+            send_assocate_statements(Statement.last.po.id)
         else
             errors.add :statement, 'needs Initiator to proceed.'
         end

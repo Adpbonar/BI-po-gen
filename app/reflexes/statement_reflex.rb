@@ -15,10 +15,10 @@ class StatementReflex < ApplicationReflex
   def associates_generate
     statement = Statement.find(element.dataset[:id])
     po = statement.po
-    unless po.locked
+    # unless po.locked
       statement.generate_associate_statement
       po.set_status
-    end
+    # end
   end
       
   def show

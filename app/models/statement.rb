@@ -84,6 +84,17 @@ class Statement < ApplicationRecord
         Statement.all.where(type: "AssociateStatement", po_id: record).each {|send| StatementMailer.pdf_attachment(send).deliver}
     end
 
+    def founder
+        if self.invoice_number.include?("F")
+            return true
+        end
+    end
+
+    def rs
+        if self.invoice_number.include?("RS")
+            return true
+        end
+    end
 
     def generate_associate_statement
         ass_users = self.po.po_users.all

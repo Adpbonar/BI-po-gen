@@ -125,7 +125,7 @@ class Statement < ApplicationRecord
                         end
                     end
                     StatementNote.create(statement_id: associate_statement.id, notes: Company.first.default_associate_note, terms: Company.first.default_associate_terms)
-                    # StatementMailer.pdf_attachment(associate_statement).deliver
+                    StatementMailer.pdf_attachment(associate_statement).deliver
                 end
             end
             rs_total = (percentage_amount(self.subtotal.to_d, self.po.revenue_share) - expenses)

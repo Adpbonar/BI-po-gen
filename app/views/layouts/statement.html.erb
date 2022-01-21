@@ -34,11 +34,7 @@
               <%= image_tag 'https://drive.google.com/uc?export=view&id=1FzZiKhw7XzJLJOwSmJwIY7aA9QzbUDTz', alt: 'Bonar Institute Logo', class: 'top-bottom-spacing', width: '350px' %>
             </td>
             <td style=" width: 50%;">
-              <% if @statement.client %>
-                <h1>Invoice</h1>
-              <% else %>
-                <h1>Invoice Request</h1>
-              <% end %>
+              <h1><%= @statement.kind? %>
             </td>
           </tr>
         </tbody>

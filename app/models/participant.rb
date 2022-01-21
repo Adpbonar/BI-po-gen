@@ -55,5 +55,7 @@ class Participant < ApplicationRecord
 
     def set_po_currency
         
-    end      
+    end   
+
+    
 end

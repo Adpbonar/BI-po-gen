@@ -169,4 +169,12 @@ class Statement < ApplicationRecord
         end
         return installments
     end
+
+    def kind?
+        if self.client
+            return "Invoice"
+        else
+            return "Invoice Request"
+        end
+    end
 end

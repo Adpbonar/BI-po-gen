@@ -43,7 +43,7 @@
               <%= image_tag 'https://drive.google.com/uc?export=view&id=1FzZiKhw7XzJLJOwSmJwIY7aA9QzbUDTz', alt: 'Bonar Institute Logo', class: 'top-bottom-spacing', width: '350px' %>
             </td>
             <td style=" width: 50%;">
-              <div class="red">Confidential</div>
+              <span class="red">Confidential</span>
               <h1><%= @statement.kind? %>
               </td>
             </tr>
@@ -178,7 +178,7 @@
             <% if @statement.client %>
               <p><b>Payment <%= installment.position %>:</b> <%= statement_money(installment, installment.cost) %> (<%= installment.percentage %>%) due on <b><%= installment.due_date.strftime("%B %e, %Y") %></b>
               <% else %>
-                <p><b>Payment <%= installment.position %>:</b> <%= statement_money(installment, @statement.percentage_amount(installment.cost, @statement.percentage)) %> to be made on or after <b><%= installment.due_date.strftime("%B %e, %Y") %></b><sup>*</sup>
+                <p><b>Payment <%= installment.position %>:</b> <%= statement_money(installment, @statement.percentage_amount(installment.cost, @statement.percentage)) %> (<%= installment.percentage %>%) to be made on or after <b><%= installment.due_date.strftime("%B %e, %Y") %></b><sup>*</sup>
                 <% end %>
               <% end %>
             <% else %>
@@ -415,16 +415,16 @@
         font-size: 1rem !important;
       }
 
-        .red {
-    font-weight: bold;
-    color: red;
-    text-transform: uppercase;
-    text-align: center;
-    padding-top: 2px;
-    padding-bottom: 2px;
-    margin: 2px;
-    height: 50px;
-    border-bottom: 2px solid red;
-  }
+      .red {
+        font-weight: bold;
+        color: red;
+        text-transform: uppercase;
+        text-align: center;
+        padding-top: 2px;
+        padding-bottom: 2px;
+        margin: 2px;
+        height: 50px;
+        border-bottom: 2px solid red;
+      }
     </style>
   </html>

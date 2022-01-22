@@ -9,7 +9,7 @@ class StatementMailer < ApplicationMailer
 
     def pdf_attachment(statement)
         @statement = statement
-        attachments["#{statement.kind?}_#{statement.invoice_number}.pdf"] = WickedPdf.new.pdf_from_string(
+        attachments["Bonar Institute for Purposeful Leadership - #{statement.kind?}_#{statement.invoice_number}.pdf"] = WickedPdf.new.pdf_from_string(
                 render_to_string(template: 'statements/show.html.erb', 
                     layout: 'statement.html.erb', 
                     pdf: 'filename', 
@@ -27,7 +27,7 @@ class StatementMailer < ApplicationMailer
                     left:   '1cm',
                     right:  '1cm' 
                     },
-                    lowquality: false,
+                    lowquality: true,
                     zoom: 1       
                 )
         )

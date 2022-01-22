@@ -35,6 +35,7 @@
           end 
         end
       %>
+    <span class="red">Confidential</span>
     <div class="invoice-image">
       <table width="100%">
         <tbody>
@@ -43,7 +44,6 @@
               <%= image_tag 'https://drive.google.com/uc?export=view&id=1FzZiKhw7XzJLJOwSmJwIY7aA9QzbUDTz', alt: 'Bonar Institute Logo', class: 'top-bottom-spacing', width: '350px' %>
             </td>
             <td style=" width: 50%;">
-              <span class="red">Confidential</span>
               <h1><%= @statement.kind? %>
               </td>
             </tr>
@@ -162,9 +162,9 @@
           </h3>
           <b><%= po_ass_type %> Percentage: <%= @statement.percentage %>%</b><br />
           <% unless @statement.founder || @statement.rs %>
-          Number of associates that participated with this PO: <%= @statement.number_participating_associates %><br />
+            Number of associates that participated with this PO: <%= @statement.number_participating_associates %><br />
           <% end %>
-          <small>See "How the <%= po_ass_type %> Toal is Calculated?" below for more information.</small> 
+          <small>See "How the <%= po_ass_type %> Toal is Calculated?" below for more information.</small>
           <br />
         <% end %>
       </div>

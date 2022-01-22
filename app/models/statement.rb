@@ -113,7 +113,7 @@ class Statement < ApplicationRecord
             unless self.po.found.blank?
                 initiator = Participant.find(self.po.found.to_i)
                 if initiator
-                    founder_statement = Statement.create(type: "AssociateStatement", po_id: self.po.id, total: percentage_amount(self.subtotal.to_d, self.po.founder_percentage), company_name: Company.first.company_name, participant_name: initiator.name, participant_address: initiator.address, invoice_number: 'REQ-' + self.po.po_number.to_s + '-F', percentage: Company.first.company_options[:business_finder], issued_to: initiator.id)
+                    founder_statement = Statement.create(type: "AssociateStatement", po_id: self.po.id, total: percentage_amount(self.subtotal.to_d, self.po.founder_percentage), company_name: Company.first.company_name, company_address: Company.first.address, participant_name: initiator.name, participant_address: initiator.address, invoice_number: 'REQ-' + self.po.po_number.to_s + '-F', percentage: Company.first.company_options[:business_finder], issued_to: initiator.id)
                     self.line_items.each do |item|
                         LineItem.create(statement_id: founder_statement.id, type: item.type, title: item.title, description: item.description, cost: item.cost, taxable: item.taxable, expense_exempt_from_tax: item.expense_exempt_from_tax, expense_cost: item.expense_cost)
                         if item.discounts.any?
@@ -141,7 +141,7 @@ class Statement < ApplicationRecord
             ass_users.each do |user|
                 usr = user.participant
                 if usr.type == 'Associate'
-                    associate_statement = Statement.create(type: "AssociateStatement", po_id: self.po.id, total: total, participant_name: usr.name, participant_address: usr.address, company_name: Company.first.company_name, invoice_number: 'REQ-' + self.po.po_number.to_s + '-P-' + usr.id.to_s, issued_to: usr.id, percentage: (Company.first.company_options[:associate_percentage]/number_participating_associates))
+                    associate_statement = Statement.create(type: "AssociateStatement", po_id: self.po.id, total: total, participant_name: usr.name, participant_address: usr.address, company_name: Company.first.company_name, company_address: Company.first.address, invoice_number: 'REQ-' + self.po.po_number.to_s + '-P-' + usr.id.to_s, issued_to: usr.id, percentage: (Company.first.company_options[:associate_percentage]/number_participating_associates))
                     self.line_items.each do |item|
                         LineItem.create(statement_id: associate_statement.id, type: item.type, title: item.title, description: item.description, cost: item.cost, taxable: item.taxable, expense_exempt_from_tax: item.expense_exempt_from_tax, expense_cost: item.expense_cost)
                         if item.discounts.any?
@@ -155,7 +155,7 @@ class Statement < ApplicationRecord
             end
             rs_total = (percentage_amount(self.subtotal.to_d, self.po.revenue_share) - expenses)
             Participant.where(revenue_share: true).all.each do |participant|
-                share_statement = Statement.create(type: "AssociateStatement", po_id: self.po.id, total: rs_total, participant_name: participant.name, participant_address: participant.address, company_name: Company.first.company_name, invoice_number: 'REQ-' + self.po.po_number.to_s + '-RS-' + participant.id.to_s, percentage: Company.first.company_options[:revenue_share], issued_to: participant.id)
+                share_statement = Statement.create(type: "AssociateStatement", po_id: self.po.id, total: rs_total, participant_name: participant.name, participant_address: participant.address, company_name: Company.first.company_name, company_address: Company.first.address, invoice_number: 'REQ-' + self.po.po_number.to_s + '-RS-' + participant.id.to_s, percentage: Company.first.company_options[:revenue_share], issued_to: participant.id)
                 self.line_items.each do |item|
                     LineItem.create(statement_id: share_statement.id, type: item.type, title: item.title, description: item.description, cost: item.cost, taxable: item.taxable, expense_exempt_from_tax: item.expense_exempt_from_tax, expense_cost: item.expense_cost)
                     if item.discounts.any?

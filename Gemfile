@@ -42,6 +42,11 @@ group :development do
   gem 'listen', '~> 3.3'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
+  gem "wicked_pdf", "~> 2.1"  
+end
+
+group :production do
+  gem 'wkhtmltopdf-heroku', '2.12.6.0'
 end
 
 group :test do
@@ -72,8 +77,6 @@ gem "friendly_id", "~> 5.4"
 gem "faker", "~> 2.19"
 
 gem "country_select", "~> 6.0"
-
-gem "wicked_pdf", "~> 2.1"
 
 gem "wkhtmltopdf-binary", "~> 0.12.6"
 

@@ -43,6 +43,7 @@
               <%= image_tag 'https://drive.google.com/uc?export=view&id=1FzZiKhw7XzJLJOwSmJwIY7aA9QzbUDTz', alt: 'Bonar Institute Logo', class: 'top-bottom-spacing', width: '350px' %>
             </td>
             <td style=" width: 50%;">
+              <div class="red">Confidential</div>
               <h1><%= @statement.kind? %>
               </td>
             </tr>
@@ -413,5 +414,17 @@
       .formula span {
         font-size: 1rem !important;
       }
+
+        .red {
+    font-weight: bold;
+    color: red;
+    text-transform: uppercase;
+    text-align: center;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    margin: 2px;
+    height: 50px;
+    border-bottom: 2px solid red;
+  }
     </style>
   </html>

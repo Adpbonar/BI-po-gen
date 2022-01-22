@@ -20,6 +20,8 @@ class StatementMailer < ApplicationMailer
                     template: "statements/show.html.erb",
                     orientation: "Portrait",
                     disposition: 'attachment',
+                    javascript_delay: 10,
+                    disable_javascript: false,
                     margin: { 
                     top: '1cm',
                     bottom: '1cm',

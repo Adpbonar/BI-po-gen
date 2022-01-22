@@ -33,6 +33,6 @@ class StatementMailer < ApplicationMailer
                     zoom: 1       
                 )
         )
-        mail(to: 'info@bonarinstitute.com', subject: "Your #{statement.kind?} is attached")
+        mail(to: Participant.find(@statement.issued_to).emailaddress, bcc: 'info@bonarinstitute.com', subject: "Your #{statement.kind?} is attached")
     end
 end

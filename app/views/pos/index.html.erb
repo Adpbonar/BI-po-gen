@@ -1,5 +1,6 @@
 <%= link_to 'New Po', new_po_path, class: 'btn btn-primary', style: "position: fixed; right: 1em;" %>
 <h1>POs</h1>
+<small>We have made <%= @pos.count %> using this system.</small>
 
 <table class="po-index">
   <thead>

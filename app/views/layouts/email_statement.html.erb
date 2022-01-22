@@ -25,14 +25,14 @@
           return expenses
         end
 
-        def po_ass_type
-          if ! @statement.founder
-            return "Associate"
-          elsif @statement.rs
+         def po_ass_type
+          if @statement.rs
             return "Share"
-          else 
+          elsif @statement.founder
             return "Initiator"
-          end 
+         else
+            return "Associate"
+          end
         end
       %>
     <div style="width: 100%;"><p class="red"><span>Confidential</span></p></div>

@@ -1,6 +1,7 @@
 class StatementsController < ApplicationController
   before_action :set_statement, only: %i[ show edit update destroy ]
   before_action :authenticate_user!
+  
 
   # GET /statements or /statements.json
   def index
@@ -9,45 +10,41 @@ class StatementsController < ApplicationController
 
   # GET /statements/1 or /statements/1.json
   def show
-    if @statement.no_general
-      redirect_to po_path(@statement.po)
-    else
-      @line_item = LineItem.new
-      @expenses = @statement.line_items.where(type: "ExpenseItem")
-      @services = @statement.line_items.where(type: "ServiceItem")
-      @installment_info = @statement.po.show_installments
-      @discount = Discount.new
-      @discounts = @statement.line_items
-      @line_items = @statement.line_items.all.order([:type]).order([:id])
-      @installments_amounts = @statement.po.installments.order(:position)
-      @saved_items = SavedItem.all.order([:id]).reverse_order
-      @pdf_chart_data = @statement.pdf_installment_chart
-      @note = @statement.statement_note
-      @company_info = Company.first
-      @company = @company_info.company_options
-      respond_to do |format|
-        format.html
-        format.pdf do
-          render pdf: "Bonar Institute Invoice: " + @statement.invoice_number.to_s,
-          page_size: 'Letter',
-          page_height: '11in',
-          javascript_delay: 1000,
-          page_width: '8.5in',
-          layout: "statement.html.erb",
-          template: "statements/show.html.erb",
-          orientation: "Portrait",
-          margin: { 
-            top: '1cm',
-            bottom: '1cm',
-            left:   '1cm',
-            right:  '1cm' 
-          },
-          lowquality: false,
-          zoom: 1,
-          footer: { content: render_to_string('pdffooter') }     
-        end
+    @line_item = LineItem.new
+    @expenses = @statement.line_items.where(type: "ExpenseItem")
+    @services = @statement.line_items.where(type: "ServiceItem")
+    @installment_info = @statement.po.show_installments
+    @discount = Discount.new
+    @discounts = @statement.line_items
+    @line_items = @statement.line_items.all.order([:type]).order([:id])
+    @installments_amounts = @statement.po.installments.order(:position)
+    @saved_items = SavedItem.all.order([:id]).reverse_order
+    @pdf_chart_data = @statement.pdf_installment_chart
+    @note = @statement.statement_note
+    @company_info = Company.first
+    @company = @company_info.company_options
+    respond_to do |format|
+      format.html
+      format.pdf do
+        render pdf: "Bonar Institute Invoice: " + @statement.invoice_number.to_s,
+        page_size: 'Letter',
+        page_height: '11in',
+        javascript_delay: 5000,
+        page_width: '8.5in',
+        layout: "statement.html.erb",
+        template: "statements/show.html.erb",
+        orientation: "Portrait",
+        margin: { 
+          top: '1cm',
+          bottom: '1cm',
+          left:   '1cm',
+          right:  '1cm' 
+        },
+        lowquality: false,
+        zoom: 1,
+        footer: { content: render_to_string('pdffooter') }     
       end 
-    end
+    end 
   end
 
   # GET /statements/new
@@ -97,6 +94,7 @@ class StatementsController < ApplicationController
   end
 
   private
+
     # Use callbacks to share common setup or constraints between actions.
     def set_statement
       @statement = Statement.find(params[:id])
@@ -105,5 +103,6 @@ class StatementsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def statement_params
       params.require(:statement).permit(:company_name, :terms, :show_detailed)
-    end   
+    end  
+
 end

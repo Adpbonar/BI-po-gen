@@ -2,8 +2,11 @@
   <p class="tax">PO <%= @statement.po.po_number %></p>
   <p class="tax">PO Tax Amount: <%= @statement.po.tax_amount %>%</p>
   <% if @statement.po.status == 'Prepared' && @statement.status_code == nil && ! @statement.locked %>
-    <%= content_tag :button, class: 'btn btn-success', data: { reflex: "click->StatementReflex#associates_generate", id: @statement.id } do %>
-      generate associate statements
+    <% unless @statement.po.statements.where.not(type: "GeneralStatement").count > 1 %>
+      <%= content_tag :button, id: 'gStatements', class: 'btn btn-success', data: { reflex: "click->StatementReflex#associates_generate", id: @statement.id } do %>
+        generate associate statements
+      <% end %>
+      <span class="highlight">After clicking "Generate Associate Statements", scroll down & press next.</span>
     <% end %>
   <% end %>
   <h2>Expense Items</h2>

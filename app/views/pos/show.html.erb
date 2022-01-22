@@ -105,7 +105,7 @@
   <% end %>
   <%= link_to 'Edit', edit_po_path(@po), class: 'btn btn-warning' %>
   <%= link_to 'Back', pos_path, class: 'btn btn-secondary' %>
-  <% unless @po.statements.first.no_general %>
+  <% unless @po.statements.count > 1 %>
     <div id="addContacts"></div>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <div id="ethics" class="overlay">

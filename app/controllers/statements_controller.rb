@@ -33,7 +33,7 @@ class StatementsController < ApplicationController
           page_height: '11in',
           javascript_delay: 10000,
           page_width: '8.5in',
-          layout: "statement.html.erb",
+          layout: "email_statement.html.erb",
           template: "statements/show.html.erb",
           orientation: "Portrait",
           margin: { 
@@ -43,8 +43,7 @@ class StatementsController < ApplicationController
             right:  '1cm' 
           },
           lowquality: false,
-          zoom: 1,
-          footer: { content: render_to_string('pdffooter')}       
+          zoom: 1     
         end
       end 
     end

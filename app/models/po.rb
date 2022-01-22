@@ -206,6 +206,9 @@ class Po < ApplicationRecord
         if statement.status_code == 'A' || statement.status_code == 'L'
           return true
         end
+        if self.status == "Locked" || self.status.include?("Submitted")
+          return true
+        end
       end
     end
 
@@ -258,5 +261,9 @@ class Po < ApplicationRecord
       if self.statements.where(type: 'AssociateStatement').count >= 1
         self.update(status: 'Associate Submitted')
       end
+    end
+
+    def no_delete
+      errors.add :user, 'does not have permission to complete this action'
     end
 end

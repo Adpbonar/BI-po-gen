@@ -65,16 +65,25 @@ class PosController < ApplicationController
 
   # DELETE /pos/1 or /pos/1.json
   def destroy
-    @po.installments.destroy_all
-    
-    @po.statements.destroy_all
-    @po.destroy
-    respond_to do |format|
-      format.html { redirect_to pos_path, notice: "Po was successfully destroyed." }
-      format.json { head :no_content }
-      format.turbo_stream { }
+    company = Company.first.company_options[:user]
+    if current_user.id == company
+      @po.installments.destroy_all
+      @po.statements.each do |statement| 
+        statement.statement_note.destroy if statement.statement_note.present? 
+        statement.line_items.each { |item| item.discounts.destroy_all if item.discounts.any? }
+        statement.line_items.destroy_all if statement.line_items.any?
+      end
+      @po.statements.destroy_all
+      @po.destroy
+      respond_to do |format|
+        format.html { redirect_to pos_path, notice: "Po was successfully destroyed." }
+        format.json { head :no_content }
+        format.turbo_stream { }
+      end
+      redirect_to pos_path
+    else
+      @po.no_delete
     end
-    redirect_to pos_path
   end
 
   private

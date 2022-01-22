@@ -59,7 +59,7 @@
               <tr>
                 <td style=" width: 50%; vertical-align: top;">
                   <b>From:</b>
-                  <p><%= @company_info.company_name %></p>
+                  <p><%= @statement.company_name %></p>
                 </td>
                 <td style=" width: 50%; vertical-align: top;">
                   <b>To:</b>
@@ -179,7 +179,7 @@
           <h4>Amounts & Due Dates</h4>
         <% end %>
         <% if @statement.po.installments.count != 1 %>
-          <% @installments_amounts.each do |installment| %>
+          <% @statement.po.installments.order(:position).each do |installment| %>
             <% if @statement.client %>
               <p><b>Payment <%= installment.position %>:</b> <%= statement_money(installment, installment.cost) %> due on <b><%= installment.due_date.strftime("%B %e, %Y") %></b>
               <% else %>

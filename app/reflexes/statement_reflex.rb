@@ -1,14 +1,14 @@
 class StatementReflex < ApplicationReflex
   def toggle
     statement = Statement.find(element.dataset[:id])
-    # unless statement.po.locked
+    unless statement.associate
       if statement.valid?
         if statement.show_detailed 
             statement.update(show_detailed: false)
         else
             statement.update(show_detailed: true)
         end
-      # end
+      end
     end
   end
   

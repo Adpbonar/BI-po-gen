@@ -15,6 +15,10 @@ class Statement < ApplicationRecord
         Statement.model_name
     end
 
+    def send_out_statement
+        StatementMailer.pdf_attachment(self).deliver 
+    end
+
     def locked
         if self.type == 'GeneralStatement'
             if self.status_code == 'A' || self.status_code == 'L'
@@ -80,8 +84,14 @@ class Statement < ApplicationRecord
         return counter.length
     end
 
-    def send_assocate_statements(record)
-        Statement.all.where(type: "AssociateStatement", po_id: record).each {|send| StatementMailer.pdf_attachment(send).deliver}
+    def send_assocate_statements
+        StatementMailer.pdf_attachment(self).deliver
+    end
+
+    def no_general
+        if self.type == "GeneralStatement" && self.status_code == "A"
+            return true
+        end
     end
 
     def founder
@@ -113,6 +123,7 @@ class Statement < ApplicationRecord
                         end
                     end
                     StatementNote.create(statement_id: founder_statement.id, notes: Company.first.default_associate_note, terms: Company.first.default_associate_terms)
+                    founder_statement.send_out_statement
                 end
             end 
             expense_items = self.line_items.all.where(type: 'ExpenseItem')
@@ -155,7 +166,7 @@ class Statement < ApplicationRecord
                 end
                 StatementNote.create(statement_id: share_statement.id, notes: Company.first.default_associate_note, terms: Company.first.default_associate_terms)
             end
-            send_assocate_statements(Statement.last.po.id)
+            
         else
             errors.add :statement, 'needs Initiator to proceed.'
         end

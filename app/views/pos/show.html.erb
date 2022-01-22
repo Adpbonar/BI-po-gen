@@ -76,12 +76,14 @@
   <h2>Statements</h2>
   <ul>
     <% @po.statements.each do |statement|%>
-      <% if statement.type == 'ClientStatement' %>
-        <li><%= link_to "client statement".capitalize, statement_path(statement), class: 'default-link' %></li>
-      <% elsif statement.type == 'GeneralStatement' %>
-        <li><%= link_to "general statement".capitalize, statement_path(statement), class: 'default-link' %></li>
-      <% else %>
-        <li><%= link_to "associate statement".capitalize, statement_path(statement), class: 'default-link' %></li>
+      <% unless statement.no_general %>
+        <% if statement.type == 'ClientStatement' %>
+          <li><%= link_to "client statement".capitalize, statement_path(statement), class: 'default-link' %></li>
+        <% elsif statement.type == 'GeneralStatement' %>
+          <li><%= link_to "edit statement".capitalize, statement_path(statement), class: 'default-link' %></li>
+        <% else %>
+          <li><%= link_to "associate statement".capitalize, statement_path(statement), class: 'default-link' %></li>
+        <% end %>
       <% end %>
     <% end %>
   </ul>
@@ -103,103 +105,105 @@
   <% end %>
   <%= link_to 'Edit', edit_po_path(@po), class: 'btn btn-warning' %>
   <%= link_to 'Back', pos_path, class: 'btn btn-secondary' %>
-  <div id="addContacts"></div>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <div id="ethics" class="overlay">
-    <div class="overlay-content">
-      <div id="ethicsClose" class="closeContainter">
-      </div>
-      <div class="default">
-        <h2 class="center">Add Participants</h2>
-        <div class="top-bottom-spacing">
-          <% @users.group_by(&:type_of).each do |type_of, participants| %>
-            <h3 id="<%= type_of %>" class="center"><%= type_of %>s <button id="<%= type_of %>-button"
+  <% unless @po.statements.first.no_general %>
+    <div id="addContacts"></div>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <div id="ethics" class="overlay">
+      <div class="overlay-content">
+        <div id="ethicsClose" class="closeContainter">
+        </div>
+        <div class="default">
+          <h2 class="center">Add Participants</h2>
+          <div class="top-bottom-spacing">
+            <% @users.group_by(&:type_of).each do |type_of, participants| %>
+              <h3 id="<%= type_of %>" class="center"><%= type_of %>s <button id="<%= type_of %>-button"
                             class="contact-button btn-sm">Go to <%= type_switch(type_of) %>s</button></h3>
-            <script>
-              $("#<%= type_of %>-button").click(function () {
-                  $('html, body').animate({
-                      scrollTop: $("#<%= type_switch(type_of) %>").offset().top
-                  }, 500);
-              });
-            </script>
-            <div class="side-by-side smaller-side">
-              <div class="center upcase">Lookup <%= type_of %> by the letter</div>
-              <% participants.group_by(&:first_letter).sort.each do |first_letter| %>
-                <div class="contact-button" id="<%= type_of %>-button-<%= first_letter[0] %>">
-                  <%= first_letter[0] %></div>
-                <script>
-                  $("#<%= type_of%>-button-<%= first_letter[0] %>").click(function () {
-                      $('html, body').animate({
-                          scrollTop: $("#<%= type_of%>-<%= first_letter[0] %>").offset().top
-                      }, 500);
-                  });
-                </script>
-              <% end %>
-              <a href="#addContacts" class="contacts">
-                <div class="contact-button upcase backToTop" id="backToTop">
-                  Top
-                </div>
-              </a>
               <script>
-                $(".backToTop").click(function () {
-                  setTimeout( function() { window.history.replaceState({}, document.title, window.location.href.split('#')[0]); }, 100 );
+                $("#<%= type_of %>-button").click(function () {
+                    $('html, body').animate({
+                        scrollTop: $("#<%= type_switch(type_of) %>").offset().top
+                    }, 500);
                 });
               </script>
-            </div>
-            <div class="side-by-side bigger-side">
-              <% participants.group_by(&:first_letter).sort.each do |first_letter, participants| %>
-                <div class="align-right scroll-btn" id="<%= type_of %>-<%= first_letter %>"><b><%= first_letter %></b>
-                </div>
+              <div class="side-by-side smaller-side">
+                <div class="center upcase">Lookup <%= type_of %> by the letter</div>
+                <% participants.group_by(&:first_letter).sort.each do |first_letter| %>
+                  <div class="contact-button" id="<%= type_of %>-button-<%= first_letter[0] %>">
+                    <%= first_letter[0] %></div>
+                  <script>
+                    $("#<%= type_of%>-button-<%= first_letter[0] %>").click(function () {
+                        $('html, body').animate({
+                            scrollTop: $("#<%= type_of%>-<%= first_letter[0] %>").offset().top
+                        }, 500);
+                    });
+                  </script>
+                <% end %>
+                <a href="#addContacts" class="contacts">
+                  <div class="contact-button upcase backToTop" id="backToTop">
+                    Top
+                  </div>
+                </a>
                 <script>
-                  $("#<%= type_of%>-<%= first_letter[0] %>").click(function () {
-                      $('html, body').animate({
-                          scrollTop: $("#<%= type_of%>-<%= first_letter[0] %>").offset().top
-                      }, 500);
+                  $(".backToTop").click(function () {
+                    setTimeout( function() { window.history.replaceState({}, document.title, window.location.href.split('#')[0]); }, 100 );
                   });
                 </script>
-                <hr />
-                <div>
-                  <% participants.sort.each do |participant| %>
-                    <% if ! PoUser.where(po_id: @po.id, participant_id: participant.id).any? %>
-                      <%= content_tag :div, class: 'saved-item', data: { reflex: "click->PartitipantReflex#add", id: participant.id, po: @po.id }  do %>
-                        <%= participant.name %>
+              </div>
+              <div class="side-by-side bigger-side">
+                <% participants.group_by(&:first_letter).sort.each do |first_letter, participants| %>
+                  <div class="align-right scroll-btn" id="<%= type_of %>-<%= first_letter %>"><b><%= first_letter %></b>
+                  </div>
+                  <script>
+                    $("#<%= type_of%>-<%= first_letter[0] %>").click(function () {
+                        $('html, body').animate({
+                            scrollTop: $("#<%= type_of%>-<%= first_letter[0] %>").offset().top
+                        }, 500);
+                    });
+                  </script>
+                  <hr />
+                  <div>
+                    <% participants.sort.each do |participant| %>
+                      <% if ! PoUser.where(po_id: @po.id, participant_id: participant.id).any? %>
+                        <%= content_tag :div, class: 'saved-item', data: { reflex: "click->PartitipantReflex#add", id: participant.id, po: @po.id }  do %>
+                          <%= participant.name %>
+                        <% end %>
+                      <% else %>
+                        <p class="center upcase"> <%= type_of %> <strong><%= participant.name %></strong> has already been added to this PO.</p>
                       <% end %>
-                    <% else %>
-                      <p class="center upcase"> <%= type_of %> <strong><%= participant.name %></strong> has already been added to this PO.</p>
-                    <% end %>
-                    <center>
-                      <div>
-                        <div class="change">
-                          <% if type_of == 'Associate' %>
-                            <div>
-                              <% if @po.found.blank? %>
-                                <div>
-                                  <%= content_tag :button, class: 'btn btn-success', data: { reflex: "click->PartitipantReflex#initiator", id: @po.id, coordinator: participant.id } do %>
-                                    Make <%= participant.member_name %> PO initiator
-                                  <% end %>
-                                </div>
-                              <% elsif @po.found == participant.id %>
-                                <div>
-                                  <%= content_tag :button, class: 'btn btn-danger', data: { reflex: "click->PartitipantReflex#remove_initiator", id: @po.id } do %>
-                                    demote <%= participant.member_name %> from PO initiator role
-                                  <% end %>
-                                </div>
-                              <% end %>
-                            </div>
-                          <% end %>
+                      <center>
+                        <div>
+                          <div class="change">
+                            <% if type_of == 'Associate' %>
+                              <div>
+                                <% if @po.found.blank? %>
+                                  <div>
+                                    <%= content_tag :button, class: 'btn btn-success', data: { reflex: "click->PartitipantReflex#initiator", id: @po.id, coordinator: participant.id } do %>
+                                      Make <%= participant.member_name %> PO initiator
+                                    <% end %>
+                                  </div>
+                                <% elsif @po.found == participant.id %>
+                                  <div>
+                                    <%= content_tag :button, class: 'btn btn-danger', data: { reflex: "click->PartitipantReflex#remove_initiator", id: @po.id } do %>
+                                      demote <%= participant.member_name %> from PO initiator role
+                                    <% end %>
+                                  </div>
+                                <% end %>
+                              </div>
+                            <% end %>
+                          </div>
                         </div>
-                      </div>
-                    </center>
-                  <% end %>
-                </div>
-              <% end %>
-            </div>
-          <% end %>
+                      </center>
+                    <% end %>
+                  </div>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
+  <% end %>
 </div>
 <script>
   var installmentInput = document.getElementById("set-installment");

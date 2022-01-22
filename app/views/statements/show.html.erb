@@ -1,3 +1,4 @@
+<div id="pdfLoading"></div>
 <div class="invoice-image">
   <%= image_tag 'Bonar-Institute-Logo-Primary.jpg', alt: 'Bonar Institute Logo', class: 'top-bottom-spacing', width: '350px' %>
   <h1><%= @statement.type.split("S").first %> Statement</h1>
@@ -8,15 +9,22 @@
 <% if @statement.type == "GeneralStatement" %>
   <%= render partial: 'general', statement: @statement %>
 <% end %>
-<% if @statement.type == "ClientStatement" || @statement.type == "AssociateStatement" %>
-  <%= button_tag class: "btn btn-info", data: { reflex: "click->StatementReflex#toggle", id: @statement.id }  do %>
-    <% if @statement.show_detailed %>
-      Show Less Information
-    <% else %>
-      Show Detailed Information
+<% if @statement.client || @statement.associate %>
+  <% unless @statement.associate %>
+    <%= button_tag class: "btn btn-info", data: { reflex: "click->StatementReflex#toggle", id: @statement.id }  do %>
+      <% if @statement.show_detailed %>
+        Show Less Information
+      <% else %>
+        Show Detailed Information
+      <% end %>
     <% end %>
-  <% end %>  
-  <%= link_to 'PDF', statement_url(@statement) + '.pdf', class: 'btn btn-success' %>
+  <% end %>
+  <%= link_to 'PDF', statement_url(@statement) + '.pdf', id: 'openPDF', class: 'btn btn-success' %>
+  <script>
+    $("#openPDF").click(function() {
+      document.getElementById("pdfLoading").textContent = "Loading <%= @statement.kind? %>: <%= @statement.invoice_number %>";
+    });
+  </script>
 <% end %>
 <div id="Print">
   <hr />
@@ -24,18 +32,18 @@
     <%= render partial: 'client', statement: @statement %>
   <% end %>
   <% unless @statement.type == "GeneralStatement" || @note == nil %>
-  <h2>Notes</h2>
-  <%= form_for(@note) do |f| %>
-  <%= f.hidden_field :notes, id: "notes"  %>
-  <trix-editor input="notes"></trix-editor>
-  <center><%= f.submit 'update notes', class: 'btn btn-success' %></center>
-  <% end %>
-  <h2>Terms & Conditions</h2>
-  <%= form_for(@note) do |f| %>
-  <%= f.hidden_field :terms, id: "terms"  %>
-  <trix-editor input="terms"></trix-editor>
-  <center><%= f.submit 'update terms & conditions', class: 'btn btn-success' %></center>
-  <% end %>
+    <h2>Notes</h2>
+    <%= form_for(@note) do |f| %>
+      <%= f.hidden_field :notes, id: "notes"  %>
+      <trix-editor input="notes"></trix-editor>
+      <center><%= f.submit 'update notes', class: 'btn btn-success' %></center>
+    <% end %>
+    <h2>Terms & Conditions</h2>
+    <%= form_for(@note) do |f| %>
+      <%= f.hidden_field :terms, id: "terms"  %>
+      <trix-editor input="terms"></trix-editor>
+      <center><%= f.submit 'update terms & conditions', class: 'btn btn-success' %></center>
+    <% end %>
   <% end %>
   <style>
     input { width: 50%; margin-bottom: 2px; }
@@ -94,5 +102,4 @@
         $("#done").click(function() {
             location.reload();
     });
-
   </script>

@@ -29,7 +29,7 @@ class StatementMailer < ApplicationMailer
                     zoom: 1,
                     footer: { content: render_to_string('pdffooter') }       
                 )
-            )
+        )
         mail(to: 'info@bonarinstitute.com', subject: 'Your #{statement.kind?} is attached')
     end
 end

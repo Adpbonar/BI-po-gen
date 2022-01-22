@@ -16,12 +16,11 @@ class StatementMailer < ApplicationMailer
                     page_size: 'Letter',
                     page_height: '11in',
                     page_width: '8.5in',
-                    layout: "statement.html.erb",
+                    layout: "email_statement.html.erb",
                     template: "statements/show.html.erb",
                     orientation: "Portrait",
                     disposition: 'attachment',
-                    javascript_delay: 10,
-                    disable_javascript: false,
+                    disable_javascript: true,
                     margin: { 
                     top: '1cm',
                     bottom: '1cm',
@@ -29,8 +28,7 @@ class StatementMailer < ApplicationMailer
                     right:  '1cm' 
                     },
                     lowquality: false,
-                    zoom: 1,
-                    footer: { content: render_to_string('pdffooter') }       
+                    zoom: 1       
                 )
         )
         mail(to: 'info@bonarinstitute.com', subject: "Your #{statement.kind?} is attached")

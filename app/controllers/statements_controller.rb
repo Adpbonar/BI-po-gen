@@ -31,9 +31,9 @@ class StatementsController < ApplicationController
           render pdf: "Bonar Institute Invoice: " + @statement.invoice_number.to_s,
           page_size: 'Letter',
           page_height: '11in',
-          javascript_delay: 10000,
+          javascript_delay: 1000,
           page_width: '8.5in',
-          layout: "email_statement.html.erb",
+          layout: "statement.html.erb",
           template: "statements/show.html.erb",
           orientation: "Portrait",
           margin: { 
@@ -43,7 +43,8 @@ class StatementsController < ApplicationController
             right:  '1cm' 
           },
           lowquality: false,
-          zoom: 1     
+          zoom: 1,
+          footer: { content: render_to_string('pdffooter') }     
         end
       end 
     end

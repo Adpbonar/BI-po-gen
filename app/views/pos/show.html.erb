@@ -168,7 +168,7 @@
                           <%= participant.name %>
                         <% end %>
                       <% else %>
-                        <p class="center upcase"> <%= type_of %> <strong><%= participant.name %></strong> has already been added to this PO.</p>
+                        <p class="center upcase"> <%= type_of %> <strong><%= participant.name %></strong> has already been added to this PO. <%= button_tag class: "round-btn", data: { reflex: "click->PartitipantReflex#remove_participant", id: participant.po_users.where(po_id: @po.id).first.id, po: @po.id } do %>X<% end %></p>
                       <% end %>
                       <center>
                         <div>

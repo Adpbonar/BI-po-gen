@@ -9,27 +9,15 @@ class PartitipantReflex  < ApplicationReflex
                 user.save
                 PoUser.destroy_duplicates_by(:participant_id, :po_id)
             end
-            # morph :nothing
             po.set_status
         end
     end
 
-    def show
-        po = Po.find(element.dataset[:id])
+    def remove_participant
+        participant = PoUser.find(element.dataset[:id])
+        po = Po.find(element.dataset[:po])
         unless po.locked
-            if po.valid?
-                po.update(show_participant: true)
-            end
-            po.set_status
-        end
-    end
-
-    def hide
-        po = Po.find(element.dataset[:id])
-        unless po.locked
-            if po.valid?
-                po.update(show_participant: false)
-            end
+           participant.destroy
             po.set_status
         end
     end

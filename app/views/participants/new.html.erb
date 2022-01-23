@@ -21,12 +21,18 @@
     <%= f.number_field :phone, class: 'form-control' %>
     <%= f.label 'Address' %>
     <%= f.text_area :address, class: 'form-control' %>
+    <div class="form-selectors">
+      <%= f.label 'Country' %>
+      <%= f.country_select :country_code, include_blank: '', required: true, priority_countries: ["AU", "CA", "CN", "FR", "DE", "GB", "IN", "JP", "MX", "NZ", "SA", "US"] %>
+    </div>
+    <br />
     <div class="form-selector">
-    <%= f.label 'Country' %>
-    <%= f.country_select :country_code, include_blank: '', required: true, priority_countries: ["AU", "CA", "CN", "FR", "DE", "GB", "IN", "JP", "MX", "NZ", "SA", "US"] %>
+      <label>Type</label>
+      <%= f.select :type, [['Client', 'Client'], ['Associate', 'Associate']], class: 'form-control', label: 'Role' %>
     </div>
     <div class="form-selector">
-    <%= f.select :type, [['Client', 'Client'], ['Associate', 'Associate']], class: 'form-control', label: 'Role' %>
+      <label>Currency</label>
+      <%= f.select :currency, Participant::CURRENCY, include_blank: '', class: 'form-control', label: 'Role' %>
     </div>
   </div>
   <div class="form-actions">

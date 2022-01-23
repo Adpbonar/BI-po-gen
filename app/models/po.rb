@@ -197,14 +197,6 @@ class Po < ApplicationRecord
       'Partnership Programs': 'Exclusive Partnership Porgrams'
     }
 
-    # Type of currency being accepted form dropdown
-    CURRENCY = {
-      'Canadian Dollar': 'CA $',
-      'US Dollar': 'US $',
-      'Euro': '&euro;',
-      'British Pound': '&#163;',
-    }
-
     def locked
       statement = self.statements.first
       if statement.type == 'GeneralStatement'

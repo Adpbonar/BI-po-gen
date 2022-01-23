@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_23_164317) do
+ActiveRecord::Schema.define(version: 2022_01_23_185214) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -126,6 +126,9 @@ ActiveRecord::Schema.define(version: 2022_01_23_164317) do
     t.datetime "updated_at", precision: 6, null: false
     t.text "terms"
     t.text "notes"
+    t.string "invoice_number"
+    t.string "type_of"
+    t.string "currency"
     t.index ["user_id"], name: "index_invoices_on_user_id"
   end
 
@@ -187,6 +190,7 @@ ActiveRecord::Schema.define(version: 2022_01_23_164317) do
     t.string "city_bidx"
     t.string "state_bidx"
     t.string "zip_bidx"
+    t.string "currency"
     t.index ["address_bidx"], name: "index_participants_on_address_bidx", unique: true
     t.index ["city_bidx"], name: "index_participants_on_city_bidx"
     t.index ["company_bidx"], name: "index_participants_on_company_bidx"
@@ -306,6 +310,7 @@ ActiveRecord::Schema.define(version: 2022_01_23_164317) do
     t.float "percentage"
     t.integer "issued_to"
     t.text "versions"
+    t.string "currency"
     t.index ["po_id"], name: "index_statements_on_po_id"
     t.index ["type"], name: "index_statements_on_type"
   end

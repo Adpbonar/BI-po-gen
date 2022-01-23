@@ -16,8 +16,16 @@
     <%= f.input :description %>
     <%= f.input :tax_rate %>
   </div>
-
+  <div class"form-selector">
+  <%= f.input :type_of, as: :select, collection: Invoice::TYPE, label: 'Type' %>
+  </div>
+<label>Notes</label>
+        <%= f.hidden_field :notes, id: "notes"  %>
+        <trix-editor input="notes"></trix-editor>
+      <label>Terms & Conditions</label>
+        <%= f.hidden_field :terms, id: "terms"  %>
+        <trix-editor input="terms"></trix-editor>
   <div class="form-actions">
-    <%= f.button :submit %>
+    <%= f.button :submit, class: 'btn btn-success' %>
   </div>
 <% end %>

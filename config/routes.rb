@@ -18,7 +18,7 @@ Rails.application.routes.draw do
   resources :statements, except: [ :new, :create, :destroy ] 
   resources :participants
   resources :line_items, only: [ :new, :create, :edit, :update, :destroy ]
-  resources :po_users
+  resources :items, except: [ :index, :show ]
 
   get :search_programs, controller: :line_items
   get :default_options, controller: :static_pages, path: 'defaults'

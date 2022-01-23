@@ -3,7 +3,7 @@ module InvoicesHelper
     participants = []
     participants << [" ", nil]
     Participant.all.order(:id).each do |person|
-      participants << [person.name, person.id]
+      participants << [person.name + ' (' + person.type + ')', person.id]
     end
     return participants
   end

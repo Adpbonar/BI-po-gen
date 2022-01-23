@@ -199,12 +199,11 @@
         <% end %>
       </div>
     </div>
-    <br />
     <div class="default-link">
       <h2>Notes</h2>
-      <p class="default-link"><%= sanitize @statement.statement_note.notes %></p>
+      <%= sanitize @statement.statement_note.notes %>
       <h2>Terms & Conditions</h2>
-      <p><%= sanitize @statement.statement_note.terms %></a>
+      <%= sanitize @statement.statement_note.terms %>
       <br />
       <% if @statement.client %>
         <div class="issued-box">

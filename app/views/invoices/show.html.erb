@@ -1,29 +1,86 @@
-<p id="notice"><%= notice %></p>
-
-<p>
-  <strong>Po:</strong>
-  <%= @invoice.po_id %>
-</p>
-
-<p>
-  <strong>Name,:</strong>
-  <%= @invoice.name %>
-</p>
-
-<p>
-  <strong>Participant:</strong>
-  <%= @invoice.participant_id %>
-</p>
-
-<p>
-  <strong>Description:</strong>
-  <%= @invoice.description %>
-</p>
-
-<p>
-  <strong>Tax rate:</strong>
-  <%= @invoice.tax_rate %>
-</p>
-
-<%= link_to 'Edit', edit_invoice_path(@invoice) %> |
-<%= link_to 'Back', invoices_path %>
+<h1>Invoice</h1>
+<% if @invoice.po_id.present? %>
+  <div style="width: 100%; margin-left: auto; margin-right: auto;">
+    <div class="invoice">
+      <h2>
+        <strong>Po:</strong></h2>
+      <%= @invoice.po_id %></div>
+  <% end %>
+  <div class="invoice">
+    <h2>
+      <strong>Invoice #:</strong></h2>
+    <%= @invoice.invoice_number %></div>
+  <div class="invoice">
+    <h2>
+      <strong>Name:</strong></h2>
+    <%= @invoice.name %></div>
+  <div class="invoice">
+    <h2>
+      <strong>Type:</strong></h2>
+    <%= @invoice.type_of %></div>
+  <div class="invoice">
+    <h2>
+      <strong>To:</strong></h2>
+    <%= @participant.name %> (<%= @participant.type %>)</div>
+  <div class="invoice">
+    <h2>
+      <strong>Tax rate:</strong></h2>
+    <%= @invoice.tax_rate %>%</div>
+</center>
+<br />
+</div>
+<hr />
+<h2>
+  <strong>Description:</strong></h2>
+<div><%= sanitize @invoice.description %></div>
+<br />
+<div>
+  <h2>
+    <strong>Notes:</strong></h2>
+  <%= sanitize @invoice.notes %>
+  <br />
+  <h2>
+    <strong>Terms & Conditions:</strong></h2>
+  <%= sanitize @invoice.terms %>
+</div>
+<% if @items.any? %>
+  <hr />
+  <div>
+    <h2>Items</h2>
+    <table>
+      <tbody>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Cost</th>
+        <th>Taxable</th>
+        <% @items.each do |item| %>
+          <tr>
+            <td style="width: 25%;"><%= item.title %></td>
+            <td style="width: 50%;"><%= sanitize item.description %></td>
+            <td style="width: 20%;">show_currency(@invoice)<%= item.cost %></td>
+            <td style="width: 20%;"><% if item.taxable == true %>
+                &#10003;
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>
+  <hr />
+  <div>
+    <h3>Add Item</h3>
+    <%= simple_form_for(@item) do |f| %>
+      <%= f.input :title %>
+      <label>Description</label>
+      <%= f.hidden_field :description, id: "description"  %>
+      <trix-editor input="description"></trix-editor>
+      <%= f.input :cost %>
+      <%= f.input :taxable %>
+      <%= f.input :invoice_id, as: :hidden, :input_html => { :value => @invoice.id } %>
+      <%= f.submit class: "btn btn-success" %>
+    <% end %>
+  </div>
+  <%= link_to 'Edit', edit_invoice_path(@invoice), class: 'btn btn-warning' %>
+  <%= link_to 'Back', invoices_path, class: 'btn btn-secondary' %>
+</div>

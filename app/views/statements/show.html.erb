@@ -18,7 +18,7 @@
       <% end %></small></div>
 </div>
 <% if @statement.type != "GeneralStatement" %>
-  <p class="bold">Invoice Number: 
+  <p class="bold"><%= @statement.kind? %> Number: 
     <%= @statement.invoice_number %></p>
   <div class="top-bottom-spacing">
     <table width="100%">

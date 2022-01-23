@@ -1,17 +1,17 @@
 <p><span class="bold">Service Category:</span> <%= @statement.po.service_type %></p>
 <table width="100%">
-        <th style="width: 25%">
+        <th style="width: 25%; text-transform: uppercase; color: #750019;">
             Item
         </th>
-        <th style="width: 50%">
+        <th style="width: 50%; text-transform: uppercase; color: #750019;">
             Description
         </th>
-        <th style="width: 25%">
+        <th style="width: 25%; text-transform: uppercase; color: #750019;">
             Price
         </th>
         <% items = '' 
         @line_items.map { |item| items = 'yes' if item.discounts.any? } %>
-        <th style="width: 25%">
+        <th style="width: 25%; text-transform: uppercase; color: #750019;">
             <% if items == 'yes' %>
                 Adjustments
             <% end %>
@@ -20,14 +20,14 @@
         <% if @statement.show_detailed == true %>
             <% @line_items.each do |item| %>
                 <tr>
-                    <td style="width: 25%" class="td-border">
+                    <td style="width: 25%;" class="td-border">
                         <%= item.title %>
                     </td>
-                    <td style="width: 50%" class="td-border">
+                    <td style="width: 50%;" class="td-border">
                         <%=sanitize item.description %>
                     </td>
                     <% if items == 'yes' %>
-                        <td style="width: 12.5%" class="td-border">
+                        <td style="width: 12.5%;" class="td-border">
                             <%= sanitized_show_money(@statement, item.cost) %>
                         </td>
                         <td style="width: 12.5%;" class="td-border">

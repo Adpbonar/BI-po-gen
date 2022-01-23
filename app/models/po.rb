@@ -33,9 +33,23 @@ class Po < ApplicationRecord
       end
     end
 
+    def show_coordinator
+      unless self.learning_coordinator.blank?
+        participant = Participant.find(self.learning_coordinator)
+        return (participant.name.to_s + ", " + '<a class="default-link" href="mailto:' + participant.emailaddress.to_s + '">' + participant.emailaddress.to_s + '</a>').html_safe
+      else
+        return 'Bonar Institute for Purposeful Leadership, <a href="mailto:info@bonarinstitute.com">info@bonarinstitute.com</a>'.html_safe
+      end
+    end
+
 		def issued_by
-			if self.user.email.split('@').last == 'bonarinstitute.com'
-				return "<b>Issued by:</b> #{isolate_user} the Bonar Institute for Purposeful Leadership Inc."
+      user = self.user.email.split('@')
+			if user.last == 'bonarinstitute.com'
+        if user.first == "info"
+          return "<b>Issued by:</b> #{self.show_coordinator}"
+        else
+          return "<b>Issued by:</b> #{self.show_coordinator} of the Bonar Institute for Purposeful Leadership Inc."
+        end
 			else
 				errors.add(:issued_by, message: "not valid")
         self.destroy
@@ -190,15 +204,6 @@ class Po < ApplicationRecord
       'Euro': '&euro;',
       'British Pound': '&#163;',
     }
-
-    def show_coordinator
-      unless self.learning_coordinator.blank?
-        participant = Participant.find(self.learning_coordinator)
-        return (participant.name.to_s + ", " + '<a class="default-link" href="mailto:' + participant.emailaddress.to_s + '">' + participant.emailaddress.to_s + '</a>').html_safe
-      else
-        return 'Bonar Institute for Purposeful Leadership, <a href="mailto:info@bonarinstitute.com">info@bonarinstitute.com</a>'.html_safe
-      end
-    end
 
     def locked
       statement = self.statements.first

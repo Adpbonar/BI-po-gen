@@ -80,18 +80,18 @@
     <% if @statement.client %>
       <table width="100%">
         <tbody>
-          <td style="width: 25%;">
+          <td style="width: 25%; text-transform: uppercase; color: #750019;">
             <b>Item</b>
           </td>
-          <td style="width: 50%;">
+          <td style="width: 50%; text-transform: uppercase; color: #750019;">
             <b>Description</b>
           </td>
-          <td style="width: 25%;">
+          <td style="width: 25%; text-transform: uppercase; color: #750019;">
             <b>Price</b>
           </td>
           <% items = '' 
             @line_items.map { |item| items = 'yes' if item.discounts.any? } %>
-          <td style="width: 25%">
+          <td style="width: 25% text-transform: uppercase; color: #750019;">
             <% if items == 'yes' %>
               <b>Adjustments</b>
             <% end %>
@@ -209,18 +209,22 @@
       <p class="default-link"><%= sanitize @statement.statement_note.notes %></p>
       <h2>Terms & Conditions</h2>
       <p><%= sanitize @statement.statement_note.terms %></a>
-      <br />
-      <hr />
-      <p><%= sanitize @statement.po.issued_by %></p>
-      <p>
-        If you have any questions or concerns, please contact <span><%= @statement.po.show_coordinator %></span>.
-      </p>
+      <% if @statement.client %>
+        <br />
+        <div class="issued-box">
+          <p><%= sanitize @statement.po.issued_by %></p>
+          <hr />
+          <p class="center">
+            If you have any questions, concerns or comments, please contact don't hesitate to get in touch.
+          </p>
+        </div>
+      <% end %>
     </div>
     <div>
       <% if @statement.associate %>
         <div class="page-break"></div>
         <div class="calculator-box">
-          <h2>How the <%= po_ass_type %> Toal is Calculated?</h2>
+          <h2 class="center">How the <%= po_ass_type %> Toal is Calculated?</h2>
           <table style="width: 100%; border: 1px solid black;">
             <tbody>
               <th colspan="2" style="padding: 1em;">
@@ -280,7 +284,21 @@
       margin-right: 2em;
       padding-top: 1.5em;
       padding-bottom: 1.5em;
-      # line-height: 1.5;
+    }
+
+    h2 {
+      color: gray;
+      border-bottom: 1px solid gray;
+      margin-top: 3em;
+      padding: 2px;
+
+    }
+
+    .issued-box {
+      border: 2px solid #750019;
+      padding: 1em;
+      margin-top: 1em;
+      border-radius: 5px;
     }
 
     .page-break {

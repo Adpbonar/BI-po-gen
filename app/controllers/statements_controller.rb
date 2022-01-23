@@ -29,7 +29,7 @@ class StatementsController < ApplicationController
         render pdf: "Bonar Institute Invoice: " + @statement.invoice_number.to_s,
         page_size: 'Letter',
         page_height: '11in',
-        javascript_delay: 5000,
+        javascript_delay: 2000,
         page_width: '8.5in',
         layout: "statement.html.erb",
         template: "statements/show.html.erb",

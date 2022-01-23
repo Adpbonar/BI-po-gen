@@ -35,7 +35,9 @@
           end
         end
       %>
-    <div style="width: 100%;"><p class="red"><span>Confidential</span></p></div>
+    <div style="width: 100%;">
+      <p class="red"><span>Confidential</span></p>
+    </div>
     <div class="invoice-image">
       <table width="100%">
         <tbody>
@@ -53,383 +55,384 @@
       <hr />
       <p class="bold"><%= @statement.kind? %> Number: 
         <%= @statement.invoice_number %></p>
-        <div class="top-bottom-spacing">
-          <table width="100%">
-            <tbody>
-              <tr>
-                <td style=" width: 50%; vertical-align: top;">
-                  <b>From:</b>
-                  <p><%= @statement.company_name %></p>
-                  <p><%= sanitize @statement.company_address %></p>
+      <div class="top-bottom-spacing">
+        <table width="100%">
+          <tbody>
+            <tr>
+              <td style=" width: 50%; vertical-align: top;">
+                <p class="bold">From:</p>
+                <%= @statement.company_name %>
+                <%= sanitize @statement.company_address %>
+              </td>
+              <td style=" width: 50%; vertical-align: top;">
+                <p class="bold">To:</p>
+                <%= @statement.po.company_name %><br />
+                <%= @statement.participant_name %>
+                <%= @statement.participant_address %>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <% unless @statement.associate %>
+          <p><span class="bold">Service Category:</span> <%= @statement.po.service_type %></p>
+        <% end %>
+      </div>
+    </div>
+    <% if @statement.client %>
+      <table width="100%">
+        <tbody>
+          <td style="width: 25%;">
+            <b>Item</b>
+          </td>
+          <td style="width: 50%;">
+            <b>Description</b>
+          </td>
+          <td style="width: 25%;">
+            <b>Price</b>
+          </td>
+          <% items = '' 
+            @line_items.map { |item| items = 'yes' if item.discounts.any? } %>
+          <td style="width: 25%">
+            <% if items == 'yes' %>
+              <b>Adjustments</b>
+            <% end %>
+          </td>
+          <% if @statement.show_detailed == true %>
+            <% @line_items.each do |item| %>
+              <tr class="td-border">
+                <td style="width: 25%; vertical-align: top;" class="td-border">
+                  <%= item.title %>
                 </td>
-                <td style=" width: 50%; vertical-align: top;">
-                  <b>To:</b>
-                  <p><%= @statement.participant_name %></p>
-                  <p><%= @statement.participant_address %></p>
+                <td style="width: 50%" class="td-border">
+                  <%=sanitize item.description %>
+                </td>
+                <% if items == 'yes' %>
+                  <td style="width: 12.5%; vertical-align: top;" class="td-border">
+                    <%= statement_money(@statement, item.cost) %>
+                  </td>
+                  <td style="width: 12.5%; vertical-align: top;" class="td-border">
+                    <% item.discounts.each do |discount| %>
+                      <div class="center"><%= render 'discount', discount: discount %></div>
+                    <% end %>
+                  </td>
+                <% else %>
+                  <td style="width: 25%; vertical-align: top;" class="td-border">
+                    <%= statement_money(@statement, item.cost) %>
+                  </td>
+                <% end %>
+              </tr>
+            <% end %>
+          <% else %>
+            <tr>
+              <td style="width: 25%" class="td-border">
+                Professonal Services
+              </td>
+              <td style="width: 50%" class="td-border">
+                Customized business solutions
+              </td>
+              <% if items == 'yes' %>
+                <td style="width: 12.5%" class="td-border">
+                  <%= statement_money(@statement, @statement.no_discount_cost) %>
+                </td>
+                <td style="width: 12.5%;" class="td-border">
+                  - <%= statement_money(@statement, @statement.total_discounts) %>
+                </td>
+              <% else %>
+                <td style="width: 25%" class="td-border">
+                  <%= statement_money(@statement, @statement.no_discount_cost) %>
+                </td>
+              <% end %>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% end %>
+    <div>
+      <% if items == 'yes' %>
+        <strong>
+          <p class="upcase">Value of Items: <%= statement_money(@statement, @statement.no_discount_cost) %></p>
+          <p class="green upcase">Discounts: (<%= statement_money(@statement, @statement.total_discounts) %>)</p>
+        </strong>
+      <% end %>
+      <h3 class="upcase">
+        <% if @statement.associate %>
+          Client 
+        <% end %>
+        Subtotal: <%= statement_money(@statement, @statement.subtotal) %>
+      </h3>
+      <% if @statement.associate %>
+        <h3>
+          Your Total: <%= statement_money(@statement, @statement.percentage_amount(@statement.subtotal, @statement.percentage)) %>
+        </h3>
+        <b><%= po_ass_type %> Percentage: <%= @statement.percentage %>%</b><br />
+        <% unless @statement.founder || @statement.rs %>
+          Number of associates that participated with this PO: <%= @statement.number_participating_associates %><br />
+        <% end %>
+        <small>See "How the <%= po_ass_type %> Toal is Calculated?" below for more information.</small>
+        <br />
+      <% end %>
+    </div>
+    <div>
+      <h2>Payment Information</h2>
+      <% unless @statement.po.installments.count == 1 %>
+        <h4>Amounts & Due Dates</h4>
+      <% end %>
+      <% if @statement.po.installments.count != 1 %>
+        <% @statement.po.installments.order(:position).each do |installment| %>
+          <% if @statement.client %>
+            <p><b>Payment <%= installment.position %>:</b> <%= statement_money(installment, installment.cost) %> (<%= installment.percentage %>%) due on <b><%= installment.due_date.strftime("%B %e, %Y") %></b>
+            <% else %>
+              <p><b>Payment <%= installment.position %>:</b> <%= statement_money(installment, @statement.percentage_amount(installment.cost, @statement.percentage)) %> (<%= installment.percentage %>%) to be made on or after <b><%= installment.due_date.strftime("%B %e, %Y") %></b><sup>*</sup>
+              <% end %>
+            <% end %>
+          <% else %>
+            <% if @statement.client %>
+              <b>Payment of <%= statement_money(@statement.po.installments.first, @statement.po.installments.first.cost) %> due on <%= @statement.po.installments.first.due_date.strftime("%B %e, %Y") %></b>
+            <% else %>
+              <b>Payment of <%= statement_money(@statement.po.installments.first, @statement.percentage_amount(@statement.po.installments.first.cost, @statement.percentage)) %> due on or after <%= @statement.po.installments.first.due_date.strftime("%B %e, %Y") %></b></b><sup>*</sup>
+          <% end %>
+        <% end %>
+        <% if @statement.associate %>
+          <br />
+          <br />
+          <small>* Dependent upon receipt of client installment amount.</small>
+        <% end %>
+      </div>
+    </div>
+    <br />
+    <div class="default-link">
+      <h2>Notes</h2>
+      <p class="default-link"><%= sanitize @statement.statement_note.notes %></p>
+      <h2>Terms & Conditions</h2>
+      <p><%= sanitize @statement.statement_note.terms %></a>
+      <br />
+      <hr />
+      <p><%= sanitize @statement.po.issued_by %></p>
+      <p>
+        If you have any questions or concerns, please contact <span><%= @statement.po.show_coordinator %></span>.
+      </p>
+    </div>
+    <div>
+      <% if @statement.associate %>
+        <div class="page-break"></div>
+        <div class="calculator-box">
+          <h2>How the <%= po_ass_type %> Toal is Calculated?</h2>
+          <table style="width: 100%; border: 1px solid black;">
+            <tbody>
+              <th colspan="2" style="padding: 1em;">
+                <strong>Variables</strong>
+              </th>
+              <tr>
+                <td>
+                  <strong>Client Amount:</strong>
+                  <td>The Client Subtotal for this PO (<%= statement_money(@statement, @statement.subtotal) %>)</td>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <strong><%= po_ass_type %> Percentage:</strong>
+                  <td>The <%= po_ass_type %> Percentage, as per Bonar Institute Associates Aggreement (<%= @statement.percentage %>%)</td>
+                </td>
+              </tr>
+              <% unless @statement.founder || @statement.rs %>
+                <tr>
+                  <td>
+                    <strong>Expenses:</strong>
+                    <td>The costs related to assessments, presentations, etc. (<%=statement_money(@statement, expenses) %>)</td>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <strong>Associates:</strong>
+                    <td>The number of associates that participated in this PO (<%= @statement.number_participating_associates %>).</td>
+                  </td>
+                </tr>
+              <% end %>
+              <tr>
+                <td>
+                  <strong>Your Total:</strong>
+                  <td>Your portion of Client Total (<%= statement_money(@statement, @statement.percentage_amount(@statement.subtotal, @statement.percentage)) %>)</td>
                 </td>
               </tr>
             </tbody>
           </table>
-          <% unless @statement.associate %>
-            <p><span class="bold">Service Category:</span> <%= @statement.po.service_type %></p>
-          <% end %>
-        </div>
-      </div>
-      <% if @statement.client %>
-        <table width="100%">
-          <tbody>
-            <td style="width: 25%;">
-              <b>Item</b>
-            </td>
-            <td style="width: 50%;">
-              <b>Description</b>
-            </td>
-            <td style="width: 25%;">
-              <b>Price</b>
-            </td>
-            <% items = '' 
-            @line_items.map { |item| items = 'yes' if item.discounts.any? } %>
-            <td style="width: 25%">
-              <% if items == 'yes' %>
-                <b>Adjustments</b>
-              <% end %>
-            </td>
-            <% if @statement.show_detailed == true %>
-              <% @line_items.each do |item| %>
-                <tr class="td-border">
-                  <td style="width: 25%; vertical-align: top;" class="td-border">
-                    <%= item.title %>
-                  </td>
-                  <td style="width: 50%" class="td-border">
-                    <%=sanitize item.description %>
-                  </td>
-                  <% if items == 'yes' %>
-                    <td style="width: 12.5%; vertical-align: top;" class="td-border">
-                      <%= statement_money(@statement, item.cost) %>
-                    </td>
-                    <td style="width: 12.5%; vertical-align: top;" class="td-border">
-                      <% item.discounts.each do |discount| %>
-                        <div class="center"><%= render 'discount', discount: discount %></div>
-                      <% end %>
-                    </td>
-                  <% else %>
-                    <td style="width: 25%; vertical-align: top;" class="td-border">
-                      <%= statement_money(@statement, item.cost) %>
-                    </td>
-                  <% end %>
-                </tr>
-              <% end %>
+          <div class="formula">
+            <p><b>The Formula</b></p>
+            <% unless @statement.founder ||  @statement.rs %>
+              <span>((<b>Client Amount</b> x 0.(<b>Associate Percentage</b>)) - <b>Expenses</b>) &#247; <b>Associates</b> = <b>Your Totoal</b></span>
             <% else %>
-              <tr>
-                <td style="width: 25%" class="td-border">
-                  Professonal Services
-                </td>
-                <td style="width: 50%" class="td-border">
-                  Customized business solutions
-                </td>
-                <% if items == 'yes' %>
-                  <td style="width: 12.5%" class="td-border">
-                    <%= statement_money(@statement, @statement.no_discount_cost) %>
-                  </td>
-                  <td style="width: 12.5%;" class="td-border">
-                    - <%= statement_money(@statement, @statement.total_discounts) %>
-                  </td>
-                <% else %>
-                  <td style="width: 25%" class="td-border">
-                    <%= statement_money(@statement, @statement.no_discount_cost) %>
-                  </td>
-                <% end %>
-              </tr>
+              <span>(<b>Client Amount</b> x 0.(<b><%= po_ass_type %> Percentage</b>)) = <b>Your Totoal</b></span>
             <% end %>
-          </tbody>
-        </table>
-      <% end %>
-      <div>
-        <% if items == 'yes' %>
-          <strong>
-            <p class="upcase">Value of Items: <%= statement_money(@statement, @statement.no_discount_cost) %></p>
-            <p class="green upcase">Discounts: (<%= statement_money(@statement, @statement.total_discounts) %>)</p>
-          </strong>
-        <% end %>
-        <h3 class="upcase">
-          <% if @statement.associate %>
-            Client 
-          <% end %>
-          Subtotal: <%= statement_money(@statement, @statement.subtotal) %>
-        </h3>
-        <% if @statement.associate %>
-          <h3>
-            Your Total: <%= statement_money(@statement, @statement.percentage_amount(@statement.subtotal, @statement.percentage)) %>
-          </h3>
-          <b><%= po_ass_type %> Percentage: <%= @statement.percentage %>%</b><br />
-          <% unless @statement.founder || @statement.rs %>
-            Number of associates that participated with this PO: <%= @statement.number_participating_associates %><br />
-          <% end %>
-          <small>See "How the <%= po_ass_type %> Toal is Calculated?" below for more information.</small>
-          <br />
-        <% end %>
-      </div>
-      <div>
-        <h2>Payment Information</h2>
-        <% unless @statement.po.installments.count == 1 %>
-          <h4>Amounts & Due Dates</h4>
-        <% end %>
-        <% if @statement.po.installments.count != 1 %>
-          <% @statement.po.installments.order(:position).each do |installment| %>
-            <% if @statement.client %>
-              <p><b>Payment <%= installment.position %>:</b> <%= statement_money(installment, installment.cost) %> (<%= installment.percentage %>%) due on <b><%= installment.due_date.strftime("%B %e, %Y") %></b>
-              <% else %>
-                <p><b>Payment <%= installment.position %>:</b> <%= statement_money(installment, @statement.percentage_amount(installment.cost, @statement.percentage)) %> (<%= installment.percentage %>%) to be made on or after <b><%= installment.due_date.strftime("%B %e, %Y") %></b><sup>*</sup>
-                <% end %>
-              <% end %>
-            <% else %>
-              <% if @statement.client %>
-                <b>Payment of <%= statement_money(@statement.po.installments.first, @statement.po.installments.first.cost) %> due on <%= @statement.po.installments.first.due_date.strftime("%B %e, %Y") %></b>
-              <% else %>
-                <b>Payment of <%= statement_money(@statement.po.installments.first, @statement.percentage_amount(@statement.po.installments.first.cost, @statement.percentage)) %> due on or after <%= @statement.po.installments.first.due_date.strftime("%B %e, %Y") %></b></b><sup>*</sup>
-            <% end %>
-          <% end %>
-          <% if @statement.associate %>
-            <br />
-            <br />
-            <small>* Dependent upon receipt of client installment amount.</small>
-          <% end %>
-        </div>
-      </div>
-      <br />
-      <div class="default-link">
-        <h2>Notes</h2>
-        <p class="default-link"><%= sanitize @statement.statement_note.notes %></p>
-        <h2>Terms & Conditions</h2>
-        <p><%= sanitize @statement.statement_note.terms %></a>
-        <br />
-        <hr />
-        <p><%= sanitize @statement.po.issued_by %></p>
-        <p>
-          If you have any questions or concerns, please contact <span><%= @statement.po.show_coordinator %></span>.
-        </p>
-      </div>
-      <div>
-        <% if @statement.associate %>
-          <div class="page-break"></div>
-          <div class="calculator-box">
-            <h2>How the <%= po_ass_type %> Toal is Calculated?</h2>
-            <table style="width: 100%; border: 1px solid black;">
-              <tbody>
-                <th colspan="2" style="padding: 1em;">
-                  <strong>Variables</strong>
-                </th>
-                <tr>
-                  <td>
-                    <strong>Client Amount:</strong>
-                    <td>The Client Subtotal for this PO (<%= statement_money(@statement, @statement.subtotal) %>)</td>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <strong><%= po_ass_type %> Percentage:</strong>
-                    <td>The <%= po_ass_type %> Percentage, as per Bonar Institute Associates Aggreement (<%= @statement.percentage %>%)</td>
-                  </td>
-                </tr>
-                <% unless @statement.founder || @statement.rs %>
-                  <tr>
-                    <td>
-                      <strong>Expenses:</strong>
-                      <td>The costs related to assessments, presentations, etc. (<%=statement_money(@statement, expenses) %>)</td>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <strong>Associates:</strong>
-                      <td>The number of associates that participated in this PO (<%= @statement.number_participating_associates %>).</td>
-                    </td>
-                  </tr>
-                <% end %>
-                <tr>
-                  <td>
-                    <strong>Your Total:</strong>
-                    <td>Your portion of Client Total (<%= statement_money(@statement, @statement.percentage_amount(@statement.subtotal, @statement.percentage)) %>)</td>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <div class="formula">
-              <p><b>The Formula</b></p>
-              <% unless @statement.founder ||  @statement.rs %>
-                <span>((<b>Client Amount</b> x 0.(<b>Associate Percentage</b>)) - <b>Expenses</b>) &#247; <b>Associates</b> = <b>Your Totoal</b></span>
-              <% else %>
-                <span>(<b>Client Amount</b> x 0.(<b><%= po_ass_type %> Percentage</b>)) = <b>Your Totoal</b></span>
-              <% end %>
-            </div>
           </div>
-        <% end %>
-      </div>
-    </body>
-    <style>
-      @import "bootstrap";
+        </div>
+      <% end %>
+    </div>
+  </body>
+  <style>
+    @import "bootstrap";
 
-      body {
-        margin-left: 2em;
-        margin-right: 2em;
-        padding-top: 1.5em;
-        padding-bottom: 1.5em;
-        # line-height: 1.5;
-      }
+    body {
+      margin-left: 2em;
+      margin-right: 2em;
+      padding-top: 1.5em;
+      padding-bottom: 1.5em;
+      # line-height: 1.5;
+    }
 
-      .page-break {
-        display: block;
-        clear: both;
-        page-break-after: always;
-      }
+    .page-break {
+      display: block;
+      clear: both;
+      page-break-after: always;
+    }
 
-      table,
-      p,
-      span,
-      div {
-        font-size: 20px !important;
-      }
+    table,
+    p,
+    span,
+    div {
+      font-size: 20px !important;
+    }
 
-      table {
-        border-collapse: collapse;
-      }
+    table {
+      border-collapse: collapse;
+    }
 
-      table tr:not(:last-child) {
-        border-top: 1px solid #600a15;
-        border-bottom: 1px solid #600a15;
-      }
+    table tr:not(:last-child) {
+      border-top: 1px solid #600a15;
+      border-bottom: 1px solid #600a15;
+    }
 
-      .td-border {
-        padding: 1em;
-      }
+    .td-border {
+      padding: 1em;
+    }
 
 
-      td {
-        padding: .5em;
-      }
+    td {
+      padding: .5em;
+    }
 
-      #set-installment {
-        width: 100%;
-      }
+    #set-installment {
+      width: 100%;
+    }
 
-      .top-bottom-spacing {
-        padding-top: 1.3em !important;
-        padding-bottom: 1.3em !important;
-      }
+    .top-bottom-spacing {
+      padding-top: 1.3em !important;
+      padding-bottom: 1.3em !important;
+    }
 
-      .center {
-        text-align: center;
-      }
+    .center {
+      text-align: center;
+    }
 
-      .upcase {
-        text-transform: uppercase;
-      }
+    .upcase {
+      text-transform: uppercase;
+    }
 
-      .total-box {
-        padding: 1em;
-        border-top: 2px solid green;
-      }
+    .total-box {
+      padding: 1em;
+      border-top: 2px solid green;
+    }
 
-      .tax {
-        font-weight: 700;
-        padding: 1em;
-        text-transform: uppercase;
-        font-size: 1.3em;
-      }
+    .tax {
+      font-weight: 700;
+      padding: 1em;
+      text-transform: uppercase;
+      font-size: 1.3em;
+    }
 
-      .green {
-        color: green;
-        border-bottom: 2px solid green;
-        padding-bottom: .6em;
-      }
+    .green {
+      color: green;
+      border-bottom: 2px solid green;
+      padding-bottom: .6em;
+    }
 
-      .extra-padding {
-        padding: .5em;
-      }
+    .extra-padding {
+      padding: .5em;
+    }
 
-      .btn-sm {
-        border-radius: 50%;
-      }
+    .btn-sm {
+      border-radius: 50%;
+    }
 
-      .invoice-image h1,
-      .invoice-image img {
-        display: inline-block !important;
-        text-transform: uppercase;
-      }
+    .invoice-image h1,
+    .invoice-image img {
+      display: inline-block !important;
+      text-transform: uppercase;
+    }
 
-      .invoice-image img {
-        margin-right: 2em;
-      }
+    .invoice-image img {
+      margin-right: 2em;
+    }
 
-      .discount-applied {
-        padding: 2px;
-        margin-bottom: 2px;
-        color: green;
-        width: 170px;
-        text-align: center;
-        text-transform: uppercase;
-      }
+    .discount-applied {
+      padding: 2px;
+      margin-bottom: 2px;
+      color: green;
+      width: 170px;
+      text-align: center;
+      text-transform: uppercase;
+    }
 
-      .td-border td {
-        padding: 1em;
+    .td-border td {
+      padding: 1em;
 
-      }
+    }
 
-      .bold {
-        font-weight: 700;
-      }
+    .bold {
+      font-weight: 700;
+    }
 
-      #chartContainer {
-        width: 100%;
-        height: auto;
-      }
+    #chartContainer {
+      width: 100%;
+      height: auto;
+    }
 
-      .default-link a {
-        color: navy !important;
-        border-bottom: 1px solid grey;
-        text-decoration: none !important;
-        margin: .2rem;
-      }
+    .default-link a {
+      color: navy !important;
+      border-bottom: 1px solid grey;
+      text-decoration: none !important;
+      margin: .2rem;
+    }
 
-      .calculator-box {
-        border: 2px solid green;
-        border-radius: 25px;
-        padding-left: 2em;
-        padding-right: 2em;
-        padding-bottom: 2em;
-      }
+    .calculator-box {
+      border: 2px solid green;
+      border-radius: 25px;
+      padding-left: 2em;
+      padding-right: 2em;
+      padding-bottom: 2em;
+    }
 
-      .calculator-box td {
-        font-size: 1rem;
-      }
+    .calculator-box td {
+      font-size: 1rem;
+    }
 
-      .formula {
-        width: 100%;
-        pading: 1em;
-        margin-top: 1em;
-      }
+    .formula {
+      width: 100%;
+      pading: 1em;
+      margin-top: 1em;
+    }
 
-      .formula p {
-        text-align: center;
-      }
+    .formula p {
+      text-align: center;
+    }
 
-      .formula span {
-        font-size: 1rem !important;
-      }
+    .formula span {
+      font-size: 1rem !important;
+    }
 
-      .red {
-        font-weight: bold;
-        color: red;
-        text-transform: uppercase;
-        text-align: center;
-        padding-top: 2px;
-        padding-bottom: 2px;
-        margin: 2px;
-        margin-left: auto;
-        margin-right: auto;
-      }
+    .red {
+      font-weight: bold;
+      color: red;
+      text-transform: uppercase;
+      text-align: center;
+      padding-top: 2px;
+      padding-bottom: 2px;
+      margin: 2px;
+      margin-left: auto;
+      margin-right: auto;
+    }
 
-      .red span {
-        border-bottom: 2px solid red;
-      }
-    </style>
-  </html>
+    .red span {
+      border-bottom: 2px solid red;
+    }
+  </style>
+</html>

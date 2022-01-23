@@ -25,14 +25,15 @@
       <tbody>
         <tr>
           <td style=" width: 50%; vertical-align: top;">
-            <b>From:</b>
-            <p><%= @statement.company_name %></p>
-            <p><%= sanitize @statement.company_address %></p>
+            <p class="bold">From:</p>
+            <%= @statement.company_name %>
+            <%= sanitize @statement.company_address %>
           </td>
           <td style=" width: 50%; vertical-align: top;">
-            <b>To:</b>
-            <p><%= @statement.participant_name %></p>
-            <p><%= @statement.participant_address %></p>
+            <p class="bold">To:</p>
+            <%= @statement.po.company_name %><br />
+            <%= @statement.participant_name %>
+            <%= @statement.participant_address %>
           </td>
         </tr>
       </tbody>

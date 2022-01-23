@@ -106,6 +106,16 @@ class Statement < ApplicationRecord
         end
     end
 
+    def set_invoice_number
+        last_invoice = Statement.where(type: "ClientStatement").last
+        unless last_invoice == nil
+            last_number = (last_invoice.invoice_number.split("-").last.to_i + 1).to_s
+            return "INV-" + last_number
+        else
+            return "INV-" + self.po.po_number.to_s + .strftime("%y").to_s + "10"
+        end
+    end
+
     def generate_associate_statement
         ass_users = self.po.po_users.all
         PoUser.destroy_duplicates_by(:participant_id, :po_id)
@@ -166,7 +176,6 @@ class Statement < ApplicationRecord
                 end
                 StatementNote.create(statement_id: share_statement.id, notes: Company.first.default_associate_note, terms: Company.first.default_associate_terms)
             end
-            
         else
             errors.add :statement, 'needs Initiator to proceed.'
         end
@@ -177,7 +186,8 @@ class Statement < ApplicationRecord
     end
 
     def generate_client_statement
-        if ass_users.count > 0 && self.po.statements.all.where(type: 'ClientStatement').count >= 1
+        if ass_users.count > 0 && self.po.statements.all.where(type: 'ClientStatement').count <= 0
+
             self.po.update(status: 'All Statements Submitted')
             self.update(status_code: 'L')
         end

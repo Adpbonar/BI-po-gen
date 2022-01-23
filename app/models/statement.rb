@@ -112,7 +112,7 @@ class Statement < ApplicationRecord
             last_number = (last_invoice.invoice_number.split("-").last.to_i + 1).to_s
             return "INV-" + last_number
         else
-            return "INV-" + self.po.po_number.to_s + .strftime("%y").to_s + "10"
+            return "INV-" + self.po.invoice_number.to_s + .strftime("%y").to_s + "10"
         end
     end
 
@@ -187,7 +187,6 @@ class Statement < ApplicationRecord
 
     def generate_client_statement
         if ass_users.count > 0 && self.po.statements.all.where(type: 'ClientStatement').count <= 0
-
             self.po.update(status: 'All Statements Submitted')
             self.update(status_code: 'L')
         end

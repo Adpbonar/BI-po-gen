@@ -5,7 +5,7 @@ class ParticipantsController < ApplicationController
   # GET /participants or /participants.json
   def index
     @associates = Associate.all.order([:id]).reverse_order
-    @participants = Client.all.order([:id]).reverse_order 
+    @clients = Client.all.order([:id]).reverse_order 
   end
 
   # GET /participants/1 or /participants/1.json

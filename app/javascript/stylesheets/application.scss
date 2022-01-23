@@ -5,9 +5,9 @@
 .trix-button--icon-code,
 .trix-button-group--file-tools,
 .trix-button--icon-heading-1,
-.trix-button--icon-quote, 
+.trix-button--icon-quote,
 .trix-button--icon-strike {
-  display: none !important;
+    display: none !important;
 }
 
 body {
@@ -489,4 +489,39 @@ h1 {
     width: 40px;
     font-weight: bold;
     border: 2px solid red;
+}
+
+.participants a {
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+    text-align: right;
+}
+
+.form-selector {
+    display: inline-block;
+    width: 48%;
+
+    select {
+        width: 100%;
+        padding: 1em;
+    }
+
+    .form-select {
+        width: 100% !important;
+    }
+}
+
+.form-selectors, #participant_country_code {
+    display: inline-block;
+    width: 100% !important;
+
+    select {
+        width: 100%;
+        padding: 1em !important;
+    }
+
+    .form-select {
+        width: 100% !important;
+    }
 }

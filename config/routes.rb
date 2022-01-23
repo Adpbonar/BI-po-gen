@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
 
+  resources :invoices
+  resources :inoices
   devise_for :users
 
   namespace :admin do

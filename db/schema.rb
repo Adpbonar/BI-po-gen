@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_22_171847) do
+ActiveRecord::Schema.define(version: 2022_01_23_164317) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -115,6 +115,31 @@ ActiveRecord::Schema.define(version: 2022_01_22_171847) do
     t.index ["po_id"], name: "index_installments_on_po_id"
   end
 
+  create_table "invoices", force: :cascade do |t|
+    t.integer "po_id"
+    t.string "name"
+    t.integer "participant_id"
+    t.text "description"
+    t.float "tax_rate"
+    t.bigint "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.text "terms"
+    t.text "notes"
+    t.index ["user_id"], name: "index_invoices_on_user_id"
+  end
+
+  create_table "items", force: :cascade do |t|
+    t.string "title"
+    t.text "description"
+    t.float "cost"
+    t.boolean "taxable", default: false
+    t.bigint "invoice_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["invoice_id"], name: "index_items_on_invoice_id"
+  end
+
   create_table "line_items", force: :cascade do |t|
     t.bigint "statement_id"
     t.string "title"
@@ -217,7 +242,6 @@ ActiveRecord::Schema.define(version: 2022_01_22_171847) do
     t.string "issued_to_bidx"
     t.string "found_bidx"
     t.string "slug"
-    t.boolean "show_participant", default: false
     t.string "issue_code"
     t.index ["company_name_bidx"], name: "index_pos_on_company_name_bidx"
     t.index ["found_bidx"], name: "index_pos_on_found_bidx"
@@ -272,7 +296,6 @@ ActiveRecord::Schema.define(version: 2022_01_22_171847) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "show_detailed", default: false
-    t.boolean "show_programs", default: false
     t.string "company_name"
     t.text "company_address"
     t.string "participant_name_ciphertext"
@@ -282,6 +305,7 @@ ActiveRecord::Schema.define(version: 2022_01_22_171847) do
     t.string "status_code"
     t.float "percentage"
     t.integer "issued_to"
+    t.text "versions"
     t.index ["po_id"], name: "index_statements_on_po_id"
     t.index ["type"], name: "index_statements_on_type"
   end
@@ -308,6 +332,8 @@ ActiveRecord::Schema.define(version: 2022_01_22_171847) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "discounts", "line_items"
   add_foreign_key "installments", "pos"
+  add_foreign_key "invoices", "users"
+  add_foreign_key "items", "invoices"
   add_foreign_key "members", "groups"
   add_foreign_key "statement_notes", "statements"
 end

@@ -1,33 +1,36 @@
 <h1>New Participant</h1>
-
 <%= form_for(@participant,  :url => participants_path) do |f| %>
-    <% if @participant.errors.any? %>
+  <% if @participant.errors.any? %>
     <div id="error_explanation">
-     The following errors prevented this participant from saving
+      The following errors prevented this participant from saving
       <ul>
-      <% @participant.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
+        <% @participant.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
       </ul>
     </div>
   <% end %>
-
-    <div class="form-inputs">
-      <%= f.label 'Name' %>
-      <%= f.text_field :name, class: 'form-control' %>
-      <%= f.label 'Email Address' %>
-      <%= f.text_field :emailaddress, class: 'form-control' %>
-      <%= f.label 'Phone Number' %>
-      <%= f.number_field :phone, class: 'form-control' %>
-      <%= f.label 'Address' %>
-      <%= f.text_area :address, class: 'form-control' %>
-      <%= f.label 'Country' %>
-      <%= f.country_select :country_code, include_blank: '', required: true, priority_countries: ["AU", "CA", "CN", "FR", "DE", "GB", "IN", "JP", "MX", "NZ", "SA", "US"] %>
-      <%= f.select :type, [['Client', 'Client'], ['Associate', 'Associate']], label: 'Role' %>
+  <div class="form-inputs">
+    <%= f.label 'Name' %>
+    <%= f.text_field :name, class: 'form-control' %>
+    <%= f.label 'Tax Rate' %>
+    <%= f.text_field :tax_rate, class: 'form-control' %>
+    <%= f.label 'Email Address' %>
+    <%= f.text_field :emailaddress, class: 'form-control' %>
+    <%= f.label 'Phone Number' %>
+    <%= f.number_field :phone, class: 'form-control' %>
+    <%= f.label 'Address' %>
+    <%= f.text_area :address, class: 'form-control' %>
+    <div class="form-selector">
+    <%= f.label 'Country' %>
+    <%= f.country_select :country_code, include_blank: '', required: true, priority_countries: ["AU", "CA", "CN", "FR", "DE", "GB", "IN", "JP", "MX", "NZ", "SA", "US"] %>
     </div>
-
-    <div class="form-actions">
-      <%= f.button :submit, class: "btn btn-primary" %>
+    <div class="form-selector">
+    <%= f.select :type, [['Client', 'Client'], ['Associate', 'Associate']], class: 'form-control', label: 'Role' %>
     </div>
-  <% end %>
-  <%= link_to 'back', participants_path, class: 'btn btn-secondary' %>
+  </div>
+  <div class="form-actions">
+    <%= f.button :submit, class: "btn btn-primary" %>
+  </div>
+<% end %>
+<%= link_to 'back', participants_path, class: 'btn btn-secondary' %>

@@ -9,8 +9,13 @@ module Admin
     before_action :authenticate_admin
 
     def authenticate_admin
-      # TODO Add authentication logic here.
+     unless user_signed_in?
+      sign_out current_user
+        redirect_to user_session_path
+        flash[:notice] = 'You must login to your account to continue'
+     end
     end
+    
 
     # Override this value to specify the number of elements to display at a time
     # on index pages. Defaults to 20.

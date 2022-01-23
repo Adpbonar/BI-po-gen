@@ -3,6 +3,13 @@ module Admin
     # Overwrite any of the RESTful controller actions to implement custom behavior
     # For example, you may want to send an email after a foo is updated.
     #
+
+    def valid_action?(name, resource = resource_class)
+      if current_user.id  == Company.first.company_options[:user]
+        %w[ :edit :destroy].exclude?(name.to_s) && super
+      end
+    end
+
     # def update
     #   super
     #   send_foo_updated_email(requested_resource)

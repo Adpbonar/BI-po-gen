@@ -9,8 +9,9 @@ class StatementMailer < ApplicationMailer
 
     def pdf_attachment(statement)
         @statement = statement
-        @greeting_plain ="Hello #{@statement.participant_name}, You have a new #{@statement.kind?} attached to this message. If you have any questions or concerns, please don\'t hesitate to reach out. Kindest regards, The team at the Bonar Institute for Purposeful Leadership."
-        @greeting = "<p>Hello #{@statement.participant_name},</p> <p>You have a new #{@statement.kind?} attached to this message.</p> <p>If you have any questions or concerns, please don\'t hesitate to reach out.</p> <p>Kindest regards,</p> <p><b>The team at the Bonar Institute for Purposeful Leadership.</b></p>"
+        @party = Participant.find(@statement.issued_to)
+        @greeting_plain ="Hello #{@party.member_name}, You have a new #{@statement.kind?} attached to this message. If you have any questions or concerns, please don\'t hesitate to reach out. Kindest regards, The team at the Bonar Institute for Purposeful Leadership."
+        @greeting = "<p>Hello #{@party.member_name},</p> <p>You have a new #{@statement.kind?} attached to this message.</p> <p>If you have any questions or concerns, please don\'t hesitate to reach out.</p> <p>Kindest regards,</p> <p><b>The team at the Bonar Institute for Purposeful Leadership.</b></p>"
         attachments["Bonar Institute for Purposeful Leadership - #{statement.kind?}_#{statement.invoice_number}.pdf"] = WickedPdf.new.pdf_from_string(
                 render_to_string(template: 'statements/show.html.erb', 
                     layout: 'statement.html.erb', 
@@ -33,6 +34,6 @@ class StatementMailer < ApplicationMailer
                     zoom: 1       
                 )
         )
-        mail(to: Participant.find(@statement.issued_to).emailaddress, bcc: 'info@bonarinstitute.com', subject: "Your #{statement.kind?} is attached")
+        mail(to: @party.emailaddress, bcc: 'info@bonarinstitute.com', subject: "Your #{statement.kind?} is attached")
     end
 end

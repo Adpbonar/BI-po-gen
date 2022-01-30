@@ -7,12 +7,25 @@ class Statement < ApplicationRecord
     encrypts :statement_participant, type: :integer
 
     validates :status_code, length: {is: 1}, allow_blank: true
+    validate :valid_general
 
     require 'bigdecimal'
 
     def self.model_name
         return super if self == Statement
         Statement.model_name
+    end
+
+    def valid_float?
+        true if Float self rescue false
+      end
+
+    def valid_general
+        unless self.type == "GeneralStatement"
+             if (currency.blank? || (tax_rate.blank? || (Float(tax_rate) == nil) || (! tax_rate.to_s.valid_float?))
+                errors.add :statement, 'is not valid'
+            end 
+        end
     end
 
     def send_out_statement

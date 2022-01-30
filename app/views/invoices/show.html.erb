@@ -18,6 +18,10 @@
     <h2>
       <strong>Type:</strong></h2>
     <%= @invoice.type_of %></div>
+     <div class="invoice">
+    <h2>
+      <strong>Currency:</strong></h2>
+    <%= sanitize @invoice.currency %></div>
   <div class="invoice">
     <h2>
       <strong>To:</strong></h2>
@@ -57,7 +61,7 @@
           <tr>
             <td style="width: 25%;"><%= item.title %></td>
             <td style="width: 50%;"><%= sanitize item.description %></td>
-            <td style="width: 20%;">show_currency(@invoice)<%= item.cost %></td>
+            <td style="width: 20%;"><%= show_money(@invoice, item.cost) %></td>
             <td style="width: 20%;"><% if item.taxable == true %>
                 &#10003;
               <% end %>

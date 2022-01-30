@@ -10,10 +10,8 @@
         <table>
           <% @clients.each do |participant| %>
             <%= content_tag :tr do %>
-              <%= turbo_frame_tag dom_id(participant) do %>
-                <td  class="participants default-link"><%= link_to participant.name, participant_path(participant) %></td>
-                <td  class="participants"><%= link_to 'edit', edit_participant_path(participant), class: 'btn btn-warning' %></td>
-              <% end %>
+              <td  class="participants default-link"><%= link_to participant.name, participant_path(participant) %></td>
+              <td  class="participants"><%= link_to 'edit', edit_participant_path(participant), class: 'btn btn-warning' %></td>
             <% end %>
           <% end %>
         </table>
@@ -23,10 +21,8 @@
         <table>
           <% @clients.each do |participant| %>
             <%= content_tag :tr do %>
-              <%= turbo_frame_tag dom_id(participant) do %>
-                <td  class="participants default-link"><%= link_to participant.name, participant_path(participant) %></td>
-                <td  class="participants"><%= link_to 'edit', edit_participant_path(participant), class: 'btn btn-warning' %></td>
-              <% end %>
+              <td  class="participants default-link"><%= link_to participant.name, participant_path(participant) %></td>
+              <td  class="participants"><%= link_to 'edit', edit_participant_path(participant), class: 'btn btn-warning' %></td>
             <% end %>
           <% end %>
         </table>

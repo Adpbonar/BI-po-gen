@@ -23,15 +23,31 @@ module ApplicationHelper
       end
     end
 
-    def show_money(record1, record2)
-      return record1.po.currency.html_safe.to_s + number_to_currency(record2).split("$").last
+    def show_money(record1, record2, record3)
+      if (record1.model_name == "Statement" && record1.type =="GeneralStatement") 
+        return (record1.po.currency.to_s + number_to_currency(record2).to_s.split("$").last).html_safe
+      elsif record1.model_name == "Installment"
+        unless record3 == ""
+          return (record3.currency.to_s + number_to_currency(record2).to_s.split("$").last).html_safe
+        end
+      elsif record1.model_name == "Discount"
+        unless record3 == ""
+          return (record3.currency.to_s + number_to_currency(record2).to_s.split("$").last).html_safe
+        end
+      else
+        return (record1.currency.to_s + number_to_currency(record2).to_s.split("$").last).html_safe
+      end
     end
 
-    def sanitized_show_money(record1, record2)
-      if record1.po.currency.html_safe.to_s.include?('$')
-        return number_to_currency(record2)
+    def sanitized_show_money(record1, record2, record3)
+      if record1.model_name == "Statement" && record1.type =="GeneralStatement"
+        if record1.po.currency.to_s.include?('$')
+          return number_to_currency(record2)
+        else
+          return record1.po.currency.to_s + number_to_currency(record2).split("$").last
+        end
       else
-        return record1.po.currency.html_safe.to_s + number_to_currency(record2).split("$").last
+        return show_money(record1, record2, record3)
       end
     end
 

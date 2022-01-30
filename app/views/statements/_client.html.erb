@@ -28,7 +28,7 @@
                     </td>
                     <% if items == 'yes' %>
                         <td style="width: 12.5%;" class="td-border">
-                            <%= sanitized_show_money(@statement, item.cost) %>
+                            <%= sanitized_show_money(@statement, item.cost, "") %>
                         </td>
                         <td style="width: 12.5%;" class="td-border">
                                 <% item.discounts.each do |discount| %>
@@ -37,7 +37,7 @@
                         </td>
                     <% else %>
                         <td style="width: 25%" class="td-border">
-                            <%= show_money(@statement, item.cost) %>
+                            <%= show_money(@statement, item.cost, "") %>
                         </td>
                     <% end %>
                 </tr>
@@ -52,14 +52,14 @@
                 </td>
                 <% if items == 'yes' %>
                     <td style="width: 12.5%" class="td-border">
-                        <%= sanitized_show_money(@statement, @statement.no_discount_cost) %>
+                        <%= sanitized_show_money(@statement, @statement.no_discount_cost, "") %>
                     </td>
                     <td style="width: 12.5%;" class="td-border">
-                            -<%= sanitized_show_money(@statement, @statement.total_discounts) %>
+                            -<%= sanitized_show_money(@statement, @statement.total_discounts, "") %>
                     </td>
                 <% else %>
                     <td style="width: 25%" class="td-border">
-                        <%= sanitized_show_money(@statement, @statement.no_discount_cost) %>
+                        <%= sanitized_show_money(@statement, @statement.no_discount_cost, "") %>
                     </td>
                 <% end %>
             </tr>
@@ -70,16 +70,16 @@
 <div class="top-bottom-spacing">  
 <% if items == 'yes' %>
     <strong>
-        <p class="upcase">Value of Items: <%= sanitized_show_money(@statement, @statement.no_discount_cost) %></p>
-        <p class="green upcase">Discounts: (<%= sanitized_show_money(@statement, @statement.total_discounts) %>)</p>
+        <p class="upcase">Value of Items: <%= sanitized_show_money(@statement, @statement.no_discount_cost, @statement) %></p>
+        <p class="green upcase">Discounts: (<%= sanitized_show_money(@statement, @statement.total_discounts, @statement) %>)</p>
     </strong>
 <% end %>
-    <h3 class="upcase">Subtotal: <%= sanitized_show_money(@statement, @statement.subtotal) %></h3>
+    <h3 class="upcase">Subtotal: <%= sanitized_show_money(@statement, @statement.subtotal, @statement) %></h3>
 </div>
 <div class="extra-padding">
     <h2>Installments</h2>
     <% @installments_amounts.each_with_index do |installment, index| %>
-        <p><b>Installment <%= index + 1 %>:</b> <%= sanitized_show_money(installment, installment.cost) %> due on <b><%= read_date(installment.due_date) %></b>
+        <p><b>Installment <%= index + 1 %>:</b> <%= sanitized_show_money(installment, installment.cost, @statement) %> due on <b><%= read_date(installment.due_date) %></b>
     <% end %>
     </div>
 </div>

@@ -1,5 +1,6 @@
 class Participant < ApplicationRecord
     has_many :po_users
+    has_many :invoices
     validates :phone,:presence => true,
                  :numericality => true,
                  :length => { :minimum => 10, :maximum => 15 }
@@ -17,7 +18,7 @@ class Participant < ApplicationRecord
     validates :address, presence: true
     validates :phone, presence: true
     validates :country_code, presence: true
-    validates :curreny, presence: true
+    validates :currency, presence: true
     
 
     def is_euro?

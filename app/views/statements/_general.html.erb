@@ -24,9 +24,9 @@
               <td style="width: 20%;">
                 <p>Price:
                   <% if ! item.expense_exempt_from_tax %>
-                    <%= show_money(item.statement, item.cost).to_s + ' + tax ' + @statement.po.tax_amount.to_s + '% ' + show_money(item.statement, (item.cost + show_percentage_amount(item.cost, @statement.po.tax_amount))).to_s %>
+                    <%= show_money(item.statement, item.cost, @po).to_s + ' + tax ' + @statement.po.tax_amount.to_s + '% ' + show_money(item.statement, (item.cost + show_percentage_amount(item.cost, @statement.po.tax_amount)), @po).to_s %>
                   <% else %>
-                    <%= show_money(item.statement, item.cost) %>
+                    <%= show_money(item.statement, item.cost, @statement, @po) %>
                   <% end %>
                 </p>
               </td>
@@ -60,7 +60,7 @@
 <% else %>
   none
 <% end %>
-<p class="tax center"><b>Taxes on all expenses: <%= show_money(@statement, @statement.expense_tax) %></b></p>
+<p class="tax center"><b>Taxes on all expenses: <%= show_money(@statement, @statement.expense_tax, @po) %></b></p>
 <h2>Services</h2>
 <% if @services.each do |item| %>
   <div>
@@ -76,10 +76,10 @@
             <td style="width: 25%;">
               <p>
                 <% unless item.discounts.any? %>
-                  Price: <%= show_money(item.statement, item.cost) %>
+                  Price: <%= show_money(item.statement, item.cost, @po) %>
                 <% else %>
                   <span style="text-decoration: line-through;">Original Price:
-                    <%= show_money(item.statement, item.cost) %>
+                    <%= show_money(item.statement, item.cost, @po) %>
                   <% end %>
                 </p>
               </td>
@@ -136,7 +136,7 @@
             <% unless discount.line_item.calculate_discounts == "Free" %>
               <div class="top-bottom-spacing">
                 <p><b>New Price:</b></p>
-                <%= show_money(discount.line_item.statement, discount.line_item.calculate_discounts) %></p>
+                <%= show_money(discount.line_item.statement, discount.line_item.calculate_discounts, @statement) %></p>
             </div>
           <% else %>
             <div class="top-bottom-spacing">
@@ -154,7 +154,7 @@
 <% else %>
   none
 <% end %>
-<p class="tax center"><b>Taxes on all services: <%= show_money(@statement, @statement.service_tax) %></b></p>
+<p class="tax center"><b>Taxes on all services: <%= show_money(@statement, @statement.service_tax, "") %></b></p>
 <div>
   <div class="extra-padding">
     <div>
@@ -166,14 +166,14 @@
         <div class="extra-padding">
           <% @installments_amounts.each do |installment| %>
             <p><b>Installment <%= installment.position %>:</b> <span
-                            class="highlight"><%= show_money(installment, installment.cost) %></span> due on
+                            class="highlight"><%= show_money(installment, installment.cost, "") %></span> due on
               <b><%= read_date(installment.due_date) %></b></p>
           <% end %>
           <h3 class="upcase total-box"><span class="green">Subtotal:</span>
-            <%= show_money(@statement, @statement.subtotal) %></h3>
-          <p class="tax">+ Applicable Tax: <%= show_money(@statement, @statement.tax) %></p>
+            <%= show_money(@statement, @statement.subtotal, "") %></h3>
+          <p class="tax">+ Applicable Tax: <%= show_money(@statement, @statement.tax, "") %></p>
           <h3 class="upcase total-box"><span class="green">Total:</span>
-            <%= show_money(@statement, (@statement.subtotal + @statement.tax)) %></h3>
+            <%= show_money(@statement, (@statement.subtotal + @statement.tax), "") %></h3>
         </div>
       <% else %>
         <h2 class="center">No cost for this statement yet...</h2>

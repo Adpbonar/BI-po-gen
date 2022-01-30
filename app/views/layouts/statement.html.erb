@@ -7,13 +7,17 @@
   </head>
   <body>
     <% 
-        def statement_money(record1, record2)
-            if record1.po.currency.html_safe.to_s.include?('$')
-            return number_to_currency(record2)
-            else
-            return record1.po.currency.html_safe.to_s + number_to_currency(record2).split("$").last
-            end
+    def statement_money(record1, record2, record3)
+      if record1.model_name == "Statement" && record1.type =="GeneralStatement"
+        if record1.po.currency.to_s.include?('$')
+          return number_to_currency(record2)
+        else
+          return record1.po.currency.to_s + number_to_currency(record2).split("$").last
         end
+      else
+        return show_money(record1, record2, record3)
+      end
+    end
 
         def expenses
           expenses = 0.0
@@ -107,7 +111,7 @@
                 </td>
                 <% if items == 'yes' %>
                   <td style="width: 12.5%; vertical-align: top;" class="td-border">
-                    <%= statement_money(@statement, item.cost) %>
+                    <%= statement_money(@statement, item.cost, @statement) %>
                   </td>
                   <td style="width: 12.5%; vertical-align: top;" class="td-border">
                     <% item.discounts.each do |discount| %>
@@ -116,7 +120,7 @@
                   </td>
                 <% else %>
                   <td style="width: 25%; vertical-align: top;" class="td-border">
-                    <%= statement_money(@statement, item.cost) %>
+                    <%= statement_money(@statement, item.cost, @statement) %>
                   </td>
                 <% end %>
               </tr>
@@ -131,14 +135,14 @@
               </td>
               <% if items == 'yes' %>
                 <td style="width: 12.5%" class="td-border">
-                  <%= statement_money(@statement, @statement.no_discount_cost) %>
+                  <%= statement_money(@statement, @statement.no_discount_cost, @statement) %>
                 </td>
                 <td style="width: 12.5%;" class="td-border">
-                  - <%= statement_money(@statement, @statement.total_discounts) %>
+                  - <%= statement_money(@statement, @statement.total_discounts, @statement) %>
                 </td>
               <% else %>
                 <td style="width: 25%" class="td-border">
-                  <%= statement_money(@statement, @statement.no_discount_cost) %>
+                  <%= statement_money(@statement, @statement.no_discount_cost, @statement) %>
                 </td>
               <% end %>
             </tr>
@@ -157,11 +161,11 @@
         <% if @statement.associate %>
           Client 
         <% end %>
-        Subtotal: <%= statement_money(@statement, @statement.subtotal) %>
+        Subtotal: <%= statement_money(@statement, @statement.subtotal, @statement) %>
       </h3>
       <% if @statement.associate %>
         <h3>
-          Your Total: <%= statement_money(@statement, @statement.percentage_amount(@statement.subtotal, @statement.percentage)) %>
+          Your Total: <%= statement_money(@statement, @statement.percentage_amount(@statement.subtotal, @statement.percentage), "") %>
         </h3>
         <b><%= po_ass_type %> Percentage: <%= @statement.percentage %>%</b><br />
         <% unless @statement.founder || @statement.rs %>
@@ -184,16 +188,16 @@
       <% if @statement.po.installments.count != 1 %>
         <% @statement.po.installments.order(:position).each do |installment| %>
           <% if @statement.client %>
-            <p><b>Payment <%= installment.position %>:</b> <%= statement_money(installment, installment.cost) %> due on <b><%= installment.due_date.strftime("%B %e, %Y") %></b>
+            <p><b>Payment <%= installment.position %>:</b> <%= statement_money(installment, installment.cost, @statement) %> due on <b><%= installment.due_date.strftime("%B %e, %Y") %></b>
             <% else %>
-              <p><b>Payment <%= installment.position %>:</b> <%= statement_money(installment, @statement.percentage_amount(installment.cost, @statement.percentage)) %> to be made on or after <b><%= installment.due_date.strftime("%B %e, %Y") %></b><sup>*</sup>
+              <p><b>Payment <%= installment.position %>:</b> <%= statement_money(installment, @statement.percentage_amount(installment.cost, @statement.percentage), @statement) %> to be made on or after <b><%= installment.due_date.strftime("%B %e, %Y") %></b><sup>*</sup>
               <% end %>
             <% end %>
           <% else %>
             <% if @statement.client %>
-              <b>Payment of <%= statement_money(@statement.po.installments.first, @statement.po.installments.first.cost) %> due on <%= @statement.po.installments.first.due_date.strftime("%B %e, %Y") %></b>
+              <b>Payment of <%= statement_money(@statement.po.installments.first, @statement.po.installments.first.cost, @statement) %> due on <%= @statement.po.installments.first.due_date.strftime("%B %e, %Y") %></b>
             <% else %>
-              <b>Payment of <%= statement_money(@statement.po.installments.first, @statement.percentage_amount(@statement.po.installments.first.cost, @statement.percentage)) %> due on or after <%= @statement.po.installments.first.due_date.strftime("%B %e, %Y") %></b></b><sup>*</sup>
+              <b>Payment of <%= statement_money(@statement.po.installments.first, @statement.percentage_amount(@statement.po.installments.first.cost, @statement.percentage), @statement) %> due on or after <%= @statement.po.installments.first.due_date.strftime("%B %e, %Y") %></b></b><sup>*</sup>
           <% end %>
         <% end %>
         <% if @statement.associate %>
@@ -232,7 +236,7 @@
               <tr>
                 <td>
                   <strong>Client Amount:</strong>
-                  <td>The Client Subtotal for this PO (<%= statement_money(@statement, @statement.subtotal) %>)</td>
+                  <td>The Client Subtotal for this PO (<%= statement_money(@statement, @statement.subtotal, @statement) %>)</td>
                 </td>
               </tr>
               <tr>
@@ -258,7 +262,7 @@
               <tr>
                 <td>
                   <strong>Your Total:</strong>
-                  <td>Your portion of Client Total (<%= statement_money(@statement, @statement.percentage_amount(@statement.subtotal, @statement.percentage)) %>)</td>
+                  <td>Your portion of Client Total (<%= statement_money(@statement, @statement.percentage_amount(@statement.subtotal, @statement.percentage), @statement) %>)</td>
                 </td>
               </tr>
             </tbody>

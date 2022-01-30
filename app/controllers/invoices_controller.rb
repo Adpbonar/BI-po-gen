@@ -1,6 +1,7 @@
 class InvoicesController < ApplicationController
   before_action :set_invoice, only: %i[ show edit update destroy ]
   before_action :authenticate_user!
+  # before_action :set_currency, only: [:create, :show]
 
   # GET /invoices or /invoices.json
   def index
@@ -12,6 +13,7 @@ class InvoicesController < ApplicationController
     @item = Item.new
     @participant = Participant.find(@invoice.participant_id)
     @items = @invoice.items.all.order(:id)
+    
     respond_to do |format|
       format.html
       format.pdf do
@@ -49,7 +51,6 @@ class InvoicesController < ApplicationController
     @invoice = Invoice.new(invoice_params)
     @invoice.user_id = current_user.id
     @invoice.invoice_number = @invoice.set_invoice_number
-    @invoice.currency = @participant.currency
 
     respond_to do |format|
       if @invoice.save
@@ -84,6 +85,8 @@ class InvoicesController < ApplicationController
     end
   end
 
+  
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_invoice
@@ -92,6 +95,6 @@ class InvoicesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def invoice_params
-      params.require(:invoice).permit(:po_id, :name, :participant_id, :description, :tax_rate, :terms, :notes, :type_of)
+      params.require(:invoice).permit(:po_id, :name, :participant_id, :description, :tax_rate, :terms, :notes, :type_of, :currency)
     end
 end

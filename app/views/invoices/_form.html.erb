@@ -25,6 +25,7 @@
       <label>Terms & Conditions</label>
         <%= f.hidden_field :terms, id: "terms"  %>
         <trix-editor input="terms"></trix-editor>
+        <%= f.input :currency, as: :select, collection: Invoice::CURRENCY, label: 'Currency' %>
   <div class="form-actions">
     <%= f.button :submit, class: 'btn btn-success' %>
   </div>

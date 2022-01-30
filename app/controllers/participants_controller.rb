@@ -28,6 +28,7 @@ class ParticipantsController < ApplicationController
   
     respond_to do |format|
       if @participant.save
+        @participant.set_currency
         format.html { redirect_to @participant, notice: "Participant was successfully created." }
         format.json { render :index, status: :created, location: @participant }
       else

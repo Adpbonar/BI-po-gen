@@ -3,7 +3,8 @@ class Invoice < ApplicationRecord
   belongs_to :user
   belongs_to :participant
   validates :currency, presence: true
-  validates :type_of, presence: true
+  validates :tax_rate, presence: true, numericality: true, :on => :update
+  validates :type_of, presence: true, :on => :update
 
   HUMANIZED_ATTRIBUTES = {
     :type_of => "Type"
@@ -13,6 +14,26 @@ class Invoice < ApplicationRecord
     HUMANIZED_ATTRIBUTES[attr.to_sym] || super
   end
 
+  def money(record)
+    return (self.currency.to_s + number_to_currency(record).to_s.split("$").last).html_safe
+  end
+
+  def set_currency
+    participant = Participant.find(self.participant_id)
+    if self.currency == nil && (! participant.currency.blank?)
+      self.currency = Participant.find(participant.id).currency
+      self.save
+    end
+    if self.tax_rate == nil && (! participant.tax_rate.blank?)
+      if participant.tax_rate == nil
+        self.tax_rate = 0
+        self.save
+      else
+        self.tax_rate = participant.tax_rate
+        self.save
+      end
+    end
+  end
 
   def set_invoice_number
     last_invoice = Invoice.last

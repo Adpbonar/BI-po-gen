@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_23_185214) do
+ActiveRecord::Schema.define(version: 2022_01_30_171200) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -311,6 +311,7 @@ ActiveRecord::Schema.define(version: 2022_01_23_185214) do
     t.integer "issued_to"
     t.text "versions"
     t.string "currency"
+    t.float "tax_rate"
     t.index ["po_id"], name: "index_statements_on_po_id"
     t.index ["type"], name: "index_statements_on_type"
   end

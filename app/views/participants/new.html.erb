@@ -30,10 +30,6 @@
       <label>Type</label>
       <%= f.select :type, [['Client', 'Client'], ['Associate', 'Associate']], class: 'form-control', label: 'Role' %>
     </div>
-    <div class="form-selector">
-      <label>Currency</label>
-      <%= f.select :currency, Participant::CURRENCY, include_blank: '', class: 'form-control', label: 'Role' %>
-    </div>
   </div>
   <div class="form-actions">
     <%= f.button :submit, class: "btn btn-primary" %>

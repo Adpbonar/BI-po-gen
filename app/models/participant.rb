@@ -18,7 +18,7 @@ class Participant < ApplicationRecord
     validates :address, presence: true
     validates :phone, presence: true
     validates :country_code, presence: true
-    validates :currency, presence: true
+    validates :currency, presence: true, :on => :update
     
 
     def is_euro?
@@ -45,13 +45,17 @@ class Participant < ApplicationRecord
 
     def set_currency
         if self.is_euro?
-            return 'EU'
+            self.currency = '&euro;'
+            self.save
         elsif self.country_code == "CA"
-            return 'CA'
+            self.currency = 'CA $'
+            self.save
         elsif self.country_code == "GB"
-            return 'LB'
+            self.currency = '&#163;'
+            self.save
         else
-            return 'US'
+            self.currency = 'US $'
+            self.save
         end
     end
 

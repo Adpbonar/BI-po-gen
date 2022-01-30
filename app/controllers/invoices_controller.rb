@@ -13,6 +13,7 @@ class InvoicesController < ApplicationController
     @item = Item.new
     @participant = Participant.find(@invoice.participant_id)
     @items = @invoice.items.all.order(:id)
+    @invoice.set_currency
     
     respond_to do |format|
       format.html
@@ -54,6 +55,7 @@ class InvoicesController < ApplicationController
 
     respond_to do |format|
       if @invoice.save
+        @invoice.currency = @invoice.set_currency
         format.html { redirect_to @invoice, notice: "Invoice was successfully created." }
         format.json { render :show, status: :created, location: @invoice }
       else

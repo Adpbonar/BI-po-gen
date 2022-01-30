@@ -28,6 +28,10 @@
   <strong>Tax Rate:</strong>
     <%= @participant.tax_rate %>
   </p>
+  <p>
+  <strong>Currency:</strong>
+    <%= sanitize @participant.currency %>
+  </p>
   <% if @participant.type == 'Associate' %>
   <p>
     <strong>Tax Rate:</strong>

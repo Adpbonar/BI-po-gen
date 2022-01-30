@@ -1,5 +1,33 @@
 <h1>New Invoice</h1>
 
-<%= render 'form', invoice: @invoice %>
+<%= simple_form_for(@invoice) do |f| %>
+  <%= f.error_notification %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+  <div class="form-inputs">
+<div class="form-selector">
+     <label>Select PO</label><br />
+    <%= f.select :po_id, pos, class: 'form-select', label: 'Role', style: 'width: 100%' %>
+    </div>
+     <div class="form-selector">
+    <label>Select participant </label><br />
+    <%= f.select :participant_id, people, class: 'form-select', label: 'Role', style: 'width: 100%' %>
+    </div>
+    <%= f.input :name %>
+    <%= f.input :description %>
+  </div>
+  <div class"form-selector">
+  <%= f.input :type_of, as: :select, collection: Invoice::TYPE, label: 'Type' %>
+  </div>
+<label>Notes</label>
+        <%= f.hidden_field :notes, id: "notes"  %>
+        <trix-editor input="notes"></trix-editor>
+      <label>Terms & Conditions</label>
+        <%= f.hidden_field :terms, id: "terms"  %>
+        <trix-editor input="terms"></trix-editor>
+  <div class="form-actions">
+    <%= f.button :submit, class: 'btn btn-success' %>
+  </div>
+<% end %>
 
 <%= link_to 'Back', invoices_path %>

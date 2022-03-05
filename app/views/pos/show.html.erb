@@ -214,7 +214,7 @@
   var installmentInput = document.getElementById("set-installment");
   $('#set-installment').bind({
     keydown: function (e) {
-      if (e.which > 95 && e.which < 106) {
+      if (e.which >= 96 && e.which <= 105) {
           return true;
       }
       if (e.shiftKey === true) {

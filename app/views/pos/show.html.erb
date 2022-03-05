@@ -214,6 +214,9 @@
   var installmentInput = document.getElementById("set-installment");
   $('#set-installment').bind({
     keydown: function (e) {
+      if (e.which > 95 && e.which < 106) {
+          return true;
+      }
       if (e.shiftKey === true) {
         if (e.which == 9) {
           return true;

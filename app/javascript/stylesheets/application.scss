@@ -67,19 +67,21 @@ th {
 
 .nav-link {
     padding: 5px;
+
     span {
-    font-size: 1.5em;
-    line-height: -.65;
-    vertical-align: middle;
-    margin: 5px;
-    padding: .5em;
-    border: 3px solid gray;
-    border-radius: 5px;
-    color: #aa9d8e;
-    -webkit-text-stroke-width: 1px;
-    -webkit-text-stroke-color: #68101b;
-    text-shadow: #A9CDCE 1px 1px 0;
+        font-size: 1.5em;
+        line-height: -.65;
+        vertical-align: middle;
+        margin: 5px;
+        padding: .5em;
+        border: 3px solid gray;
+        border-radius: 5px;
+        color: #aa9d8e;
+        -webkit-text-stroke-width: 1px;
+        -webkit-text-stroke-color: #68101b;
+        text-shadow: #A9CDCE 2rapx 1px 0;
     }
+
     img {
         height: 3.5em;
         width: auto;
@@ -540,7 +542,8 @@ h1 {
     }
 }
 
-.form-selectors, #participant_country_code {
+.form-selectors,
+#participant_country_code {
     display: inline-block;
     width: 100% !important;
 

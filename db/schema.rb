@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_30_171200) do
+ActiveRecord::Schema.define(version: 2022_03_05_173155) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -51,6 +51,18 @@ ActiveRecord::Schema.define(version: 2022_01_30_171200) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "adjustments", force: :cascade do |t|
+    t.bigint "statement_id", null: false
+    t.string "name"
+    t.decimal "cost"
+    t.boolean "absolute", default: false
+    t.boolean "apply_to_all", default: false
+    t.boolean "taxed", default: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["statement_id"], name: "index_adjustments_on_statement_id"
   end
 
   create_table "companies", force: :cascade do |t|
@@ -336,6 +348,7 @@ ActiveRecord::Schema.define(version: 2022_01_30_171200) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "adjustments", "statements"
   add_foreign_key "discounts", "line_items"
   add_foreign_key "installments", "pos"
   add_foreign_key "invoices", "users"

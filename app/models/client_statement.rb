@@ -29,4 +29,22 @@ end
     end
     cost.to_f
   end
+
+  def adjusted_total 
+    cost = 0
+    party = Participant.find(self.issued_to)
+    self.adjustments.map do |adj|
+        if adj.absolute == true
+            amount = adj.cost
+        else
+            amount = ("-" + adj.cost.to_s).to_f
+        end
+        if adj.taxed
+            cost =  cost + percentage_amount(amount, party.tax_rate)
+        else
+            cost = cost + amount
+        end
+    end
+    return self.total + cost
+  end
 end

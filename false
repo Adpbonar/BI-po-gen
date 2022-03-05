@@ -1,0 +1,6 @@
+      invoke  active_record
+      create    db/migrate/20220305173155_create_adjustments.rb
+      create    app/models/adjustment.rb
+      invoke    test_unit
+      create      test/models/adjustment_test.rb
+      create      test/fixtures/adjustments.yml

@@ -68,7 +68,12 @@
           <% end %>
         </td>
         <td>
-          <%= pie_chart @pdf_chart_data, donut: true, legend: true, title: "Installment Percentages"  %>
+          <div data-reflex-permanent>
+            <div id="loadingChart" class="center"></div>
+            <div id="installmentChart">
+              <%= pie_chart @pdf_chart_data, donut: true, legend: true, title: "Installment Percentages"  %>
+            </div>  
+          </div>
         </td>
       </tr>
     </tbody>
@@ -208,21 +213,28 @@
 <script>
   var installmentInput = document.getElementById("set-installment");
   $('#set-installment').bind({
-      keydown: function (e) {
-          if (e.shiftKey === true) {
-              if (e.which == 9) {
-                  return true;
-              }
-              return false;
-          }
-          if (e.which > 57) {
-              return false;
-          }
-          if (e.which == 32) {
-              return true;
-          }
+    keydown: function (e) {
+      if (e.shiftKey === true) {
+        if (e.which == 9) {
           return true;
+        }
+        return false;
+      } 
+      if (e.which > 57) {
+        return false;
       }
+      if (e.which == 32) {
+        return true;
+      }
+      return true;
+    }
+  });
+  $('#installment-submit').click(function() {
+    document.getElementById("loadingChart").textContent = "Updating Installment Chart...";
+    $("#installmentChart").hide();
+    window.setTimeout(function () {
+      window.location.reload();
+    }, 3000);
   });
 </script>
 </div>

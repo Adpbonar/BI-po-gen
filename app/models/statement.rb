@@ -2,7 +2,9 @@ class Statement < ApplicationRecord
     belongs_to :po
     has_many :line_items
     has_many :payments
+    has_many :adjustments
     has_one :statement_note
+
     encrypts :participant_address, :participant_name
     encrypts :statement_participant, type: :integer
 
@@ -22,7 +24,7 @@ class Statement < ApplicationRecord
 
     def valid_general
         unless self.type == "GeneralStatement"
-             if (currency.blank? || (tax_rate.blank? || (Float(tax_rate) == nil) || (! tax_rate.to_s.valid_float?))
+            if (currency.blank? || (tax_rate.blank? || (Float(tax_rate) == nil) || (! tax_rate.to_s.valid_float?)))
                 errors.add :statement, 'is not valid'
             end 
         end

@@ -24,19 +24,19 @@ class PartitipantReflex  < ApplicationReflex
 
     def coordinator
         po = Po.find(element.dataset[:id])
-        unless po.locked
+        # unless po.locked
         participant = Participant.find(element.dataset[:coordinator])
-            if participant.type == 'Associate' && po.learning_coordinator.blank? && participant.valid? && po.valid?
+            if participant.type == 'Associate' && po.learning_coordinator.blank? && po.valid?
                 po.update(learning_coordinator: participant.id)
             end
             po.set_status
-        end
+        # end
     end
 
     def remove_coordinator
         po = Po.find(element.dataset[:id])
         unless po.locked
-            unless po.learning_coordinator.blank? && participant.valid? && po.valid?
+            unless po.learning_coordinator.blank? && po.valid?
                 po.update(learning_coordinator: nil)
             end
             po.set_status
@@ -47,7 +47,7 @@ class PartitipantReflex  < ApplicationReflex
         po = Po.find(element.dataset[:id])
         unless po.locked
             participant = Participant.find(element.dataset[:coordinator])
-            if participant.type == 'Associate' && po.found.blank? && participant.valid? && po.valid?
+            if participant.type == 'Associate' && po.found.blank? && po.valid?
                 po.update(found: participant.id)
             end
             po.set_status

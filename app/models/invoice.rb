@@ -46,7 +46,7 @@ class Invoice < ApplicationRecord
   end
 
   TYPE = {
-      'Charge': 'Charge',
-      'Credit': 'Credit'
-    }
+    'Charge': 'Charge',
+    'Credit': 'Credit'
+  }
 end

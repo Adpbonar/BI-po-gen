@@ -37,7 +37,7 @@ class Discount < ApplicationRecord
   end
 
   TYPE = {
-        'Amount': '1',
-        'Percentage': '0',
-    }
+    'Amount': '1',
+    'Percentage': '0',
+  }
 end

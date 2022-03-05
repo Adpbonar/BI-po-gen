@@ -1,4 +1,5 @@
 <div id="pdfLoading"></div>
+
 <div class="invoice-image">
   <%= image_tag 'Bonar-Institute-Logo-Primary.jpg', alt: 'Bonar Institute Logo', class: 'top-bottom-spacing', width: '350px' %>
   <h1><%= @statement.type.split("S").first %> Statement</h1>
@@ -82,7 +83,7 @@
       <% end %>
     <% end %>
     <br />
-    <% if @statement.type == "GeneralStatement" || @statement.po.statements.where.not(type: "GeneralStatement").count > 1 %>
+    <% if !@statement.type == "GeneralStatement" || @statement.po.statements.where.not(type: "GeneralStatement").count > 1 %>
       <center>
         <table style="width: 100%;" border="0">
           <tbody>

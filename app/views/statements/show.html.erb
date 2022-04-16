@@ -41,7 +41,7 @@
     </table>
   <% end %>
   <% unless @statement.po.status == 'Prepared' %>
-    <%= link_to 'back to po', po_path(@statement.po), class: "btn btn-secondary" %>
+    <%= link_to 'back to po', po_url(@statement.po), class: "btn btn-secondary" %>
   <% end %>
   <% if @statement.type == "GeneralStatement" && ! @statement.no_general %>
     <%= render partial: 'general', statement: @statement %>
@@ -95,7 +95,7 @@
                       <span title="Another Statement" class="btn btn-primary">< Previous</span>
                         <% end %>
                       </div>
-                    <% elsif @statement == @statement.po.statements.where.not(type: "GeneralStatement").first %>
+                    <% elsif @statement == @statement.po.statements.where.not(achieved: true, type: "GeneralStatement").first %>
                       <div class="left-div">
                         <%= link_to @statement.po.statements.last do %>
                           <span title="Another Statement" class="btn btn-primary">< Previous</span>
@@ -111,7 +111,7 @@
                             </div>
                           <% elsif @statement == @statement.po.statements.last %>
                             <div style="text-align: right;">
-                              <%= link_to @statement.po.statements.where.not(type: "GeneralStatement").first do %>
+                              <%= link_to @statement.po.statements.where.not(achieved: true, type: "GeneralStatement").first do %>
                                 <span title="Another Statement" class="btn btn-primary">Next ></span>
                               <% end %>
                             </div>

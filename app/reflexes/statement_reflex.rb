@@ -21,26 +21,5 @@ class StatementReflex < ApplicationReflex
     # end
   end
       
-  def show
-    statement = Statement.find(element.dataset[:id])
-    po = statement.po
-    unless po.locked
-      if statement.valid?
-          statement.update(show_programs: true)
-      end
-      po.set_status
-    end
-   end
-
-  def hide
-    statement = Statement.find(element.dataset[:id])
-    po = statement.po
-    unless po.locked
-      if statement.valid?
-          statement.update(show_programs: false)
-          morph :nothing
-      end
-      po.set_status
-    end
-  end
+ 
 end

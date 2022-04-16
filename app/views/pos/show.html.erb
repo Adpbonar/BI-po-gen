@@ -83,11 +83,11 @@
     <% @po.statements.each do |statement|%>
       <% unless statement.no_general %>
         <% if statement.type == 'ClientStatement' %>
-          <li><%= link_to "client statement".capitalize, statement_path(statement), class: 'default-link' %></li>
+          <li><%= link_to "client statement".capitalize, statement_url(statement), class: 'default-link' %></li>
         <% elsif statement.type == 'GeneralStatement' %>
-          <li><%= link_to "edit statement".capitalize, statement_path(statement), class: 'default-link' %></li>
+          <li><%= link_to "edit statement".capitalize, statement_url(statement), class: 'default-link' %></li>
         <% else %>
-          <li><%= link_to "associate statement".capitalize, statement_path(statement), class: 'default-link' %></li>
+          <li><%= link_to "associate statement".capitalize, statement_url(statement), class: 'default-link' %></li>
         <% end %>
       <% end %>
     <% end %>

@@ -61,7 +61,7 @@
           <tr>
             <td style="width: 25%;"><%= item.title %></td>
             <td style="width: 50%;"><%= sanitize item.description %></td>
-            <td style="width: 20%;"><%= show_money(@invoice, item.cost) %></td>
+            <td style="width: 20%;"><%= show_money(@invoice, item.cost, @invoice.currency) %></td>
             <td style="width: 20%;"><% if item.taxable == true %>
                 &#10003;
               <% end %>

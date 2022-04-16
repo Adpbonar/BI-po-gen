@@ -15,7 +15,7 @@ Rails.application.routes.draw do
   root to: 'pos#index'
   resources :pos
   resources :statement_notes, only: [ :edit, :update ]
-  resources :statements, except: [ :new, :create, :destroy ] 
+  resources :statements, except: [ :destroy ] 
   resources :participants
   resources :line_items, only: [ :new, :create, :edit, :update, :destroy ]
   resources :items, except: [ :index, :show ]

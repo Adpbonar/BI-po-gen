@@ -20,9 +20,9 @@ class Installment < ApplicationRecord
                 if installment.percentage == 0 
                     return errors.add :installment, 'cannot be 0'
                 end
+               
             end
-            return if amount.to_i < 100 || amount.to_i > 100
-            errors.add :installment_percentages, 'must equal 100'
+           
         end
     end
 

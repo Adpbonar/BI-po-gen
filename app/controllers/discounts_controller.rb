@@ -27,7 +27,7 @@ class DiscountsController < ApplicationController
           @discount.errors.full_messages.each do |error|
             string = string + "<div>#{error}</div>".to_s
           end
-          format.html { redirect_to statement_path(@discount.line_item.statement_id), notice: string } 
+          format.html { redirect_to statement_url(@discount.line_item.statement_id), notice: string } 
           format.json { render json: @discount.errors, status: :unprocessable_entity }
           # format.turbo_stream {  }
         end

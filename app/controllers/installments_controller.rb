@@ -8,6 +8,7 @@ class InstallmentsController < ApplicationController
 
   # PATCH/PUT /installments/1 or /installments/1.json
   def update
+    
     respond_to do |format|
       if @installment.update(installment_params)
         format.html { redirect_to po_path(@installment.po), notice: "Installment was successfully updated." }
@@ -27,6 +28,6 @@ class InstallmentsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def installment_params
-      params.require(:installment).permit(:percentage, :due_date, position)
+      params.require(:installment).permit(:percentage, :due_date, :position)
     end
 end

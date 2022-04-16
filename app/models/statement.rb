@@ -13,11 +13,6 @@ class Statement < ApplicationRecord
 
     require 'bigdecimal'
 
-    def self.model_name
-        return super if self == Statement
-        Statement.model_name
-    end
-
     def valid_float?
         true if Float self rescue false
       end
@@ -132,10 +127,10 @@ class Statement < ApplicationRecord
     end
 
     def generate_associate_statement
-        ass_users = self.po.po_users.all
+        ass_users = self.po.po_users.where(type: "Associate").all
         PoUser.destroy_duplicates_by(:participant_id, :po_id)
-        if self.po.status == 'Prepared' && self.po.statements.count == 1 && self.type == 'GeneralStatement' 
-            unless self.po.found.blank?
+        if self.po.status == 'Prepared' && self.po.statements.count == 1 && self.type == 'GeneralStatement' && self.achieved == false
+            unless self.po.found.blank? && self.po.learning_coordinator.blank?
                 initiator = Participant.find(self.po.found.to_i)
                 if initiator
                     founder_statement = Statement.create(type: "AssociateStatement", po_id: self.po.id, total: percentage_amount(self.subtotal.to_d, self.po.founder_percentage), company_name: Company.first.company_name, company_address: Company.first.address, participant_name: initiator.name, participant_address: initiator.address, invoice_number: 'REQ-' + self.po.po_number.to_s + '-F', percentage: Company.first.company_options[:business_finder], currency: initiator.currency, tax_rate: initiator.tax_rate, issued_to: initiator.id)
@@ -180,16 +175,16 @@ class Statement < ApplicationRecord
             end
             rs_total = (percentage_amount(self.subtotal.to_d, self.po.revenue_share) - expenses)
             Participant.where(revenue_share: true).all.each do |participant|
-                share_statement = Statement.create(type: "AssociateStatement", po_id: self.po.id, total: rs_total, participant_name: participant.name, participant_address: participant.address, company_name: Company.first.company_name, company_address: Company.first.address, invoice_number: 'REQ-' + self.po.po_number.to_s + '-RS-' + participant.id.to_s, percentage: Company.first.company_options[:revenue_share], tax_rate: participant.tax_rate, currency: participant.currency, issued_to: participant.id)
-                self.line_items.each do |item|
-                    LineItem.create(statement_id: share_statement.id, type: item.type, title: item.title, description: item.description, cost: item.cost, taxable: item.taxable, expense_exempt_from_tax: item.expense_exempt_from_tax, expense_cost: item.expense_cost)
-                    if item.discounts.any?
-                        item.discounts.each do |discount|
-                            Discount.create(amount: discount.amount, amount_type: discount.amount_type, line_item_id: discount.line_item_id)
-                        end
-                    end
+            share_statement = Statement.create(type: "AssociateStatement", po_id: self.po.id, total: rs_total, participant_name: participant.name, participant_address: participant.address, company_name: Company.first.company_name, company_address: Company.first.address, invoice_number: 'REQ-' + self.po.po_number.to_s + '-RS-' + participant.id.to_s, percentage: Company.first.company_options[:revenue_share], tax_rate: participant.tax_rate, currency: participant.currency, issued_to: participant.id)
+            self.line_items.each do |item|
+              LineItem.create(statement_id: share_statement.id, type: item.type, title: item.title, description: item.description, cost: item.cost, taxable: item.taxable, expense_exempt_from_tax: item.expense_exempt_from_tax, expense_cost: item.expense_cost)
+              if item.discounts.any?
+                item.discounts.each do |discount|
+                  Discount.create(amount: discount.amount, amount_type: discount.amount_type, line_item_id: discount.line_item_id)
                 end
-                StatementNote.create(statement_id: share_statement.id, notes: Company.first.default_associate_note, terms: Company.first.default_associate_terms)
+              end
+            end
+            StatementNote.create(statement_id: share_statement.id, notes: Company.first.default_associate_note, terms: Company.first.default_associate_terms)
             end
         else
             errors.add :statement, 'needs Initiator to proceed.'
@@ -231,10 +226,52 @@ class Statement < ApplicationRecord
     end
 
     def next
-        Statement.where(po_id: self.po.id).where.not(type: "GeneralStatement").where("id > ?", id).order(id: :asc).limit(1).first
+        Statement.where(po_id: self.po.id).where.not(achieved: false, type: "GeneralStatement").where("id > ?", id).order(id: :asc).limit(1).first
       end
     
       def prev
-        Statement.where(po_id: self.po.id).where.not(type: "GeneralStatement").where("id < ?", id).order(id: :desc).limit(1).first
+        Statement.where(po_id: self.po.id).where.not(achieved: false, type: "GeneralStatement").where("id < ?", id).order(id: :desc).limit(1).first
       end
+
+      def expense_tax
+        cost = 0
+        self.line_items.where(type: 'ExpenseItem').map do |expense| 
+          unless expense.expense_exempt_from_tax
+              cost = cost + percentage_amount(expense.cost, expense.statement.po.tax_amount) 
+          end
+      end
+      return cost
+    end
+
+    def service_tax
+      tax = 0
+      self.line_items.where(type: 'ServiceItem').map do |service| 
+          if service.taxable
+              unless service.calculate_discounts == "Free"
+                  tax = tax + percentage_amount(service.calculate_discounts, service.statement.po.tax_amount)
+              end
+          end
+      end
+      return tax
+    end
+
+  def adjusted_total 
+    cost = 0
+    tax = 0
+    party = Participant.find(self.issued_to)
+    self.adjustments.map do |adj|
+        if adj.absolute == true
+            amount = adj.cost
+        else
+            amount = ("-" + adj.cost.to_s).to_f
+        end
+        if adj.taxed
+            cost =  cost + percentage_amount(amount, party.tax_rate)
+            tax = tax + percentage_amount(amount, party.tax_rate)
+        else
+            cost = cost + amount
+        end
+    end
+    return (self.total + cost).to_s + ":" + tax.to_s
+  end
 end

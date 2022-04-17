@@ -1,182 +1,147 @@
+<%= render 'navigation', statement: @statement %>
 <div id="pdfLoading"></div>
-
 <div class="invoice-image">
-  <%= image_tag 'Bonar-Institute-Logo-Primary.jpg', alt: 'Bonar Institute Logo', class: 'top-bottom-spacing', width: '350px' %>
-  <h1><%= @statement.type.split("S").first %> Statement</h1>
-  <div class="bold upcase"><small>Type: 
-      <% unless @statement.type == "GeneralStatement" %>
-        <% if @statement.client %>
-          Client
-        <% elsif @statement.rs %>
-          Share
-        <% elsif @statement.founder %>
-          Initiator
+  <%= image_tag 'Bonar-Institute-Logo-for-Purposeful-Leadership-Primary.jpg', alt: 'Bonar Institute Logo', class: 'top-bottom-spacing', width: '350px' %>
+  <h1><%= @statement.type.underscore.titleize %></h1>
+  <div class="bold upcase"><small>PO Number: <%= @statement.po.po_number %></div>
+    <div class="bold upcase"><small>Type: 
+        <% unless @statement.type == "GeneralStatement" %>
+          <% if @statement.client %>
+            Client
+          <% elsif @statement.rs %>
+            Share
+          <% elsif @statement.founder %>
+            Initiator
+          <% else %>
+            Associate
+          <% end %>
         <% else %>
-          Associate
-        <% end %>
-      <% else %>
-        General
-      <% end %></small></div>
-</div>
-<% if @statement.type != "GeneralStatement" %>
-  <p class="bold"><%= @statement.kind? %> Number: 
-    <%= @statement.invoice_number %></p>
-  <div class="top-bottom-spacing">
-    <table width="100%">
-      <tbody>
-        <tr>
-          <td style=" width: 50%; vertical-align: top;">
-            <p class="bold">From:</p>
-            <%= @statement.company_name %>
-            <%= sanitize @statement.company_address %>
-          </td>
-          <td style=" width: 50%; vertical-align: top;">
-            <p class="bold">To:</p>
-            <%= @statement.po.company_name %><br />
-            <%= @statement.participant_name %>
-            <%= @statement.participant_address %>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  <% end %>
-  <% unless @statement.po.status == 'Prepared' %>
-    <%= link_to 'back to po', po_url(@statement.po), class: "btn btn-secondary" %>
-  <% end %>
-  <% if @statement.type == "GeneralStatement" && ! @statement.no_general %>
-    <%= render partial: 'general', statement: @statement %>
-  <% end %>
-  <% if @statement.client || @statement.associate %>
-    <% unless @statement.associate %>
-      <%= button_tag class: "btn btn-info", data: { reflex: "click->StatementReflex#toggle", id: @statement.id }  do %>
-        <% if @statement.show_detailed %>
-          Show Less Information
-        <% else %>
-          Show Detailed Information
+          General
+        <% end %></small></div>
+  </div>
+  <% if @statement.type != "GeneralStatement" %>
+    <p class="bold"><%= @statement.kind? %> Number: 
+      <%= @statement.invoice_number %></p>
+    <div class="top-bottom-spacing">
+      <table width="100%">
+        <tbody>
+          <tr>
+            <td style=" width: 50%; vertical-align: top;">
+              <p class="bold">From:</p>
+              <%= @statement.company_name %>
+              <%= sanitize @statement.company_address %>
+            </td>
+            <td style=" width: 50%; vertical-align: top;">
+              <p class="bold">To:</p>
+              <%= @statement.po.company_name %><br />
+              <%= @statement.participant_name %>
+              <%= @statement.participant_address %>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    <% end %>
+    <% if @statement.type == "GeneralStatement" && ! @statement.no_general %>
+      <%= render partial: 'general', statement: @statement %>
+    <% end %>
+    <% if @statement.client || @statement.associate %>
+      <%= link_to 'back to po', po_url(@statement.po), class: "btn btn-secondary" %>
+      <% unless @statement.associate %>
+        <%= button_tag class: "btn btn-info", data: { reflex: "click->StatementReflex#toggle", id: @statement.id }  do %>
+          <% if @statement.show_detailed %>
+            Show Less Information
+          <% else %>
+            Show Detailed Information
+          <% end %>
         <% end %>
       <% end %>
+      <%= link_to 'PDF', statement_url(@statement) + '.pdf', id: 'openPDF', class: 'btn btn-success' %>
+      <script>
+        $("#openPDF").click(function() {
+          document.getElementById("pdfLoading").textContent = "Loading <%= @statement.kind? %>: <%= @statement.invoice_number %>";
+        });
+      </script>
     <% end %>
-    <%= link_to 'PDF', statement_url(@statement) + '.pdf', id: 'openPDF', class: 'btn btn-success' %>
-    <script>
-      $("#openPDF").click(function() {
-        document.getElementById("pdfLoading").textContent = "Loading <%= @statement.kind? %>: <%= @statement.invoice_number %>";
-      });
-    </script>
-  <% end %>
-  <div id="Print">
-    <hr />
-    <% if @statement.client %>
-      <%= render partial: 'client', statement: @statement %>
-    <% end %>
-    <% unless @statement.type == "GeneralStatement" || @note == nil %>
-      <h2>Notes</h2>
-      <%= form_for(@note) do |f| %>
-        <%= f.hidden_field :notes, id: "notes"  %>
-        <trix-editor input="notes"></trix-editor>
-        <center><%= f.submit 'update notes', class: 'btn btn-success' %></center>
+    <div id="Print">
+      <hr />
+      <% if @statement.client %>
+        <%= render partial: 'client', statement: @statement %>
       <% end %>
-      <h2>Terms & Conditions</h2>
-      <%= form_for(@note) do |f| %>
-        <%= f.hidden_field :terms, id: "terms"  %>
-        <trix-editor input="terms"></trix-editor>
-        <center><%= f.submit 'update terms & conditions', class: 'btn btn-success' %></center>
+      <% unless @statement.type == "GeneralStatement" || @note == nil %>
+        <div>
+          <h2>Notes</h2>
+          <%= form_for(@note) do |f| %>
+            <%= f.hidden_field :notes, id: "notes"  %>
+            <trix-editor input="notes"></trix-editor>
+            <center><%= f.submit 'update notes', class: 'btn btn-success' %></center>
+          <% end %>
+        </div>
+        <div>
+          <h2>Terms & Conditions</h2>
+          <%= form_for(@note) do |f| %>
+            <%= f.hidden_field :terms, id: "terms"  %>
+            <trix-editor input="terms"></trix-editor>
+            <center><%= f.submit 'update terms & conditions', class: 'btn btn-success' %></center>
+          <% end %>
+        </div>
       <% end %>
-    <% end %>
-    <br />
-    <% if !@statement.type == "GeneralStatement" || @statement.po.statements.where.not(type: "GeneralStatement").count > 1 %>
-      <center>
-        <table style="width: 100%;" border="0">
-          <tbody>
-            <tr>
-              <td style="width: 50%">
-                <% if @statement.prev. present? %>
-                  <div class="left-div">
-                    <%= link_to @statement.prev do %>
-                      <span title="Another Statement" class="btn btn-primary">< Previous</span>
-                        <% end %>
-                      </div>
-                    <% elsif @statement == @statement.po.statements.where.not(achieved: true, type: "GeneralStatement").first %>
-                      <div class="left-div">
-                        <%= link_to @statement.po.statements.last do %>
-                          <span title="Another Statement" class="btn btn-primary">< Previous</span>
-                            <% end %>
-                          <% end %>
-                        </td>
-                        <td style="width: 50%;">
-                          <% if @statement.next.present? %>
-                            <div style="text-align: right;">
-                              <%= link_to @statement.next do %>
-                                <span title="Another Statement" class="btn btn-primary">Next ></span>
-                              <% end %>
-                            </div>
-                          <% elsif @statement == @statement.po.statements.last %>
-                            <div style="text-align: right;">
-                              <%= link_to @statement.po.statements.where.not(achieved: true, type: "GeneralStatement").first do %>
-                                <span title="Another Statement" class="btn btn-primary">Next ></span>
-                              <% end %>
-                            </div>
-                          <% end %>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </center>
-              <% end %>
-              <style>
-                input { width: 50%; margin-bottom: 2px; }
-              </style>
-              <script>
-                document.addEventListener("turbo:load", function () {
-                    var list = ""
-                    $input = $("[data-behavior='autocomplete']")
-                    $('#program-search').keydown(function (event) {
-                        if (event.which === 13 || event.keyCode === 13) {
-                            event.preventDefault();
-                            return false;
-                        }
-                        else return true;
-                    });
-                    var options = {
-                    getValue: "name",
-                    url: function(phrase) {
-                        return "/search_programs.json?q=" + phrase;
-                    },
-                    categories: [
-                        {
-                        listLocation: "saved_items",
-                        header: "<strong>Programs</strong>",
-                        },
-                    ],
-                    list: {
-                        onChooseEvent: function() {
-                        var url = $input.getSelectedItemData().url
-                        $input.val("")
-                        Turbo.visit(url)
-                        $(url).css("display", "block");
-                        $(url).css("background-color", "green");
-                        window.history.replaceState({}, document.title, window.location.href.split('#')[0]);
-                        setTimeout(function(){
-                            $(url).css("background-color", "transparent");
-                        }, 2500);
+      <br />
+      <%= render 'navigation', statement: @statement %>
+      <style>
+        input { width: 50%; margin-bottom: 2px; }
+      </style>
+      <script>
+        document.addEventListener("turbo:load", function () {
+            var list = ""
+            $input = $("[data-behavior='autocomplete']")
+            $('#program-search').keydown(function (event) {
+                if (event.which === 13 || event.keyCode === 13) {
+                    event.preventDefault();
+                    return false;
+                }
+                else return true;
+            });
+            var options = {
+            getValue: "name",
+            url: function(phrase) {
+                return "/search_programs.json?q=" + phrase;
+            },
+            categories: [
+                {
+                listLocation: "saved_items",
+                header: "<strong>Programs</strong>",
+                },
+            ],
+            list: {
+                onChooseEvent: function() {
+                var url = $input.getSelectedItemData().url
+                $input.val("")
+                Turbo.visit(url)
+                $(url).css("display", "block");
+                $(url).css("background-color", "green");
+                window.history.replaceState({}, document.title, window.location.href.split('#')[0]);
+                setTimeout(function(){
+                    $(url).css("background-color", "transparent");
+                }, 2500);
 
-                $(url).click(function() {
-                    $(url).css("display", "none");
-                    list = "added"
-                    console.log(list)
-                    if (! list == "") {
-                        $("#done").css("display", "block");
-                    }
+        $(url).click(function() {
+            $(url).css("display", "none");
+            list = "added"
+            console.log(list)
+            if (! list == "") {
+                $("#done").css("display", "block");
+            }
 
-                });
-                        }
-                    }
-                    }
-                    $input.easyAutocomplete(options)
+        });
+                }
+            }
+            }
+            $input.easyAutocomplete(options)
 
-                });
+        });
 
 
-                    $("#done").click(function() {
-                        location.reload();
-                });
-              </script>
+            $("#done").click(function() {
+                location.reload();
+        });
+      </script>

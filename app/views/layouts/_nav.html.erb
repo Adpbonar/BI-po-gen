@@ -1,35 +1,46 @@
-<% if user_signed_in? %>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container-fluid">
-      <a class="navbar-brand nav-link" href="/pos"><span class="center bold">POs</span></a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarText">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <%= link_to 'POs', pos_path, class: 'default-link' %>
-          </li>
-          <li class="nav-item">
-            <%= link_to 'People', participants_path, class: 'default-link' %>
-          </li>
-          <li class="nav-item">
-            <%= link_to 'Non-PO Invoices & Requests', invoices_path, class: 'default-link' %>
-          </li>
-          <li class="nav-item">
-            <%= link_to 'Admin', admin_root_path, class: 'default-link' %>
-          </li>
-          <% if current_user.id == Company.first.company_options[:user] %>
-            <li class="nav-item">
-              <%= link_to 'Edit Defaults', default_options_path, class: 'default-link' %>
-            </li>
-          <% end %>
-        </ul>
-        <span class="navbar-text">
-          <%= link_to 'Logout', destroy_user_session_path, data: { turbo_method: :delete }, class: 'btn btn-danger' %>
-        </span>
-      </div>
+<div>
+  <div>
+    <% if user_signed_in? %>
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <% if controller_name == "statements" %>
+          <div class="container-fluid fix-me">
+          <% else %>
+            <div class="container-fluid">
+            <% end %>
+            <a class="navbar-brand nav-link" href="/pos"><span class="center bold"><%= image_tag 'Crest.png', alt: 'Bonar Institute Logo' %> P.O.s</span></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarText">
+              <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                  <%= link_to 'POs', pos_path, class: 'default-link' %>
+                </li>
+                <li class="nav-item">
+                  <%= link_to 'People', participants_path, class: 'default-link' %>
+                </li>
+                <li class="nav-item">
+                  <%= link_to 'Non-PO Invoices & Requests', invoices_path, class: 'default-link' %>
+                </li>
+                <li class="nav-item">
+                  <%= link_to 'Admin', admin_root_path, class: 'default-link' %>
+                </li>
+                <% if current_user.id == Company.first.company_options[:user] %>
+                  <li class="nav-item">
+                    <%= link_to 'Edit Defaults', default_options_path, class: 'default-link' %>
+                  </li>
+                <% end %>
+              </ul>
+             
+              <span class="navbar-text">
+                <%= link_to 'Logout', destroy_user_session_path, data: { turbo_method: :delete }, class: 'btn btn-danger' %>
+              </span>
+              <hr />
+            </di>
+          </div>
+          <br />
+          <br />
+        </nav>
+      <% end %>
     </div>
-  </nav>
-  <hr />
-<% end %>
+  </div>

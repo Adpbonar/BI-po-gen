@@ -1,5 +1,5 @@
 class StatementsController < ApplicationController
-  before_action :set_statement, only: %i[ show edit update destroy ]
+  before_action :set_statement, only: %i[ show edit update destroy achieve_po ]
   before_action :authenticate_user!
   
 
@@ -10,6 +10,9 @@ class StatementsController < ApplicationController
 
   # GET /statements/1 or /statements/1.json
   def show
+    if @statement.type == "GeneralStatement" && @statement.achieved
+      redirect_to @statement.po
+    end
     @line_item = LineItem.new
     @expenses = @statement.line_items.where(type: "ExpenseItem")
     @services = @statement.line_items.where(type: "ServiceItem")
@@ -91,6 +94,10 @@ class StatementsController < ApplicationController
       format.html { redirect_to statements_url, notice: "Statement was successfully destroyed." }
       format.json { head :no_content }
     end
+  end
+
+  def achieve_po
+
   end
 
   private

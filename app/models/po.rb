@@ -250,13 +250,16 @@ class Po < ApplicationRecord
           if self.statements.first.subtotal == 0
             self.update(status: 'Generated')
           end
-          if self.end_date < Time.now && (! self.status == "Associate Submitted" || ! self.status == "Submitted")
+          if self.end_date < Time.now && (! self.status == "Associate Submitted" || ! self.status == "Submitted" || ! self.status == "All Statements Submitted")-
             self.update(status: 'Lapsed')
           end
         end
       end
       if self.statements.where(type: 'AssociateStatement').count >= 1
         self.update(status: 'Associate Submitted')
+      end
+      if self.statements.where(type: 'ClientStatement').count >= 1
+        self.update(status: 'All Statements Submitted')
       end
     end
 

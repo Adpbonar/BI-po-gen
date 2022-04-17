@@ -1,62 +1,68 @@
-<div statement data-reflex-root="[statement]">
-  <p class="tax">PO <%= @statement.po.po_number %></p>
-  <p class="tax">PO Tax Amount: <%= @statement.po.tax_amount %>%</p>
-  <% if @statement.po.status == 'Prepared' && @statement.status_code == nil && ! @statement.locked %>
-    <% unless @statement.po.statements.where.not(type: "GeneralStatement").count > 1 %>
-      <%= content_tag :button, id: 'gStatements', class: 'btn btn-success', data: { reflex: "click->StatementReflex#associates_generate", id: @statement.id } do %>
-        generate associate statements
+<% unless @statement.achieved %>
+  <div id="<%= @statement.achieved %> statement data-reflex-root="[statement]">
+    <p class="tax">PO <%= @statement.po.po_number %></p>
+    <p class="tax">PO Tax Amount: <%= @statement.po.tax_amount %>%</p>
+    <% if @statement.po.status == 'Prepared' && @statement.status_code == nil && ! @statement.locked %>
+      <% unless @statement.po.statements.where.not(type: "GeneralStatement").count > 1 %>
+        <%= content_tag :button, id: 'gStatements', class: 'btn btn-success', data: { reflex: "click->StatementReflex#associates_generate", id: @statement.id } do %>
+          generate associate statements
+        <% end %>
+        <span id="redirectToPo" class="highlight">After clicking "Generate Statements", scroll down & press next.</span>
       <% end %>
-      <span class="highlight">After clicking "Generate Associate Statements", scroll down & press next.</span>
     <% end %>
-  <% end %>
-  <h2>Expense Items</h2>
-  <% if @expenses.each do |item| %>
-    <div>
-      <div class="top-bottom-spacing">
-        <p class="upcase" style="font-weight: 700"><%= item.title.capitalize %>
-          <% unless @statement.locked %> |
-            <%= link_to 'Edit', edit_line_item_path(item), class: 'default-link' %>
-          <% end %>
-        </p>
-        <table style="border: none !important; width: 100%;">
-          <tbody>
-            <tr class="upcase">
+    <script>
+      $('#redirectToPo').click( function => {
+        $('#redirectToPo').innerHtml = '<h1>Click <i>Back to PO</i></h1>'
+      });
+    </script>
+    <h2>Expense Items</h2>
+    <% if @expenses.each do |item| %>
+      <div>
+        <div class="top-bottom-spacing">
+          <p class="upcase" style="font-weight: 700"><%= item.title.capitalize %>
+            <% unless @statement.locked %> |
+              <%= link_to 'Edit', edit_line_item_path(item), class: 'default-link' %>
+            <% end %>
+          </p>
+          <table style="border: none !important; width: 100%;">
+            <tbody>
+              <tr class="upcase">
+                <td style="width: 20%;">
+                  <p>Price:
+                    <% if ! item.expense_exempt_from_tax %>
+                      <%= show_money(item.statement, item.cost, @po).to_s + ' + tax ' + @statement.po.tax_amount.to_s + '% ' + show_money(item.statement, (item.cost + show_percentage_amount(item.cost, @statement.po.tax_amount)), @po).to_s %>
+                    <% else %>
+                      <%= show_money(item.statement, item.cost, @statement, @po) %>
+                    <% end %>
+                  </p>
+                </td>
+                <td style="width: 20%;">
+                  <p>Customer Tax: <%= item.taxable %></p>
+                  <p>Purchase Tax Exepmt: <%= item.expense_exempt_from_tax %></p>
+                </td>
+                <td style="width: 20%;">
+                  <p>Type: Expense</p>
+                </td>
+              </td>
               <td style="width: 20%;">
-                <p>Price:
-                  <% if ! item.expense_exempt_from_tax %>
-                    <%= show_money(item.statement, item.cost, @po).to_s + ' + tax ' + @statement.po.tax_amount.to_s + '% ' + show_money(item.statement, (item.cost + show_percentage_amount(item.cost, @statement.po.tax_amount)), @po).to_s %>
-                  <% else %>
-                    <%= show_money(item.statement, item.cost, @statement, @po) %>
+                <p>Discounts: Not available for expenses.</p>
+              </td>
+              <td style="width: 20%;">
+                <% unless @statement.locked %>
+                  <%= button_tag 'X', class: 'btn-danger btn-sm', style: 'position: relative; right: 1em;', data: { reflex: "click->ItemReflex#remove", id: item.id } %>
+                  <% if item.saved_item_check %>
+                    <%= button_tag 'Save', class: 'btn-success btn', style: 'position: relative; right: 1em;', data: { reflex: "click->ItemReflex#save", id: item.id } %>
                   <% end %>
-                </p>
-              </td>
-              <td style="width: 20%;">
-                <p>Customer Tax: <%= item.taxable %></p>
-                <p>Purchase Tax Exepmt: <%= item.expense_exempt_from_tax %></p>
-              </td>
-              <td style="width: 20%;">
-                <p>Type: Expense</p>
-              </td>
-            </td>
-            <td style="width: 20%;">
-              <p>Discounts: Not available for expenses.</p>
-            </td>
-            <td style="width: 20%;">
-              <% unless @statement.locked %>
-                <%= button_tag 'X', class: 'btn-danger btn-sm', style: 'position: relative; right: 1em;', data: { reflex: "click->ItemReflex#remove", id: item.id } %>
-                <% if item.saved_item_check %>
-                  <%= button_tag 'Save', class: 'btn-success btn', style: 'position: relative; right: 1em;', data: { reflex: "click->ItemReflex#save", id: item.id } %>
                 <% end %>
-              <% end %>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <div><%=sanitize item.description %></div>
-      <hr />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div><%=sanitize item.description %></div>
+        <hr />
+      </div>
     </div>
-  </div>
-<% end.any? %>
+  <% end.any? %>
 <% else %>
   none
 <% end %>
@@ -226,3 +232,4 @@
   </div>
 </div>
 </div>
+<% end %>

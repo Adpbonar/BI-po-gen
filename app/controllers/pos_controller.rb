@@ -16,6 +16,8 @@ class PosController < ApplicationController
     @users = Participant.all
     @po_users = @po.po_users.uniq
     @pdf_chart_data = @po.statements.first.pdf_installment_chart
+    @associates = []
+    @po_users.each { |user| @associates << user if user.type_of == "Associate" }
   end
 
   # GET /pos/new

@@ -1,7 +1,9 @@
 class ClientStatement < Statement 
+
   def self.model_name
     Statement.model_name
 end
+ 
   def formula
     cost = 0.0
     self.po.installments.each { |installment| cost = cost + installment.cost }

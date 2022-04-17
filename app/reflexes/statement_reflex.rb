@@ -18,7 +18,7 @@ class StatementReflex < ApplicationReflex
     # unless po.locked
       statement.generate_associate_statement
       po.set_status
-    # end
+     # end
   end
       
  

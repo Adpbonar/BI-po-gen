@@ -6,7 +6,8 @@ module StatementsHelper
       end
       if record.rs
         return "Share"
-      elseif record.founder
+      end
+      if record.founder
         return "Initiator"
       end 
       if ! record.founder || ! record.rs
@@ -16,6 +17,4 @@ module StatementsHelper
       return "General"
     end
   end
-
-  
 end

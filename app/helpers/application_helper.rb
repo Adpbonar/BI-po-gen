@@ -23,6 +23,15 @@ module ApplicationHelper
       end
     end
 
+    def ass_type(record)
+      if record.rs
+        return "Share"
+      end
+      if record.founder
+        return "Initiator"
+      end 
+    end
+
     def show_money(record1, record2, record3)
       if (record1.model_name == "Statement" && record1.type =="GeneralStatement") 
         return (record1.po.currency.to_s + number_to_currency(record2).to_s.split("$").last).html_safe

@@ -73,7 +73,7 @@
             <li><%= link_to "edit statement".capitalize, statement_url(statement), class: 'default-link' %></li>
           <% end %>
         <% else %>
-          <li><%= link_to statement.type.underscore.titleize.capitalize + ": " + statement.participant_name.split(".").last, statement_url(statement), class: 'default-link' %></li>
+          <li><%= link_to ass_type(statement).to_s + " " + statement.type.underscore.titleize.capitalize + ": " + statement.participant_name.split(".").last, statement_url(statement), class: 'default-link' %></li>
         <% end %>
       <% end %>
     <% end %>

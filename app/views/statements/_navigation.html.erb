@@ -24,8 +24,10 @@
                           <button class="dropbtn btn btn-info">More Statements from PO <%= @statement.po.po_number %></button>
                           <div class="dropdown-content">
                             <% @statement.po.statements.where(achieved: false).all.order(:id).reverse_order.each do |statement| %>
-                              <%= link_to statement_path(statement) do %>
-                                <u><%= statement.type.underscore.titleize %></u> for <strong><%= statement.participant_name.split(".").last %></strong>
+                              <% unless statement == @statement %>
+                                <%= link_to statement_path(statement) do %>
+                                  <u><%= ass_type(statement) %> <%= statement.type.underscore.titleize %></u> for <strong><%= statement.participant_name.split(".").last %></strong>
+                                <% end %>
                               <% end %>
                             <% end %>
                             <br />

@@ -2,27 +2,27 @@
 <br>
 <%= link_to 'New Participant', new_participant_path, class: 'btn btn-primary', style: 'position: fixed; right: 1em;' %>
 <br />
-<table style="width: 80%; margin: 1em;">
+<table style="vertical-align: top; width: 80%; margin: 1em;">
   <tbody>
     <tr>
-      <td>
+      <td class="participants">
         <h2>Clients</h2>
         <table>
           <% @clients.each do |participant| %>
             <%= content_tag :tr do %>
-              <td  class="participants default-link"><%= link_to participant.name, participant_path(participant) %></td>
-              <td  class="participants"><%= link_to 'edit', edit_participant_path(participant), class: 'btn btn-warning' %></td>
+              <td  class="default-link"><%= link_to participant.name, participant_path(participant) %></td>
+              <td><%= link_to 'edit', edit_participant_path(participant), class: 'btn btn-warning' %></td>
             <% end %>
           <% end %>
         </table>
       </td>
-      <td>
+      <td class="participants">
         <h2>Associates</h2>
         <table>
           <% @associates.each do |participant| %>
             <%= content_tag :tr do %>
-              <td  class="participants default-link"><%= link_to participant.name, participant_path(participant) %></td>
-              <td  class="participants"><%= link_to 'edit', edit_participant_path(participant), class: 'btn btn-warning' %></td>
+              <td  class="default-link"><%= link_to participant.name, participant_path(participant) %></td>
+              <td><%= link_to 'edit', edit_participant_path(participant), class: 'btn btn-warning' %></td>
             <% end %>
           <% end %>
         </table>

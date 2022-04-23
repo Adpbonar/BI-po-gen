@@ -115,6 +115,10 @@ class Statement < ApplicationRecord
         end
     end
 
+    def send_out_statement
+        StatementMailer.pdf_attachment(self).deliver 
+    end
+
     def set_invoice_number
         last_invoice = Statement.where(type: "ClientStatement").last
         unless last_invoice == nil

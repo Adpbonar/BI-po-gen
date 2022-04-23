@@ -45,6 +45,9 @@
           <% end %>
         <% end %>
       <% end %>
+      <%= button_tag class: "btn btn-warning", data: { reflex: "click->StatementReflex#send_statement", id: @statement.id }  do %>
+          Send out this statement
+        <% end %>
       <%= link_to 'PDF', statement_url(@statement) + '.pdf', id: 'openPDF', class: 'btn btn-success' %>
       <script>
         $("#openPDF").click(function() {

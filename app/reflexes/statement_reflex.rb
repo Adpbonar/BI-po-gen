@@ -20,6 +20,13 @@ class StatementReflex < ApplicationReflex
       po.set_status
      # end
   end
+
+  def send_statement
+    statement = Statement.find(element.dataset[:id])
+    if statement.po.status == 'All Statements Submitted'
+      statement.send_out_statement
+    end
+  end
       
  
 end

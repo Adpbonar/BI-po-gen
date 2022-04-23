@@ -19,7 +19,7 @@
       <td>
         <h2>Associates</h2>
         <table>
-          <% @clients.each do |participant| %>
+          <% @associates.each do |participant| %>
             <%= content_tag :tr do %>
               <td  class="participants default-link"><%= link_to participant.name, participant_path(participant) %></td>
               <td  class="participants"><%= link_to 'edit', edit_participant_path(participant), class: 'btn btn-warning' %></td>

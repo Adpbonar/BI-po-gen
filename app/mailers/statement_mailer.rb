@@ -14,7 +14,7 @@ class StatementMailer < ApplicationMailer
         @greeting = "<p>Hello #{@party.member_name},</p> <p>You have a new #{@statement.kind?} attached to this message.</p> <p>If you have any questions or concerns, please don\'t hesitate to reach out.</p> <p>Kindest regards,</p> <p><b>The team at the Bonar Institute for Purposeful Leadership.</b></p>"
         attachments["Bonar Institute for Purposeful Leadership - #{@statement.kind?}_#{@statement.invoice_number}.pdf"] = WickedPdf.new.pdf_from_string(
                 render_to_string(template: 'statements/show.html.erb', 
-                    layout: 'statement.html.erb', 
+                    # layout: 'statement.html.erb', 
                     pdf: 'filename', 
                     page_size: 'Letter',
                     page_height: '11in',

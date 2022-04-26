@@ -37,7 +37,7 @@
         <td>
           <% if @po.installments.count == @po.number_of_installments %>
             <div class="upcase">Number of installments: <%= @po.number_of_installments %>
-              (<%= @po.initilize_default_installments %>) | PO client currency: <%= show_currency(@po) %> | PO value:
+              (<%= @po.show_installments_total_psercent %>) | PO client currency: <%= show_currency(@po) %> | PO value:
               <%= @po.currency.html_safe.to_s + number_to_currency(@po.statements.first.subtotal).split("$").last %></div>
           <% end %>
           <% @po.installments.order([:id]).each_with_index do |installment, index| %>
@@ -67,7 +67,6 @@
   <ul>
     <% @po.statements.order(:type).reverse_order.each do |statement|%>
       <% unless statement.no_general %>
-        
         <% if statement.type == 'GeneralStatement' %>
           <% unless statement.achieved %>
             <li><%= link_to "edit statement".capitalize, statement_url(statement), class: 'default-link' %></li>
@@ -84,47 +83,56 @@
     <div class="top-bottom-spacing no-show" id="adjust-installments">
       <h2>Adjust the number and percentage of installments</h2>
       <%= text_field_tag 'set-installment' %>
-      <small>Adjust number and percentage of installments using the following format "30 30 30 10", where the number
-        is the percentage and the quanity of numbers is the amount of installments. <span
-                class="highlight"><br />
-          <b>Note:</b> that decimals are not accepted and that the total of the
-          installment percentages must equal 100.</span></small>
+      <small>Adjust number and percentage of installments using the following format "30 30 30 10", where the whole number
+        is the percentage and the quanity of numbers is the amount of installments. To adjust in equal installment percentages use the buttons below.</small>
       <div class="top-bottom-spacing">
-        <%= button_tag 'submit changes', type: "text", pattern: "([0-9]+.{0,1}[0-9]*,{0,1})*[0-9]",  id: "installment-submit", class: 'btn btn-secondary', data: { reflex: "click->InstallmentReflex#change", id: @po.id, installments: "" } %>
+        <%= button_tag 'submit changes', type: "text",  id: "installment-submit", class: 'btn btn-secondary', data: { reflex: "click->InstallmentReflex#change", id: @po.installments.first.id, installments: "" } %>
       </div>
-    </div>
-  <% end %>
-  <%= link_to 'Edit', edit_po_path(@po), class: 'btn btn-warning' %>
-  <%= link_to 'Back', pos_path, class: 'btn btn-secondary' %>
-  <%= render 'populate', po: @po %>
-  <script>
-    var installmentInput = document.getElementById("set-installment");
-    $('#set-installment').bind({
-      keydown: function (e) {
-        if (e.which >= 96 && e.which <= 105) {
-            return true;
-        }
-        if (e.shiftKey === true) {
-          if (e.which == 9) {
-            return true;
-          }
-          return false;
-        }
-        if (e.which > 57) {
-          return false;
-        }
-        if (e.which == 32) {
+      <%= button_tag "1", class: 'btn-primary', style: 'border-radius: 50%; margin: 2px;', data: { reflex: "click->InstallmentReflex#change", id: @po.installments.first.id, installments: "100" } %>
+       <%= button_tag "2", class: 'btn-primary', style: 'border-radius: 50%; margin: 2px;', data: { reflex: "click->InstallmentReflex#change", id: @po.installments.first.id, installments: "50 50" } %>
+      <% number = 2
+       58.times do 
+       number = number + 1 %>
+     <%= button_tag number.to_s, class: 'btn-primary', style: 'border-radius: 50%; margin: 2px;', data: { reflex: "click->InstallmentReflex#select_installments", id: @po.installments.first.id, installments: number.to_s } %>
+ <% end %>
+    <%= button_tag "Reset Defaults", class: 'btn-primary', style: 'border-radius: 5px; margin: 2px;', data: { reflex: "click->InstallmentReflex#change", id: @po.installments.first.id, installments: @po.options[:initial_installments].to_s } %>
+  </div>
+<% end %>
+<%= link_to 'Edit', edit_po_path(@po), class: 'btn btn-warning' %>
+<%= link_to 'Back', pos_path, class: 'btn btn-secondary' %>
+<%= render 'populate', po: @po %>
+<script>
+  var installmentInput = document.getElementById("set-installment");
+  $('#set-installment').bind({
+    keydown: function (e) {
+
+      if (e.which >= 96 && e.which <= 105) {
+          return true;
+      }
+      if (e.which == 190 || e.which == 110) {
           return true;
         }
+      if (e.shiftKey === true) {
+        if (e.which == 9) {
+          return true;
+        }
+        return false;
+      }
+      if (e.which > 57) {
+        return false;
+      }
+      if (e.which == 32) {
         return true;
       }
-    });
-    $('#installment-submit').click(function() {
-      document.getElementById("loadingChart").textContent = "Updating Installment Chart...";
-      $("#installmentChart").hide();
-      window.setTimeout(function () {
-        window.location.reload();
-      }, 3000);
-    });
-  </script>
+      return true;
+    }
+  });
+  $('#installment-submit').click(function() {
+    document.getElementById("loadingChart").textContent = "Updating Installment Chart...";
+    $("#installmentChart").hide();
+    window.setTimeout(function () {
+      window.location.reload();
+    }, 3000);
+  });
+</script>
 </div>

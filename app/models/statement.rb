@@ -265,6 +265,25 @@ class Statement < ApplicationRecord
         end
     end
 
+    def invoice_type
+        unless self.type == "GeneralStatement"
+          if self.client
+            return "Client"
+          end
+          if self.rs
+            return "Share"
+          end
+          if self.founder
+            return "Initiator"
+          end 
+          if ! self.founder || ! self.rs
+            return "Associate"
+          end
+        else
+          return "General"
+        end
+      end
+
     def next
         Statement.where(po_id: self.po.id).where.not(achieved: true, type: "GeneralStatement").where("id > ?", id).order(id: :asc).limit(1).first
       end

@@ -135,7 +135,7 @@
               </td>
               <% if items == 'yes' %>
                 <td style="width: 12.5%" class="td-border">
-                  <%= statement_money(@statement, @statement.no_discount_cost, @statement) %>
+                  <%= show_money(@statement, @statement.no_discount_cost, @statement) %>
                 </td>
                 <td style="width: 12.5%;" class="td-border">
                   - <%= statement_money(@statement, @statement.total_discounts, @statement) %>

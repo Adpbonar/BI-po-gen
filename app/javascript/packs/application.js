@@ -59,6 +59,7 @@ document.addEventListener("turbo:load", function () {
         installmentInput.addEventListener("keyup", () => {
             var value = installmentSubmit.setAttribute("data-installments", installmentInput.value);
         });
+        
     }
     installment1Input.addEventListener("keyup", () => {
         var value = installmentDefualtSubmit.setAttribute("data-installment1", installment1Input.value);
@@ -82,5 +83,6 @@ document.addEventListener("turbo:load", function () {
         var value = defualtOptionsSubmit.setAttribute("data-share", associateInput.value);
     });
 });
+
 require("trix")
 require("@rails/actiontext")

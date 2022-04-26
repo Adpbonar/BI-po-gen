@@ -1,8 +1,11 @@
 class Installment < ApplicationRecord
+
+    require 'bigdecimal'
+
     belongs_to :po
     validates :due_date, presence: true
     validates :percentage, presence: true
-    validates :percentage, numericality: { in: 1..100 }
+    # validates :percentage, numericality: { in: 1..100 }
     validate :reasonable_installment_due_date, :on => :update
     validate :installment_total
     # validate :due_date_is_valid_datetime
@@ -17,7 +20,7 @@ class Installment < ApplicationRecord
             installments = Installment.all.where(po_id: self.po_id)
             installments.each do |installment| 
                 amount = amount + installment.percentage 
-                if installment.percentage == 0 
+                if installment.percentage == 0.0 
                     return errors.add :installment, 'cannot be 0'
                 end
                
@@ -67,4 +70,83 @@ class Installment < ApplicationRecord
       def date 
         return self.due_date.strftime("%b %e, %Y")
       end
+      
+      def check_string(string)
+        string.scan(/\D/).empty?
+      end
+    
+      def percentage_ceiling(string)
+        total = 0
+        array = string.split(" ").map(&:to_i) 
+        array.each do |number| 
+          n = number.to_i 
+          if n == 0
+            return false
+          end
+          total = total + n
+        end
+        if total == 100
+          return true
+        end
+      end
+
+      def select_number_of_installments(installments)
+        po = self.po
+        multiple_installments = installments.to_i
+        if (multiple_installments >= 3 && multiple_installments <= 60)
+          po.installments.destroy_all
+            date_collector = []
+            num =  multiple_installments -2
+            date = ((po.end_date.to_i - po.start_date.to_i) / num).round.abs
+            perc = 100 / multiple_installments.to_d
+            i = -1
+            multiple_installments.times do 
+              i = i+1
+              if po.installments.count == 0
+                portion = Installment.new(po_id: po.id, percentage: perc, due_date: po.start_date, position: i.to_i + 1)
+              else
+                new_due_date = date_collector[-1] + date
+                portion = Installment.new(po_id: po.id, percentage: perc, due_date: new_due_date, position: i.to_i + 1)
+              end
+              portion.save 
+              date_collector << portion.due_date
+            end
+            po.number_of_installments = date_collector.length
+            po.save
+          return errors.add :installments,  'Installments adjusted. The default due dates has been provided.'
+        end
+      end
+
+      def adjust_installments(installments)
+        if installments == "100"
+          po.installments.destroy_all
+          portion = Installment.new(po_id: po.id, percentage: 100, due_date: po.start_date) 
+          portion.save 
+          po.number_of_installments = 1
+          po.save
+        elsif percentage_ceiling(installments)
+          po.installments.destroy_all
+          date_collector = []
+          multiple_installments = installments.split(" ")
+          num = (multiple_installments.length + 1) -2
+          date = ((po.end_date.to_i - po.start_date.to_i) / num).round.abs
+          multiple_installments.each_with_index do |installment, i| 
+            installment = installment.to_d
+            if i == 0
+              portion = Installment.new(po_id: po.id, percentage: installment, due_date: po.start_date, position: i.to_i + 1)
+            else
+              new_due_date = date_collector[-1] + date
+              portion = Installment.new(po_id: po.id, percentage: installment, due_date: new_due_date, position: i.to_i + 1)
+            end
+            portion.save 
+            date_collector << portion.due_date
+          end
+          po.number_of_installments = date_collector.length
+          po.save
+        return errors.add :installments,  'Installments adjusted. The default due dates has been provided.'
+      else
+        return errors.add :installments, 'Installment could not be saved. Please refer to the pattern below the form.'
+      end
+    end
+ 
 end

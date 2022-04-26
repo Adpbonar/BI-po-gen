@@ -1,4 +1,4 @@
-<%= render 'navigation', statement: @statement %>
+<%= render 'navigation', statement: @statement, :formats => [:html] %>
 <div id="pdfLoading"></div>
 <div class="invoice-image">
   <%= image_tag 'Bonar-Institute-Logo-for-Purposeful-Leadership-Primary.jpg', alt: 'Bonar Institute Logo', class: 'top-bottom-spacing', width: '350px' %>
@@ -6,7 +6,7 @@
   <div class="bold upcase"><small>PO Number: <%= @statement.po.po_number %></div>
     <div class="bold upcase"><small>Type: 
         <% unless @statement.type == "GeneralStatement" %>
-         <%= invoice_type(@statement) %></small></div>
+         <%= @statement.invoice_type %></small></div>
          <% end %>
   </div>
   <% if @statement.type != "GeneralStatement" %>
@@ -79,7 +79,7 @@
         </div>
       <% end %>
       <br />
-      <%= render 'navigation', statement: @statement %>
+      <%= render 'navigation', statement: @statement, :formats => [:html] %>
       <style>
         input { width: 50%; margin-bottom: 2px; }
       </style>

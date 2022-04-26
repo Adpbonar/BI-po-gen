@@ -168,6 +168,11 @@ class Po < ApplicationRecord
           installment.save 
         end
       end
+    end
+
+    def show_installments_total_psercent
+      amount = 0.0
+      installments.map { |installment| amount = amount + installment.percentage.to_f }
       return (amount.to_i).to_s + "%"
     end
 
@@ -194,7 +199,8 @@ class Po < ApplicationRecord
       'Training Programs': 'Modular Training Programs',
       'Coaching & Mentorship Programs': 'Modular Coaching and Mentorship Programs',
       'Integrated Programs': 'Integrated Programs',
-      'Partnership Programs': 'Exclusive Partnership Porgrams'
+      'Partnership Programs': 'Exclusive Partnership Porgrams',
+      'IT Programs': 'Technology'
     }
 
     def locked

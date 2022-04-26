@@ -5,6 +5,21 @@
   </head>
   <body>
     <% 
+    def statement_show_money(record1, record2, record3)
+      if (record1.model_name == "Statement" && record1.type =="GeneralStatement") 
+        return (record1.po.currency.to_s + number_to_currency(record2).to_s.split("$").last).html_safe
+      elsif record1.model_name == "Installment"
+        unless record3 == ""
+          return (record3.currency.to_s + number_to_currency(record2).to_s.split("$").last).html_safe
+        end
+      elsif record1.model_name == "Discount"
+        unless record3 == ""
+          return (record3.currency.to_s + number_to_currency(record2).to_s.split("$").last).html_safe
+        end
+      else
+        return (record1.currency.to_s + number_to_currency(record2).to_s.split("$").last).html_safe
+      end
+    end
           def statement_money(record1, record2, record3)
       if record1.model_name == "Statement" && record1.type =="GeneralStatement"
         if record1.po.currency.to_s.include?('$')
@@ -13,7 +28,7 @@
           return record1.po.currency.to_s + number_to_currency(record2).split("$").last
         end
       else
-        return show_money(record1, record2, record3)
+        return statement_show_money(record1, record2, record3)
       end
     end
 
@@ -112,7 +127,7 @@
                 </td>
                 <% if items == 'yes' %>
                   <td style="width: 12.5%; vertical-align: top;" class="td-border">
-                    <%= statement_money(@statement, item.cost) %>
+                    <%= statement_money(@statement, item.cost, @statement) %>
                   </td>
                   <td style="width: 12.5%; vertical-align: top;" class="td-border">
                     <% item.discounts.each do |discount| %>
@@ -121,7 +136,7 @@
                   </td>
                 <% else %>
                   <td style="width: 25%; vertical-align: top;" class="td-border">
-                    <%= statement_money(@statement, item.cost) %>
+                    <%= statement_money(@statement, item.cost, @statement) %>
                   </td>
                 <% end %>
               </tr>
@@ -162,7 +177,7 @@
         <% if @statement.associate %>
           Client 
         <% end %>
-        Subtotal: <%= statement_money(@statement, @statement.subtotal) %>
+        Subtotal: <%= statement_money(@statement, @statement.subtotal, @statement) %>
       </h3>
       <% if @statement.associate %>
         <h3>

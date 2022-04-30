@@ -76,16 +76,16 @@ class Installment < ApplicationRecord
       end
     
       def percentage_ceiling(string)
-        total = 0
-        array = string.split(" ").map(&:to_i) 
+        total = 0.0
+        array = string.split(" ").map(&:to_d) 
         array.each do |number| 
           n = number.to_i 
-          if n == 0
+          if n == 0 || n == 0.0
             return false
           end
-          total = total + n
+          total = total + number
         end
-        if total == 100
+        if total == 100 || total == 100.0 
           return true
         end
       end
@@ -131,12 +131,12 @@ class Installment < ApplicationRecord
           num = (multiple_installments.length + 1) -2
           date = ((po.end_date.to_i - po.start_date.to_i) / num).round.abs
           multiple_installments.each_with_index do |installment, i| 
-            installment = installment.to_d
+          ins = installment.to_d
             if i == 0
-              portion = Installment.new(po_id: po.id, percentage: installment, due_date: po.start_date, position: i.to_i + 1)
+              portion = Installment.new(po_id: po.id, percentage: ins, due_date: po.start_date, position: i.to_i + 1)
             else
               new_due_date = date_collector[-1] + date
-              portion = Installment.new(po_id: po.id, percentage: installment, due_date: new_due_date, position: i.to_i + 1)
+              portion = Installment.new(po_id: po.id, percentage: ins, due_date: new_due_date, position: i.to_i + 1)
             end
             portion.save 
             date_collector << portion.due_date

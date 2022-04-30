@@ -88,21 +88,60 @@
       <div class="top-bottom-spacing">
         <%= button_tag 'submit changes', type: "text",  id: "installment-submit", class: 'btn btn-secondary', data: { reflex: "click->InstallmentReflex#change", id: @po.installments.first.id, installments: "" } %>
       </div>
-      <%= button_tag "1", class: 'btn-primary', style: 'border-radius: 50%; margin: 2px;', data: { reflex: "click->InstallmentReflex#change", id: @po.installments.first.id, installments: "100" } %>
-       <%= button_tag "2", class: 'btn-primary', style: 'border-radius: 50%; margin: 2px;', data: { reflex: "click->InstallmentReflex#change", id: @po.installments.first.id, installments: "50 50" } %>
+      <%= button_tag "1", id: 'installment-select-1', class: 'btn-primary set-installments-button circle', data: { reflex: "click->InstallmentReflex#change", id: @po.installments.first.id, installments: "100" } %>
+      <script>
+        $('#installment-select-1').click(function() {
+            document.getElementById("loadingChart").textContent = "Updating Installment Chart...";
+            $("#installmentChart").hide();
+            window.setTimeout(function () {
+              window.location.reload();
+            }, 2000);
+          });
+      </script>
+      <%= button_tag "2", id: 'installment-select-2', class: 'btn-primary set-installments-button circle', data: { reflex: "click->InstallmentReflex#change", id: @po.installments.first.id, installments: "50 50" } %>
+      <script>
+        $('#installment-select-2').click(function() {
+            document.getElementById("loadingChart").textContent = "Updating Installment Chart...";
+            $("#installmentChart").hide();
+            window.setTimeout(function () {
+        window.location.reload();
+            }, 2000);
+          });
+      </script>
       <% number = 2
        58.times do 
        number = number + 1 %>
-     <%= button_tag number.to_s, class: 'btn-primary', style: 'border-radius: 50%; margin: 2px;', data: { reflex: "click->InstallmentReflex#select_installments", id: @po.installments.first.id, installments: number.to_s } %>
- <% end %>
-    <%= button_tag "Reset Defaults", class: 'btn-primary', style: 'border-radius: 5px; margin: 2px;', data: { reflex: "click->InstallmentReflex#change", id: @po.installments.first.id, installments: @po.options[:initial_installments].to_s } %>
+      <%= button_tag number.to_s, id: 'installment-select-' + number.to_s, class: 'btn-primary set-installments-button circle', data: { reflex: "click->InstallmentReflex#select_installments", id: @po.installments.first.id, installments: number.to_s } %>
+      <script>
+        $('#installment-select-<%= number.to_s %>').click(function() {
+            document.getElementById("loadingChart").textContent = "Updating Installment Chart...";
+            $("#installmentChart").hide();
+            window.setTimeout(function () {
+        window.location.reload();
+            }, 2000);
+          });
+      </script>
+    <% end %>
+    <%= button_tag "Restore to Defaults", id: 'restore-defaults', class: 'btn-primary set-installments-button rounded', data: { reflex: "click->InstallmentReflex#change", id: @po.installments.first.id, installments: @po.options[:initial_installments].to_s } %>
   </div>
+  <script>
+    $('#restore-defaults').click(function() {
+        document.getElementById("loadingChart").textContent = "Updating Installment Chart...";
+        $("#installmentChart").hide();
+        window.setTimeout(function () {
+    window.location.reload();
+        }, 2000);
+      });
+  </script>
 <% end %>
 <%= link_to 'Edit', edit_po_path(@po), class: 'btn btn-warning' %>
 <%= link_to 'Back', pos_path, class: 'btn btn-secondary' %>
 <%= render 'populate', po: @po %>
 <script>
   var installmentInput = document.getElementById("set-installment");
+   $('#set-installment').on("cut copy paste",function(e) {
+      e.preventDefault();
+   });
   $('#set-installment').bind({
     keydown: function (e) {
 

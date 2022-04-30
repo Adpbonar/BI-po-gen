@@ -19,13 +19,43 @@ body {
 
 }
 
+.set-installments-button {
+    margin: 4px;
+    padding: 2px;
+    font-weight: 700;
+    text-transform: uppercase;
+    height: 35px;
+    min-width: 35px;
+    vertical-align: middle;
+    text-align: middle;
+}
+
+.circle {
+    border-radius: 50%;
+}
+
+.rounded {
+    border-radius: 5px;
+    padding-left: 4px;
+    padding-right: 4px;
+}
+
 .po-index {
+    table {
+        width: 100%;
+    }
+
     th {
         text-transform: uppercase;
+        text-align: center;
     }
 
     tr {
         border-bottom: 1px solid black;
+    }
+
+    td {
+        text-align: center;
     }
 }
 
@@ -535,7 +565,7 @@ h1 {
     color: black;
     font-weight: bold;
     text-align: right;
-    
+
 }
 
 .participants {

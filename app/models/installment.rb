@@ -101,7 +101,7 @@ class Installment < ApplicationRecord
             perc = 100 / multiple_installments.to_d
             i = -1
             multiple_installments.times do 
-              i = i+1
+              i = i + 1
               if po.installments.count == 0
                 portion = Installment.new(po_id: po.id, percentage: perc, due_date: po.start_date, position: i.to_i + 1)
               else

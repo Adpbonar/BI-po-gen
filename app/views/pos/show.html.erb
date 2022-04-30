@@ -83,8 +83,8 @@
     <div class="top-bottom-spacing no-show" id="adjust-installments">
       <h2>Adjust the number and percentage of installments</h2>
       <%= text_field_tag 'set-installment' %>
-      <small>Adjust number and percentage of installments using the following format "30 30 30 10", where the whole number
-        is the percentage and the quanity of numbers is the amount of installments. To adjust in equal installment percentages use the buttons below.</small>
+      <div class="installment-info-box"><small>Adjust number and percentage of installments using the following format "30 30 30 10", where the number 
+        is the percentage and the quanity of numbers is the amount of installments. (Cut, copy and paste functions have been disabled and <b>whole numbers are recommended</b>). <span class="attention">To adjust in equal installment percentages use the buttons below.</span></small></div>
       <div class="top-bottom-spacing">
         <%= button_tag 'submit changes', type: "text",  id: "installment-submit", class: 'btn btn-secondary', data: { reflex: "click->InstallmentReflex#change", id: @po.installments.first.id, installments: "" } %>
       </div>
@@ -139,6 +139,9 @@
 <%= render 'populate', po: @po %>
 <script>
   var installmentInput = document.getElementById("set-installment");
+    $('#set-installment').bind("contextmenu",function(e){
+ return false;
+ });
    $('#set-installment').on("cut copy paste",function(e) {
       e.preventDefault();
    });

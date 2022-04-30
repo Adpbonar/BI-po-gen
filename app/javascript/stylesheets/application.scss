@@ -30,6 +30,18 @@ body {
     text-align: middle;
 }
 
+.installment-info-box {
+    padding: .5em;
+    margin: 4px;
+    border: 2px solid green;
+    border-radius: 5px;
+    font-weight: bold;
+    background-color: #ced4da;
+}
+
+.attention {
+    color: green;
+}
 .circle {
     border-radius: 50%;
 }

@@ -2,7 +2,7 @@ class PosController < ApplicationController
   before_action :set_po, only: %i[ show edit update destroy has_installments ]
   before_action :authenticate_user!
   after_action :update_status, only: :show
-  before_action :has_installments, only: %i[ index show ]
+  before_action :has_installments, only: %i[ show ]
   before_action :force_json, only: :pdf_chart
 
   # GET /pos or /pos.json

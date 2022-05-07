@@ -175,7 +175,8 @@
                   <div class="installment-display">
                     <div class="top-bottom-spacing">
                       <p class="bold">Installment <%= index + 1 %>:</p>
-                      <p><span class="highlight">Due: <%= read_date(installment.due_date) %></span></p>
+                      <p><span class="highlight">Client Due: <%= read_date(installment.due_date) %></span></p>
+                          <p>Associate Due: <%= read_date(installment.lead_time) %></p>
                       <p>Portion: <%= installment.percentage %>%</p>
                       <p>Cost: <u><%= sanitized_installment_money(installment, installment.cost) %></u></p>
                     </div>

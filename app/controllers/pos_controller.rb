@@ -41,6 +41,7 @@ class PosController < ApplicationController
     @po.number_of_installments = @po.options[:initial_installments].split(",").length
     @po.tax_amount = @po.options[:tax_rate]
     @po.currency = @po.options[:currency]
+    @po.lead_time_in_days = 14
     @po.status = 'New' 
     respond_to do |format|
       if @po.save
@@ -98,7 +99,7 @@ class PosController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def po_params
-      params.require(:po).permit(:po_number, :title, :description, :start_date, :end_date, :tax_amount, :company_name, :number_of_installments, :service_type, :currency, :learning_coordinator, :found, :show_participant)
+      params.require(:po).permit(:po_number, :title, :description, :start_date, :end_date, :tax_amount, :company_name, :number_of_installments, :service_type, :currency, :learning_coordinator, :found, :show_participant, :lead_time_in_days)
     end
 
     def update_status
@@ -106,9 +107,11 @@ class PosController < ApplicationController
     end
 
     def has_installments
-      if @po.installments.count == 0
-        @po.installments.create(due_date: @po.start_date, percentage: 100)
-        @po.installments.first.adjust_installments(@po.options[:initial_installments].to_s)
+      unless @po.status == "New"
+        if @po.installments.count == 0
+          @po.installments.create(due_date: @po.start_date, percentage: 100)
+          @po.installments.first.adjust_installments(@po.options[:initial_installments].to_s)
+        end
       end
     end
 

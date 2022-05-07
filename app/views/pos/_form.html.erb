@@ -29,7 +29,8 @@
   <%= f.input :founder_percentage, label: 'Initiator Percentage', input_html: { type: 'number' } %>
   <%= f.input :revenue_share, label: 'Revenue Share Percentage', input_html: { type: 'number' } %>
   <%= f.input :associate_percentage, label: 'Associate Percentage', input_html: { type: 'number' } %>
-  <small>Minus expense costs</small>
+   <small>Minus expense costs</small>
+  <%= f.input :lead_time_in_days, label: 'Number of days between when a client is expected to pay and associate invoices are due', input_html: { type: 'number' } %>
   <div><%= f.submit class: 'btn btn-primary' %></div>
 <% end %>
 

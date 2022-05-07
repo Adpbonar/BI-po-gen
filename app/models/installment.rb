@@ -49,6 +49,9 @@ class Installment < ApplicationRecord
         return (cost * ("0." + self.percentage.to_s).to_f).to_d
     end
     
+    def lead_time
+      return self.due_date + self.po.lead_time_in_days.days 
+    end
 
     def total
         cost = 0.0

@@ -35,7 +35,7 @@
   <% if @po.installments.count == @po.number_of_installments %>
     <div class="upcase">Number of installments: <%= @po.number_of_installments %>
       (<%= @po.show_installments_total_percent %>) | PO client currency: <%= show_currency(@po) %> | PO value:
-      <%= @po.currency.html_safe.to_s + number_to_currency(@po.statements.first.subtotal).split("$").last %></div>
+      <%= @po.currency.html_safe.to_s + number_to_currency(@po.statements.first.subtotal).split("$").last %> | Client Payment Lead Time: <%= @po.lead_time_in_days %> days</div>
   <% end %>
   <div style="margin: 5px; padding: 5px; background-color: #e8e8e8e8; border: 1px dotted green;">
     <%= render 'change', po: @po %>
@@ -47,7 +47,8 @@
           <div class="installment-display">
             <div class="top-bottom-spacing">
               <p class="bold">Installment <%= index + 1 %>:</p>
-              <p><span class="highlight">Due: <%= read_date(installment.due_date) %></span></p>
+              <p><span class="highlight">Client Due: <%= read_date(installment.due_date) %></span></p>
+              <p>Associate Due: <%= read_date(installment.lead_time) %></p>
               <p>Portion: <%= installment.percentage %>%</p>
               <p>Cost: <u><%= sanitized_installment_money(installment, installment.cost) %></u></p>
             </div>

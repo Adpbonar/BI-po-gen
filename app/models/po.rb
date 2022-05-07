@@ -12,14 +12,21 @@ class Po < ApplicationRecord
 
 		validates :po_number, presence: true, uniqueness: true
     validates :title, presence: true
+    validates :lead_time_in_days, presence: true
+    validates_numericality_of :lead_time_in_days, :greater_than => 0
     validates_length_of :title, in: 1..100
     validates :start_date, presence: true
     validates :end_date, presence: true
     validates :service_type, presence: true
     validates :currency, presence: true, :on => :update
-    validates :tax_amount, numericality: { in: 1..100 }, :on => :update
-    validates :associate_percentage, presence: true, numericality: { in: 1..50 }
-    validates :founder_percentage, presence: true, numericality: { in: 1..25 }
+    validates_numericality_of :tax_amount, :greater_than => 0, :on => :update
+    validates_numericality_of :tax_amount, :less_than => 50, :on => :update
+    validates :associate_percentage, presence: true
+    validates_numericality_of :associate_percentage, :greater_than => 0
+    validates_numericality_of :associate_percentage, :less_than_equal_to => 50
+    validates_numericality_of :founder_percentage, :greater_than => 0
+    validates_numericality_of :founder_percentage, :less_than_equal_to => 25
+    validates :founder_percentage, presence: true
     validates_length_of :description, in: 0..600
     validate :in_future, :on => :create
     validate :time_duration

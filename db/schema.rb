@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_04_26_113436) do
+ActiveRecord::Schema.define(version: 2022_05_07_194124) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -115,6 +115,14 @@ ActiveRecord::Schema.define(version: 2022_04_26_113436) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["po_id"], name: "index_groups_on_po_id"
+  end
+
+  create_table "hours_requireds", force: :cascade do |t|
+    t.integer "number_of_hours"
+    t.integer "item_id"
+    t.string "reason"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "installments", force: :cascade do |t|
@@ -261,6 +269,7 @@ ActiveRecord::Schema.define(version: 2022_04_26_113436) do
     t.string "found_bidx"
     t.string "slug"
     t.string "issue_code"
+    t.integer "lead_time_in_days"
     t.index ["company_name_bidx"], name: "index_pos_on_company_name_bidx"
     t.index ["found_bidx"], name: "index_pos_on_found_bidx"
     t.index ["issued_to_bidx"], name: "index_pos_on_issued_to_bidx"

@@ -93,10 +93,6 @@ class Statement < ApplicationRecord
         return counter.length
     end
 
-    def send_assocate_statements
-        StatementMailer.pdf_attachment(self).deliver
-    end
-
     def no_general
         if self.type == "GeneralStatement" && self.status_code == "A"
             return true

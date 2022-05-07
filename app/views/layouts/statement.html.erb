@@ -49,7 +49,10 @@
               <%= image_tag 'https://drive.google.com/uc?export=view&id=1FzZiKhw7XzJLJOwSmJwIY7aA9QzbUDTz', alt: 'Bonar Institute Logo', class: 'top-bottom-spacing', width: '350px' %>
             </td>
             <td style=" width: 50%;">
-              <h1><%= @statement.kind? %>
+              <h1><%= @statement.kind? %></h1>
+              <% if @statement.kind?.include?("Request") %>
+                <p class="bold">PO: <%= @statement.po.po_number %>
+                <% end %>
               </td>
             </tr>
           </tbody>
@@ -242,14 +245,14 @@
               <tr>
                 <td>
                   <strong><%= po_ass_type %> Percentage:</strong>
-                  <td>The <%= po_ass_type %> Percentage, as per Bonar Institute Associates Aggreement (<%= @statement.percentage %>%)</td>
+                  <td>The <%= po_ass_type %> Percentage, as per Bonar Institute Associates Agreement (<%= @statement.percentage %>%)</td>
                 </td>
               </tr>
               <% unless @statement.founder || @statement.rs %>
                 <tr>
                   <td>
                     <strong>Expenses:</strong>
-                    <td>The costs related to assessments, presentations, etc. (<%=statement_money(@statement, expenses) %>)</td>
+                    <td>The costs related to assessments, presentations, etc. (<%=statement_money(@statement, expenses, @statement) %>)</td>
                   </td>
                 </tr>
                 <tr>

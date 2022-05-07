@@ -37,54 +37,45 @@
       (<%= @po.show_installments_total_percent %>) | PO client currency: <%= show_currency(@po) %> | PO value:
       <%= @po.currency.html_safe.to_s + number_to_currency(@po.statements.first.subtotal).split("$").last %></div>
   <% end %>
-  <table style="width: 100%; margin: 1em;">
-    <tbody>
-      <tr>
-        <td colspan="2" style="vertical-align: middle;">
-          <div style="margin: 5px; padding: 5px; background-color: #e8e8e8e8; border: 1px dotted green;">
-            <%= render 'change', po: @po %>
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <td style="width: 30%">
-          <% @po.installments.order([:id]).each_with_index do |installment, index| %>
-            <% if installment.due_date.present? %>
-              <div class="top-bottom-spacing">Installment <%= index + 1 %>: <span
-            class="highlight"><%= read_date(installment.due_date) %></span> @ <%= installment.percentage %>%</div>
-              <div><%= link_to 'Change due date', edit_installment_path(installment), class: 'btn btn-info' %></div>
-            <% else %>
-              <div class="top-bottom-spacing">Installment <%= index + 1 %>:
-                <%= link_to 'No Due Date set for installment', edit_installment_path(installment), class: 'btn btn-info' %> @
-                <%= installment.percentage %>%</div>
-            <% end %>
-          <% end %>
-        </td>
-        <td style="vertical-align: top;">
-          <div data-reflex-permanent>
-            <div id="loadingChart" class="center"></div>
-            <div id="installmentChart">
-              <%= pie_chart @pdf_chart_data, donut: true, legend: true, title: "Installment Percentages"  %>
+  <div style="margin: 5px; padding: 5px; background-color: #e8e8e8e8; border: 1px dotted green;">
+    <%= render 'change', po: @po %>
+  </div>
+  <div>
+    <center>
+      <% @po.installments.order([:id]).each_with_index do |installment, index| %>
+        <% if installment.due_date.present? %>
+          <div class="installment-display">
+            <div class="top-bottom-spacing">
+              <p class="bold">Installment <%= index + 1 %>:</p>
+              <p><span class="highlight">Due: <%= read_date(installment.due_date) %></span></p>
+              <p>Portion: <%= installment.percentage %>%</p>
+              <p>Cost: <u><%= sanitized_installment_money(installment, installment.cost) %></u></p>
             </div>
+            <div><%= link_to 'Change due date', edit_installment_path(installment), class: 'btn btn-info' %></div>
           </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+        <% end %>
+      <% end %>
+    </center>
+  </div>
+  <div data-reflex-permanent>
+    <div id="loadingChart" class="center"></div>
+    <div id="installmentChart">
+      <%= pie_chart @pdf_chart_data, donut: true, legend: true, title: "Installment Percentages"  %>
+    </div>
+  </div>
   <h2>Statements</h2>
   <ul>
     <% @po.statements.order(:type).reverse_order.each do |statement|%>
       <% unless statement.no_general %>
-        <% if statement.type == 'GeneralStatement' %>
-          <% unless statement.achieved %>
-            <li><%= link_to "edit statement".capitalize, statement_url(statement), class: 'default-link' %></li>
-          <% end %>
-        <% else %>
+        <% unless statement.type == 'GeneralStatement' %>
           <li><%= link_to ass_type(statement).to_s + " " + statement.type.underscore.titleize.capitalize + ": " + statement.participant_name.split(".").last, statement_url(statement), class: 'default-link' %></li>
         <% end %>
       <% end %>
     <% end %>
   </ul>
+  <% unless @po.statements.count > 1 %>
+    No Statements yet.
+  <% end %>
   <%= render 'populate', po: @po %>
   <%= render 'nav', po: @po %>
 </div>

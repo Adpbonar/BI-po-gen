@@ -1,4 +1,7 @@
 <hr />
-<%= link_to 'Edit', edit_po_path(@po), class: 'btn btn-warning' %>
-<%= link_to 'Back', pos_path, class: 'btn btn-secondary' %>
+<%= link_to 'Home', pos_path, class: 'btn btn-secondary' %>
+<%= link_to 'Edit PO', edit_po_path(@po), class: 'btn btn-warning' %>
+<% unless @po.statements.count > 1 %>
+  <%= link_to "edit statement".capitalize, statement_url(@po.statements.first), class: 'btn btn-info' %>
+<% end %>
 <hr />

@@ -165,15 +165,26 @@
     <div>
       <% if @statement.line_items.any? %>
         <h2 class="center">Installments</h2>
-        <%= pie_chart @pdf_chart_data, donut: true, legend: true, title: "Installment Percentages" %>
         <p class="center">Installment Percentage Breakdown: <%= @installment_info %> | Currency:
           <%= show_currency(@statement.po) %></p>
-        <div class="extra-padding">
-          <% @installments_amounts.each do |installment| %>
-            <p><b>Installment <%= installment.position %>:</b> <span
-                            class="highlight"><%= show_money(installment, installment.cost, "") %></span> due on
-              <b><%= read_date(installment.due_date) %></b></p>
-          <% end %>
+        <div>
+          <div>
+            <center>
+              <% @statement.po.installments.order([:id]).each_with_index do |installment, index| %>
+                <% if installment.due_date.present? %>
+                  <div class="installment-display">
+                    <div class="top-bottom-spacing">
+                      <p class="bold">Installment <%= index + 1 %>:</p>
+                      <p><span class="highlight">Due: <%= read_date(installment.due_date) %></span></p>
+                      <p>Portion: <%= installment.percentage %>%</p>
+                      <p>Cost: <u><%= sanitized_installment_money(installment, installment.cost) %></u></p>
+                    </div>
+                  </div>
+                <% end %>
+              <% end %>
+            </center>
+            <br />
+          </div>
           <h3 class="upcase total-box"><span class="green">Subtotal:</span>
             <%= show_money(@statement, @statement.subtotal, "") %></h3>
           <p class="tax">+ Applicable Tax: <%= show_money(@statement, @statement.tax, "") %></p>

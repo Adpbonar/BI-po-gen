@@ -14,24 +14,22 @@ class Installment < ApplicationRecord
     end
 
     def installment_total
-        unless po.status == "New"
-            amount = 0
-            installments = Installment.all.where(po_id: self.po_id)
-            installments.each do |installment| 
-                amount = amount + installment.percentage 
-                if installment.percentage == 0.0 
-                    return errors.add :installment, 'cannot be 0'
-                end
-               
-            end
-           
+      unless po.status == "New"
+        amount = 0.0
+        installments = Installment.all.where(po_id: self.po_id)
+        installments.each do |installment| 
+          amount = amount.to_d + installment.percentage 
+          if installment.percentage == 0.0 
+              return errors.add :installment, 'cannot be 0'
+          end
         end
+      end
     end
 
     # Prevent due_date from being before the PO parent starts
     def reasonable_installment_due_date
-        return if self.due_date >= self.po.start_date
-        errors.add :due_date, 'must not be before the po start date'
+      return if self.due_date >= self.po.start_date
+      errors.add :due_date, 'must not be before the po start date'
     end
 
     # Totaling statement line items and costing intallments

@@ -31,7 +31,13 @@ module ApplicationHelper
         return "Initiator"
       end 
     end
-
+    def sanitized_installment_money(record1, record2)
+      if record1.po.currency.html_safe.to_s.include?('$')
+        return number_to_currency(record2)
+      else
+        return record1.po.currency.html_safe.to_s + number_to_currency(record2).split("$").last
+      end
+    end
     def show_money(record1, record2, record3)
       if (record1.model_name == "Statement" && record1.type =="GeneralStatement") 
         return (record1.po.currency.to_s + number_to_currency(record2).to_s.split("$").last).html_safe

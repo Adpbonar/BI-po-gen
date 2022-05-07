@@ -141,10 +141,10 @@ class Statement < ApplicationRecord
                     client_statement = ClientStatement.create(po_id: self.po.id, total: self.subtotal, participant_name: usr.name, participant_address: usr.address, company_name: Company.first.company_name, company_address: Company.first.address, invoice_number: number.first.to_s + "-" + usr.id.to_s + number.last.to_s, currency: usr.currency, tax_rate: usr.tax_rate, issued_to: usr.id)
                     if client_statement.save
                         self.line_items.each do |item|
-                            LineItem.create(statement_id: client_statement.id, type: item.type, title: item.title, description: item.description, cost: item.cost, taxable: item.taxable, expense_exempt_from_tax: item.expense_exempt_from_tax, expense_cost: item.expense_cost)
+                            line = LineItem.create(statement_id: client_statement.id, type: item.type, title: item.title, description: item.description, cost: item.cost, taxable: item.taxable, expense_exempt_from_tax: item.expense_exempt_from_tax, expense_cost: item.expense_cost)
                             if item.discounts.any?
                                 item.discounts.each do |discount|
-                                    Discount.create(amount: discount.amount, amount_type: discount.amount_type, line_item_id: discount.line_item_id)
+                                    Discount.create(amount: discount.amount, amount_type: discount.amount_type, line_item_id: line.id)
                                 end
                             end
                         end
@@ -186,10 +186,10 @@ class Statement < ApplicationRecord
                         founder_statement = AssociateStatement.create(po_id: self.po.id, total: percentage_amount(self.subtotal.to_d, self.po.founder_percentage), company_name: Company.first.company_name, company_address: Company.first.address, participant_name: initiator.name, participant_address: initiator.address, invoice_number: 'REQ-' + self.po.po_number.to_s + '-F', percentage: Company.first.company_options[:business_finder], currency: initiator.currency, tax_rate: initiator.tax_rate, issued_to: initiator.id)
                         if founder_statement.save
                             self.line_items.each do |item|
-                                LineItem.create(statement_id: founder_statement.id, type: item.type, title: item.title, description: item.description, cost: item.cost, taxable: item.taxable, expense_exempt_from_tax: item.expense_exempt_from_tax, expense_cost: item.expense_cost)
+                                line = LineItem.create(statement_id: founder_statement.id, type: item.type, title: item.title, description: item.description, cost: item.cost, taxable: item.taxable, expense_exempt_from_tax: item.expense_exempt_from_tax, expense_cost: item.expense_cost)
                                 if item.discounts.any?
                                     item.discounts.each do |discount|
-                                        Discount.create(amount: discount.amount, amount_type: discount.amount_type, line_item_id: discount.line_item_id)
+                                        Discount.create(amount: discount.amount, amount_type: discount.amount_type, line_item_id: line.id)
                                     end
                                 end
                             end
@@ -204,10 +204,10 @@ class Statement < ApplicationRecord
                         associate_statement = AssociateStatement.create(po_id: self.po.id, total: total, participant_name: usr.name, participant_address: usr.address, company_name: Company.first.company_name, company_address: Company.first.address, invoice_number: 'REQ-' + self.po.po_number.to_s + '-P-' + usr.id.to_s, currency: usr.currency, tax_rate: usr.tax_rate, issued_to: usr.id, percentage: (Company.first.company_options[:associate_percentage]/number_participating_associates))
                         if associate_statement.save
                             self.line_items.each do |item|
-                                LineItem.create(statement_id: associate_statement.id, type: item.type, title: item.title, description: item.description, cost: item.cost, taxable: item.taxable, expense_exempt_from_tax: item.expense_exempt_from_tax, expense_cost: item.expense_cost)
+                                line = LineItem.create(statement_id: associate_statement.id, type: item.type, title: item.title, description: item.description, cost: item.cost, taxable: item.taxable, expense_exempt_from_tax: item.expense_exempt_from_tax, expense_cost: item.expense_cost)
                                 if item.discounts.any?
                                     item.discounts.each do |discount|
-                                        Discount.create(amount: discount.amount, amount_type: discount.amount_type, line_item_id: discount.line_item_id)
+                                        Discount.create(amount: discount.amount, amount_type: discount.amount_type, line_item_id: line.id)
                                     end
                                 end
                             end
@@ -220,10 +220,10 @@ class Statement < ApplicationRecord
                 share_statement = AssociateStatement.create(po_id: self.po.id, total: rs_total, participant_name: participant.name, participant_address: participant.address, company_name: Company.first.company_name, company_address: Company.first.address, invoice_number: 'REQ-' + self.po.po_number.to_s + '-RS-' + participant.id.to_s, percentage: Company.first.company_options[:revenue_share], tax_rate: participant.tax_rate, currency: participant.currency, issued_to: participant.id)
                 if share_statement.save
                     self.line_items.each do |item|
-                    LineItem.create(statement_id: share_statement.id, type: item.type, title: item.title, description: item.description, cost: item.cost, taxable: item.taxable, expense_exempt_from_tax: item.expense_exempt_from_tax, expense_cost: item.expense_cost)
+                    line = LineItem.create(statement_id: share_statement.id, type: item.type, title: item.title, description: item.description, cost: item.cost, taxable: item.taxable, expense_exempt_from_tax: item.expense_exempt_from_tax, expense_cost: item.expense_cost)
                     if item.discounts.any?
                         item.discounts.each do |discount|
-                        Discount.create(amount: discount.amount, amount_type: discount.amount_type, line_item_id: discount.line_item_id)
+                        Discount.create(amount: discount.amount, amount_type: discount.amount_type, line_item_id: line.id)
                         end
                     end
                     end

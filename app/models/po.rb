@@ -1,4 +1,5 @@
 class Po < ApplicationRecord
+    require 'bigdecimal'
     has_many :statements
     belongs_to :user
 		has_many :installments
@@ -170,10 +171,14 @@ class Po < ApplicationRecord
       end
     end
 
-    def show_installments_total_psercent
+    def show_installments_total_percent
       amount = 0.0
-      installments.map { |installment| amount = amount + installment.percentage.to_f }
-      return (amount.to_i).to_s + "%"
+      installments.map { |installment| amount = amount + installment.percentage.to_d }
+      if amount.to_d < 100.0 
+        return (amount.to_d).to_s + "%"
+      else
+        return 100.to_s + "%"
+      end
     end
 
     # set up initial statement and create blank installments for the PO

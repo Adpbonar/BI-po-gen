@@ -1,0 +1,114 @@
+  <% unless @po.locked %>
+  <center><button id="show-button" class="btn btn-warning">Set Custom installments</button><button id="hide-button"
+            class="no-show btn btn-secondary">I changed my mind...</button></center>
+  <div class="top-bottom-spacing no-show" id="adjust-installments">
+    <div class="top-bottom-spacing">
+      <h2 class="center">Adjust the number and percentage of installments using the form below</h2>
+      <%= text_field_tag 'set-installment' %>
+      <%= button_tag 'submit changes',  id: "installment-submit", class: 'btn btn-secondary', data: { reflex: "click->InstallmentReflex#change", id: @po.installments.first.id, installments: "" } %>
+      <div class="installment-info-box"><small><u>About This Form</u>: Adjust number and percentage of installments using the following format "30 30 30 10", where the number 
+          is the percentage and the quanity of numbers is the amount of installments. (Cut, copy and paste functions have been disabled and <b>whole numbers are recommended</b>).</small></div>
+    </div>
+    <%= button_tag "Set 1 Installment of 100%", id: 'installment-select-1', class: 'btn btn-success', data: { reflex: "click->InstallmentReflex#change", id: @po.installments.first.id, installments: "100" } %>
+    <script>
+      $('#installment-select-1').click(function() {
+          document.getElementById("loadingChart").textContent = "Updating Installment Chart. This page will reload shortly...";
+          $("#installmentChart").hide();
+          window.setTimeout(function () {
+            window.location.reload();
+          }, 2000);
+        });
+    </script>
+    <%= button_tag id: 'restore-defaults', class: 'btn btn-success', data: { reflex: "click->InstallmentReflex#change", id: @po.installments.first.id, installments: @po.options[:initial_installments].to_s } do %>
+      Restore Default Installments <% @po.options[:initial_installments].split(",").each_with_index do |piece, i| %>
+        <% if i == 2 %>
+          <%= piece.to_s + "%)" %>
+        <% elsif i == 0 %>
+          <%= "(" + piece.to_s + "%," %>
+        <% else %>
+          <%= piece.to_s + "%," %>
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
+  <script>
+    $('#restore-defaults').click(function() {
+        document.getElementById("loadingChart").textContent = "Updating Installment Chart. This page will reload shortly...";
+        $("#installmentChart").hide();
+        window.setTimeout(function () {
+    window.location.reload();
+        }, 2000);
+      });
+  </script>
+  <hr />
+  <div class="center">
+    <h2><span class="attention">Generate up to 60 equal installments using the blue buttons</span></h2>
+    <%= button_tag "2", id: 'installment-select-2', class: 'btn-primary set-installments-button circle', data: { reflex: "click->InstallmentReflex#change", id: @po.installments.first.id, installments: "50 50" } %>
+    <script>
+      $('#installment-select-2').click(function() {
+          document.getElementById("loadingChart").textContent = "Updating Installment Chart. This page will reload shortly...";
+          $("#installmentChart").hide();
+          window.setTimeout(function () {
+      window.location.reload();
+          }, 2000);
+        });
+    </script>
+    <% number = 2
+       58.times do 
+       number = number + 1 %>
+    <%= button_tag number.to_s, id: 'installment-select-' + number.to_s, class: 'btn-primary set-installments-button circle', data: { reflex: "click->InstallmentReflex#select_installments", id: @po.installments.first.id, installments: number.to_s } %>
+    <script>
+      $('#installment-select-<%= number.to_s %>').click(function() {
+          document.getElementById("loadingChart").textContent = "Updating Installment Chart. This page will reload shortly...";
+          $("#installmentChart").hide();
+          window.setTimeout(function () {
+      window.location.reload();
+          }, 2000);
+        });
+    </script>
+  <% end %>
+</div>
+<% else %>
+  <p class="center bold">You cannot change the number of installments right now.</p>
+  <p class="center bold">You are only allow to adjust the due dates.</p>
+<% end %>
+<script>
+  var installmentInput = document.getElementById("set-installment");
+    $('#set-installment').bind("contextmenu",function(e){
+   return false;
+   });
+   $('#set-installment').on("cut copy paste",function(e) {
+      e.preventDefault();
+   });
+  $('#set-installment').bind({
+    keydown: function (e) {
+
+      if (e.which >= 96 && e.which <= 105) {
+          return true;
+      }
+      if (e.which == 190 || e.which == 110) {
+          return true;
+        }
+      if (e.shiftKey === true) {
+        if (e.which == 9) {
+          return true;
+        }
+        return false;
+      }
+      if (e.which > 57) {
+        return false;
+      }
+      if (e.which == 32) {
+        return true;
+      }
+      return true;
+    }
+  });
+  $('#installment-submit').click(function() {
+    document.getElementById("loadingChart").textContent = "Updating Installment Chart...";
+    $("#installmentChart").hide();
+    window.setTimeout(function () {
+      window.location.reload();
+    }, 3000);
+  });
+</script>

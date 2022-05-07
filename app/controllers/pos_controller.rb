@@ -1,7 +1,8 @@
 class PosController < ApplicationController
-  before_action :set_po, only: %i[ show edit update destroy ]
+  before_action :set_po, only: %i[ show edit update destroy has_installments ]
   before_action :authenticate_user!
   after_action :update_status, only: :show
+  before_action :has_installments, only: %i[ index show ]
   before_action :force_json, only: :pdf_chart
 
   # GET /pos or /pos.json
@@ -87,7 +88,7 @@ class PosController < ApplicationController
       @po.no_delete
     end
   end
-
+  
   private
 
     # Use callbacks to share common setup or constraints between actions.
@@ -103,4 +104,12 @@ class PosController < ApplicationController
     def update_status
       @po.set_status
     end
+
+    def has_installments
+      if @po.installments.count == 0
+        @po.installments.create(due_date: @po.start_date, percentage: 100)
+        @po.installments.first.adjust_installments(@po.options[:initial_installments].to_s)
+      end
+    end
+
 end

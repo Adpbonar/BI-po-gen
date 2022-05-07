@@ -1,5 +1,6 @@
 <div>
   <h1>PO <%= @po.po_number %>: <%= @po.title %></h1>
+  <%= render 'nav', po: @po %>
   <p style="text-transform: uppercase;"><b>Status: <%= @po.status %></b></p>
   <p>Service: <%= @po.service_type %></p>
   <p>Approximate completion time: <%= @po.duration %><br />
@@ -31,15 +32,22 @@
     </div>
   </div>
   <h2>Installments</h2>
+  <% if @po.installments.count == @po.number_of_installments %>
+    <div class="upcase">Number of installments: <%= @po.number_of_installments %>
+      (<%= @po.show_installments_total_percent %>) | PO client currency: <%= show_currency(@po) %> | PO value:
+      <%= @po.currency.html_safe.to_s + number_to_currency(@po.statements.first.subtotal).split("$").last %></div>
+  <% end %>
   <table style="width: 100%; margin: 1em;">
     <tbody>
       <tr>
-        <td>
-          <% if @po.installments.count == @po.number_of_installments %>
-            <div class="upcase">Number of installments: <%= @po.number_of_installments %>
-              (<%= @po.show_installments_total_psercent %>) | PO client currency: <%= show_currency(@po) %> | PO value:
-              <%= @po.currency.html_safe.to_s + number_to_currency(@po.statements.first.subtotal).split("$").last %></div>
-          <% end %>
+        <td colspan="2" style="vertical-align: middle;">
+          <div style="margin: 5px; padding: 5px; background-color: #e8e8e8e8; border: 1px dotted green;">
+            <%= render 'change', po: @po %>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td style="width: 30%">
           <% @po.installments.order([:id]).each_with_index do |installment, index| %>
             <% if installment.due_date.present? %>
               <div class="top-bottom-spacing">Installment <%= index + 1 %>: <span
@@ -52,7 +60,7 @@
             <% end %>
           <% end %>
         </td>
-        <td>
+        <td style="vertical-align: top;">
           <div data-reflex-permanent>
             <div id="loadingChart" class="center"></div>
             <div id="installmentChart">
@@ -77,104 +85,6 @@
       <% end %>
     <% end %>
   </ul>
-  <% unless @po.locked %>
-    <center><button id="show-button" class="btn btn-warning">Adjust installments</button><button id="hide-button"
-            class="no-show btn btn-secondary">I changed my mind...</button></center>
-    <div class="top-bottom-spacing no-show" id="adjust-installments">
-      <h2>Adjust the number and percentage of installments</h2>
-      <%= text_field_tag 'set-installment' %>
-      <div class="installment-info-box"><small>Adjust number and percentage of installments using the following format "30 30 30 10", where the number 
-        is the percentage and the quanity of numbers is the amount of installments. (Cut, copy and paste functions have been disabled and <b>whole numbers are recommended</b>). <span class="attention">To adjust in equal installment percentages use the buttons below.</span></small></div>
-      <div class="top-bottom-spacing">
-        <%= button_tag 'submit changes', type: "text",  id: "installment-submit", class: 'btn btn-secondary', data: { reflex: "click->InstallmentReflex#change", id: @po.installments.first.id, installments: "" } %>
-      </div>
-      <%= button_tag "1", id: 'installment-select-1', class: 'btn-primary set-installments-button circle', data: { reflex: "click->InstallmentReflex#change", id: @po.installments.first.id, installments: "100" } %>
-      <script>
-        $('#installment-select-1').click(function() {
-            document.getElementById("loadingChart").textContent = "Updating Installment Chart...";
-            $("#installmentChart").hide();
-            window.setTimeout(function () {
-              window.location.reload();
-            }, 2000);
-          });
-      </script>
-      <%= button_tag "2", id: 'installment-select-2', class: 'btn-primary set-installments-button circle', data: { reflex: "click->InstallmentReflex#change", id: @po.installments.first.id, installments: "50 50" } %>
-      <script>
-        $('#installment-select-2').click(function() {
-            document.getElementById("loadingChart").textContent = "Updating Installment Chart...";
-            $("#installmentChart").hide();
-            window.setTimeout(function () {
-        window.location.reload();
-            }, 2000);
-          });
-      </script>
-      <% number = 2
-       58.times do 
-       number = number + 1 %>
-      <%= button_tag number.to_s, id: 'installment-select-' + number.to_s, class: 'btn-primary set-installments-button circle', data: { reflex: "click->InstallmentReflex#select_installments", id: @po.installments.first.id, installments: number.to_s } %>
-      <script>
-        $('#installment-select-<%= number.to_s %>').click(function() {
-            document.getElementById("loadingChart").textContent = "Updating Installment Chart...";
-            $("#installmentChart").hide();
-            window.setTimeout(function () {
-        window.location.reload();
-            }, 2000);
-          });
-      </script>
-    <% end %>
-    <%= button_tag "Restore to Defaults", id: 'restore-defaults', class: 'btn-primary set-installments-button rounded', data: { reflex: "click->InstallmentReflex#change", id: @po.installments.first.id, installments: @po.options[:initial_installments].to_s } %>
-  </div>
-  <script>
-    $('#restore-defaults').click(function() {
-        document.getElementById("loadingChart").textContent = "Updating Installment Chart...";
-        $("#installmentChart").hide();
-        window.setTimeout(function () {
-    window.location.reload();
-        }, 2000);
-      });
-  </script>
-<% end %>
-<%= link_to 'Edit', edit_po_path(@po), class: 'btn btn-warning' %>
-<%= link_to 'Back', pos_path, class: 'btn btn-secondary' %>
-<%= render 'populate', po: @po %>
-<script>
-  var installmentInput = document.getElementById("set-installment");
-    $('#set-installment').bind("contextmenu",function(e){
- return false;
- });
-   $('#set-installment').on("cut copy paste",function(e) {
-      e.preventDefault();
-   });
-  $('#set-installment').bind({
-    keydown: function (e) {
-
-      if (e.which >= 96 && e.which <= 105) {
-          return true;
-      }
-      if (e.which == 190 || e.which == 110) {
-          return true;
-        }
-      if (e.shiftKey === true) {
-        if (e.which == 9) {
-          return true;
-        }
-        return false;
-      }
-      if (e.which > 57) {
-        return false;
-      }
-      if (e.which == 32) {
-        return true;
-      }
-      return true;
-    }
-  });
-  $('#installment-submit').click(function() {
-    document.getElementById("loadingChart").textContent = "Updating Installment Chart...";
-    $("#installmentChart").hide();
-    window.setTimeout(function () {
-      window.location.reload();
-    }, 3000);
-  });
-</script>
+  <%= render 'populate', po: @po %>
+  <%= render 'nav', po: @po %>
 </div>

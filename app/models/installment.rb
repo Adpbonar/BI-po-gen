@@ -5,10 +5,9 @@ class Installment < ApplicationRecord
     belongs_to :po
     validates :due_date, presence: true
     validates :percentage, presence: true
-    # validates :percentage, numericality: { in: 1..100 }
     validate :reasonable_installment_due_date, :on => :update
     validate :installment_total
-    # validate :due_date_is_valid_datetime
+    validate :due_date_is_valid_datetime
 
     def percentage_amount(record1, record2)
         return (record1.to_i * ("0." + record2.to_s).to_f)
@@ -64,7 +63,7 @@ class Installment < ApplicationRecord
 
     # Verify datetime formatting is correct
     def due_date_is_valid_datetime
-        errors.add(:due_date, 'must be a valid datetime') if ((DateTime.parse(due_date) rescue ArgumentError) == ArgumentError)
+        errors.add(:due_date, 'must be a valid datetime') if ((DateTime.parse(due_date.to_s) rescue ArgumentError) == ArgumentError)
       end
 
       def date 
@@ -93,7 +92,7 @@ class Installment < ApplicationRecord
       def select_number_of_installments(installments)
         po = self.po
         multiple_installments = installments.to_i
-        if (multiple_installments >= 3 && multiple_installments <= 60)
+        if (multiple_installments >= 3 && multiple_installments <= 60) && check_string(installments)
           po.installments.destroy_all
             date_collector = []
             num =  multiple_installments -2
@@ -118,13 +117,13 @@ class Installment < ApplicationRecord
       end
 
       def adjust_installments(installments)
-        if installments == "100"
+        if installments == "100" && check_string(installments)
           po.installments.destroy_all
           portion = Installment.new(po_id: po.id, percentage: 100, due_date: po.start_date) 
           portion.save 
           po.number_of_installments = 1
           po.save
-        elsif percentage_ceiling(installments)
+        elsif percentage_ceiling(installments) && ! check_string(installments)
           po.installments.destroy_all
           date_collector = []
           multiple_installments = installments.split(" ")
@@ -148,5 +147,4 @@ class Installment < ApplicationRecord
         return errors.add :installments, 'Installment could not be saved. Please refer to the pattern below the form.'
       end
     end
- 
 end

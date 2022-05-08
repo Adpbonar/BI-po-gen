@@ -1,4 +1,5 @@
 class LineItem < ApplicationRecord
+    require 'bigdecimal'
     belongs_to :statement
     has_many :discounts
     has_many :details
@@ -14,7 +15,7 @@ class LineItem < ApplicationRecord
 
     def calculate_discounts
         cost = self.cost.to_f
-        total = 0.to_f
+        total = 0.to_d
         self.discounts.order(:id).each do |off|
             if off.amount_type == 1
                 total = total + off.amount.to_f 

@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
 
+  resources :ranking_forms
+  resources :rankings
   resources :invoices
   resources :inoices
   devise_for :users

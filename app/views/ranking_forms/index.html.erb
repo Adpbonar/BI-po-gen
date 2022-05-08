@@ -1,0 +1,25 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Ranking Forms</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @ranking_forms.each do |ranking_form| %>
+      <tr>
+        <td><%= link_to 'Show', ranking_form %></td>
+        <td><%= link_to 'Edit', edit_ranking_form_path(ranking_form) %></td>
+        <td><%= link_to 'Destroy', ranking_form, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Ranking Form', new_ranking_form_path %>

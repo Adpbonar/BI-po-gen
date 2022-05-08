@@ -119,7 +119,7 @@ ActiveRecord::Schema.define(version: 2022_05_07_194124) do
 
   create_table "hours_requireds", force: :cascade do |t|
     t.integer "number_of_hours"
-    t.integer "item_id"
+    t.integer "line_item_id"
     t.string "reason"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false

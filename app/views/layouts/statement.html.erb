@@ -61,6 +61,8 @@
       <hr />
       <p class="bold"><%= @statement.kind? %> Number: 
         <%= @statement.invoice_number %></p>
+         <p class="bold"><%= @statement.kind? %> Date: 
+        <%= read_date(@statement.created_at) %></p>
       <div class="top-bottom-spacing">
         <table width="100%">
           <tbody>

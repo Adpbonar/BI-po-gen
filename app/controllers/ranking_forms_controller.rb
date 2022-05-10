@@ -1,5 +1,6 @@
 class RankingFormsController < ApplicationController
   before_action :set_ranking_form, only: %i[ show edit update destroy ]
+  before_action :authenticate_user!, except: %i[ new create show ]
 
   # GET /ranking_forms or /ranking_forms.json
   def index
@@ -8,6 +9,16 @@ class RankingFormsController < ApplicationController
 
   # GET /ranking_forms/1 or /ranking_forms/1.json
   def show
+    @rusers = Po.where(po_number: @ranking_form.po_number).first.rusers.all
+    @count = 0
+    users = []
+    @rusers.each do  |associate| 
+      party = Participant.find(associate.participant_id) 
+      if party
+        users << party
+      end
+      @users = users.shuffle!
+    end
   end
 
   # GET /ranking_forms/new
@@ -21,17 +32,21 @@ class RankingFormsController < ApplicationController
 
   # POST /ranking_forms or /ranking_forms.json
   def create
-    @ranking_form = RankingForm.new(ranking_form_params)
-
-    respond_to do |format|
-      if @ranking_form.save
-        format.html { redirect_to @ranking_form, notice: "Ranking form was successfully created." }
-        format.json { render :show, status: :created, location: @ranking_form }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @ranking_form.errors, status: :unprocessable_entity }
-      end
-    end
+        @ranking_form = RankingForm.new(ranking_form_params)
+        if po = Po.where(access_code: @ranking_form.access_code).first
+          if po.accepting_submissions == true
+            @ranking_form.po_number = po.po_number
+        respond_to do |format|
+          if @ranking_form.save
+            format.html { redirect_to @ranking_form, notice: "Ranking form was successfully created." }
+            format.json { render :show, status: :created, location: @ranking_form }
+          else
+            format.html { render :new, status: :unprocessable_entity }
+            format.json { render json: @ranking_form.errors, status: :unprocessable_entity }
+          end
+        end
+      end 
+    end 
   end
 
   # PATCH/PUT /ranking_forms/1 or /ranking_forms/1.json
@@ -64,6 +79,6 @@ class RankingFormsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def ranking_form_params
-      params.fetch(:ranking_form, {})
+      params.require(:ranking_form).permit(:name, :access_code)
     end
 end

@@ -2,7 +2,7 @@ class PosController < ApplicationController
   before_action :set_po, only: %i[ show edit update destroy has_installments ]
   before_action :authenticate_user!
   after_action :update_status, only: :show
-  before_action :has_installments, only: %i[ show ]
+  before_action :has_installments, only: :show
   before_action :force_json, only: :pdf_chart
 
   # GET /pos or /pos.json
@@ -12,6 +12,7 @@ class PosController < ApplicationController
 
   # GET /pos/1 or /pos/1.json
   def show
+    @po.check_submission_status
     update_status
     po_issuer = @po.user
     @users = Participant.all
@@ -45,6 +46,7 @@ class PosController < ApplicationController
     @po.status = 'New' 
     respond_to do |format|
       if @po.save
+        @po.update(access_code: @po.created_at.to_s.tr('^1-9', '').split("").shuffle.join)
         format.html { redirect_to @po, notice: "Po was successfully created." }
         format.json { render :show, status: :created, location: @po }
       else
@@ -99,7 +101,7 @@ class PosController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def po_params
-      params.require(:po).permit(:po_number, :title, :description, :start_date, :end_date, :tax_amount, :company_name, :number_of_installments, :service_type, :currency, :learning_coordinator, :found, :show_participant, :lead_time_in_days)
+      params.require(:po).permit(:po_number, :title, :description, :start_date, :end_date, :tax_amount, :company_name, :number_of_installments, :service_type, :currency, :learning_coordinator, :found, :show_participant, :lead_time_in_days, :accepting_submissions, :access_code)
     end
 
     def update_status

@@ -15,7 +15,7 @@
     <%= f.text_field :title, class: 'form-control' %>
     <%= f.label 'Name' %>
     <%= f.text_field :name, class: 'form-control' %>
-      <%= f.label 'Tax Rate' %>
+    <%= f.label 'Tax Rate' %>
     <%= f.text_field :tax_rate, class: 'form-control' %>
     <%= f.label 'Email Address' %>
     <%= f.text_field :emailaddress, class: 'form-control' %>
@@ -23,13 +23,15 @@
     <%= f.number_field :phone, class: 'form-control', input_html: { type: 'number' } %>
     <%= f.label 'Address' %>
     <%= f.text_area :address, class: 'form-control' %>
+    <%= f.label 'Image Link' %>
+    <%= f.text_area :image_link, class: 'form-control' %>
     <div "class="form-selectors">
-    <%= f.label 'Country' %>
-    <%= f.country_select :country_code, include_blank: '', required: true, priority_countries: ["AU", "CA", "CN", "FR", "DE", "GB", "IN", "JP", "MX", "NZ", "SA", "US"] %>
+      <%= f.label 'Country' %>
+      <%= f.country_select :country_code, include_blank: '', required: true, priority_countries: ["AU", "CA", "CN", "FR", "DE", "GB", "IN", "JP", "MX", "NZ", "SA", "US"] %>
     </div>
     <div class="form-selectors">
-    <label>Currency</label>
-    <%= f.select :currency, Participant::CURRENCY, include_blank: '', class: 'form-control', label: 'Role' %>
+      <label>Currency</label>
+      <%= f.select :currency, Participant::CURRENCY, include_blank: '', class: 'form-control', label: 'Role' %>
     </div>
   </div>
   <div class="form-actions">

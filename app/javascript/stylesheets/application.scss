@@ -31,9 +31,9 @@ body {
 }
 
 .div-center {
+
     margin-left: auto !important;
     margin-right: auto !important;
-    width: 100%;
 }
 
 .installment-display {
@@ -679,4 +679,71 @@ h1 {
 /* Change the background color of the dropdown button when the dropdown content is shown */
 .dropdown:hover .dropbtn {
     -color: white;
+}
+
+.form-profile-img {
+    display: inline;
+    border-radius: 50%;
+    width: 200px;
+    height: 200px;
+    border: 2px solid #333333;
+    margin-left: 3em;
+    box-shadow: 4px 4px 5px 0px rgba(207, 193, 193, 0.75);
+    -webkit-box-shadow: 4px 4px 5px 0px rgba(207, 193, 193, 0.75);
+    -moz-box-shadow: 4px 4px 5px 0px rgba(207, 193, 193, 0.75);
+    z-index: 3 !important;
+}
+
+.profile {
+    float: right;
+    padding: 1.5em;
+    padding-top: calc(2.8em + 20px);
+    padding-bottom: calc(2.8em + 20px);
+    margin-bottom: calc(2.8em + 50px);
+    padding-right: 2.25em;
+    min-width: 50%;
+    max-width: calc(100vw - 274px);
+    margin-top: calc(-274px / 3);
+    margin-right: 10px;
+    background-color: rgba(207, 193, 193, 0.808) !important;
+    border-radius: 0 50px 30px 5px;
+
+    p {
+        margin-top: -.5em;
+        font-size: 0.875rem;
+    }
+
+    hr {
+        color: rgba(105, 102, 102, 0.671);
+    }
+}
+
+.profile-container {
+    display: block;
+    padding: 5px;
+    width: 100%;
+    line-height: 1.75;
+    letter-spacing: 2px;
+}
+
+.clear {
+    clear: both;
+}
+
+.round {
+    display: inline-block;
+    border: 2px solid black;
+    border-radius: 50%;
+    text-align: center;
+    height: 50px;
+    width: 50px;
+    vertical-align: middle;
+    font-weight: bold;
+
+    &:hover,
+    &:focus {
+        background-color: black;
+        color: white;
+        border: 2px solid white;
+    }
 }

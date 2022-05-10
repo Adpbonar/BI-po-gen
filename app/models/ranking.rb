@@ -1,3 +1,3 @@
 class Ranking < ApplicationRecord
-  belongs_to :rankings_form
+  belongs_to :ranking_form
 end

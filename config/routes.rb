@@ -21,14 +21,10 @@ Rails.application.routes.draw do
   resources :participants
   resources :line_items, only: [ :new, :create, :edit, :update, :destroy ]
   resources :items, except: [ :index, :show ]
-
+  resources :ranking_forms, path: 'forms'
   get :search_programs, controller: :line_items
   get :default_options, controller: :static_pages, path: 'defaults'
 
-  patch :achieve_po, to: 'statements#achieve_po' do 
-  member do
-    patch :achieve_po
-  end
-end
+  
 
 end 

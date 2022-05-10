@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_05_08_150822) do
+ActiveRecord::Schema.define(version: 2022_05_08_191710) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -211,6 +211,8 @@ ActiveRecord::Schema.define(version: 2022_05_08_150822) do
     t.string "state_bidx"
     t.string "zip_bidx"
     t.string "currency"
+    t.text "image_link"
+    t.text "profile"
     t.index ["address_bidx"], name: "index_participants_on_address_bidx", unique: true
     t.index ["city_bidx"], name: "index_participants_on_city_bidx"
     t.index ["company_bidx"], name: "index_participants_on_company_bidx"
@@ -270,6 +272,10 @@ ActiveRecord::Schema.define(version: 2022_05_08_150822) do
     t.string "slug"
     t.string "issue_code"
     t.integer "lead_time_in_days"
+    t.string "access_code"
+    t.boolean "accepting_submissions", default: false
+    t.boolean "fixed_payments", default: true
+    t.index ["access_code"], name: "index_pos_on_access_code"
     t.index ["company_name_bidx"], name: "index_pos_on_company_name_bidx"
     t.index ["found_bidx"], name: "index_pos_on_found_bidx"
     t.index ["issued_to_bidx"], name: "index_pos_on_issued_to_bidx"
@@ -280,21 +286,21 @@ ActiveRecord::Schema.define(version: 2022_05_08_150822) do
 
   create_table "ranking_forms", force: :cascade do |t|
     t.string "name"
-    t.bigint "ranking_id", null: false
     t.integer "ranking"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.text "participants"
-    t.text "#<ActiveRecord::ConnectionAdapters::PostgreSQL::TableDefinition"
-    t.index ["ranking_id"], name: "index_ranking_forms_on_ranking_id"
+    t.string "access_code"
+    t.integer "po_number"
+    t.string "email"
+    t.boolean "complete", default: false
   end
 
   create_table "rankings", force: :cascade do |t|
-    t.integer "ranking"
+    t.string "participant_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.string "participant"
-    t.string "#<ActiveRecord::ConnectionAdapters::PostgreSQL::TableDefinition"
+    t.integer "ranking_form_id"
+    t.integer "rank"
   end
 
   create_table "rusers", force: :cascade do |t|
@@ -386,6 +392,5 @@ ActiveRecord::Schema.define(version: 2022_05_08_150822) do
   add_foreign_key "invoices", "users"
   add_foreign_key "items", "invoices"
   add_foreign_key "members", "groups"
-  add_foreign_key "ranking_forms", "rankings"
   add_foreign_key "statement_notes", "statements"
 end

@@ -2,6 +2,9 @@
   <h1>PO <%= @po.po_number %>: <%= @po.title %></h1>
   <%= render 'nav', po: @po %>
   <p style="text-transform: uppercase;"><b>Status: <%= @po.status %></b></p>
+  <% if @po.accepting_submissions == true %>
+    <p style="text-transform: uppercase;"><b>Selection Survey Access Code: <span class="green"><%= @po.access_code %></span></b></p>
+  <% end %>
   <p>Service: <%= @po.service_type %></p>
   <p>Approximate completion time: <%= @po.duration %><br />
     <small class="highlight">From <%= read_date(@po.start_date) %> to <%= read_date(@po.end_date) %></small></p>

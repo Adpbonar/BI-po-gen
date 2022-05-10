@@ -5,7 +5,8 @@ class Po < ApplicationRecord
 		has_many :installments
 		has_many :po_users
     has_many :groups
-    
+    has_many :rusers
+
     encrypts :learning_coordinator, type: :integer
     encrypts :found, type: :integer
     encrypts :issued_to, :company_name, :approved_by
@@ -283,5 +284,16 @@ class Po < ApplicationRecord
 
     def no_delete
       errors.add :user, 'does not have permission to complete this action'
+    end
+
+    def check_submission_status
+      if self.rusers.any?
+        first = self.rusers.first.created_at
+        if (first + self.lead_time_in_days) > DateTime.now
+          self.update(accepting_submissions: true)
+        end
+      else
+        self.update(accepting_submissions: false)
+      end
     end
 end

@@ -1,5 +1,6 @@
 class FormReflex  < ApplicationReflex
 
+   
     def add
         po = Po.find(element.dataset[:id])
         participant = Participant.find(element.dataset[:user])
@@ -20,7 +21,7 @@ class FormReflex  < ApplicationReflex
         form = RankingForm.find(element.dataset[:form])
         rank = element.dataset[:rank].to_i
         ranking = form.rankings.where(participant_id: participant.id, rank: rank)
-        unless ranking.any?
+        unless ranking.any? || form.rankings.where(rank: rank).any?
             r = Ranking.new(ranking_form_id: form.id, rank: rank, participant_id: participant.id)
             r.save
         else

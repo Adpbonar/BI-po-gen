@@ -293,6 +293,7 @@ ActiveRecord::Schema.define(version: 2022_05_08_191710) do
     t.integer "po_number"
     t.string "email"
     t.boolean "complete", default: false
+    t.text "shuffled_people"
   end
 
   create_table "rankings", force: :cascade do |t|

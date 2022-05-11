@@ -21,7 +21,7 @@ Rails.application.routes.draw do
   resources :participants
   resources :line_items, only: [ :new, :create, :edit, :update, :destroy ]
   resources :items, except: [ :index, :show ]
-  resources :ranking_forms, path: 'forms'
+  resources :ranking_forms, path: 'forms', except: [ :destroy, :edit, :update]
   get :search_programs, controller: :line_items
   get :default_options, controller: :static_pages, path: 'defaults'
 

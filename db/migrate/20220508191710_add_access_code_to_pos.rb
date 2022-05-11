@@ -9,6 +9,7 @@ class AddAccessCodeToPos < ActiveRecord::Migration[6.1]
     add_column :ranking_forms, :email, :string
     add_column :participants, :profile, :text
     add_column :ranking_forms, :complete, :boolean, :default => false 
+    add_column :ranking_forms, :shuffled_people, :text 
     add_column :rankings, :ranking_form_id, :integer
     add_column :rankings, :rank, :integer
     remove_column :rankings, :ranking, :integer

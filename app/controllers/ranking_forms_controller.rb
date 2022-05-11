@@ -9,15 +9,24 @@ class RankingFormsController < ApplicationController
 
   # GET /ranking_forms/1 or /ranking_forms/1.json
   def show
-    @rusers = Po.where(po_number: @ranking_form.po_number).first.rusers.all
-    @count = 0
-    users = []
-    @rusers.each do  |associate| 
-      party = Participant.find(associate.participant_id) 
-      if party
-        users << party
+    if @ranking_form.shuffled_people.empty?
+      @rusers = Po.where(po_number: @ranking_form.po_number).first.rusers.all
+      @users = []
+      @rusers.shuffle.each do  |associate| 
+        party = Participant.find(associate.participant_id) 
+        if party
+          @users << party.id
+        end
       end
-      @users = users.shuffle!
+      @users.length.times do
+        @users = @users.shuffle!
+      end
+      @ranking_form.update(shuffled_people: @users)
+    end
+    @members = []
+      @team = @ranking_form.shuffled_people.each do |party|
+      part = Participant.find(party) 
+      @members << part
     end
   end
 
@@ -72,6 +81,7 @@ class RankingFormsController < ApplicationController
   end
 
   private
+
     # Use callbacks to share common setup or constraints between actions.
     def set_ranking_form
       @ranking_form = RankingForm.find(params[:id])

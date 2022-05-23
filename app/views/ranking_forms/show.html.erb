@@ -1,70 +1,70 @@
 <p id="notice"><%= notice %></p>
 <% unless @ranking_form.complete %>
-<div>
-  <% @members.each do |ass| %>
-    <div class="profile-container">
-      <center>
-      <img alt="<%= ass.name %>" class="form-profile-img" src="<%= ass.image_link %>" />
-      </center>
-      <div class="profile">
-        <table>
-          <tbody>
-            <tr>
-              <td>
-                <center>
-                  <br />
-                  <p class="bold"><%= ass.name %></p>
-                  <hr class="profile-line" />
-                </center>
-                <p>Senior Director, Digital Media Solutions
-                  Offering actionable insights and advice to clients around the globe.
-                  John Barker is a thought leader and consultant who delivers impactful and actionable client insights and advice in these times of existential disruptions in local, national, and global economies, as well as society at large. John is a highly respected consultant with a track record of supporting multicultural management teams in startups and large and middle-sized organizations in North America, Asia-Pacific, Europe, and the Middle East in adapting to major disruptions. John is a conference presenter and panelist at numerous international gatherings dealing with customer insights, analytics, and innovation.
-                  His academic background includes a BA in Philosophy from the Catholic University of Louvain, Belgium; a Juris Doctor from Tulane University Law School, New Orleans; and a Master of Science in Regulatory Compliance from Northwestern University, Chicago. John has the following certifications from the Compliance Certification Board (CCB): Certified Compliance and Ethics Professional (CCEP); Certified in Healthcare Compliance (CHC); Certified in Healthcare Research Compliance (CHRC); and Certified in Healthcare Privacy Compliance (CHPC).</div>
-              </p>
-            </td>
-            <tr>
-              <td>
-                <p class="center">
-                  <div data-reflex-root=".rank">RANK <%= ass.member_name.upcase %>: </div>
-                  <div>
-                    <% count = 0 %>
-                    <% @members.count.times do %>
-                      <span class="rank"
+  <div>
+    <% @members.each do |ass| %>
+      <div class="profile-container">
+        <center><img alt="<%= ass.name %>" class="form-profile-img" src="<%= ass.image_link %>" />
+          <div class="profile">
+            <table>
+              <tbody>
+                <tr>
+                  <td>
+                    <center>
+                      <br />
+                      <div>
+                        <% if ass.title %>
+                          <p class="profile-name"><%= ass.name %>, <%= ass.title %></p>
+                        <% else %>
+                          <p class="profile-name"><%= ass.name %></p>
+                        <% end %>
+                      </div>
+                      <hr class="profile-line" />
+                    </center>
+                    <%=sanitize ass.profile %>
+                  </td>
+                  <tr>
+                    <td>
+                      <p class="center">
+                        <div data-reflex-root=".rank">RANK <%= ass.member_name.upcase %>: </div>
+                        <div>
+                          <% count = 0 %>
+                          <% @members.count.times do %>
+                            <span class="rank"
                       <% count = count + 1 %>
                       <% ranker = @ranking_form.rankings.where(participant_id: ass.id) %>
                       <% if ranker.any? %>
                         <% if ranker.first.rank == count %>
                           <span>
-                        <%= button_tag class: 'btn round', style: 'border: none; border-radius: 5px; width: auto;', data: { reflex: "click->FormReflex#select", form: @ranking_form.id, id: ass.id, rank: count } do %>
-                          <span style="font-size: 1.25rem;">"<%= count %>" Selected</span>
+                              <%= button_tag class: 'btn round', style: 'border: none; border-radius: 5px; width: auto;', data: { reflex: "click->FormReflex#select", form: @ranking_form.id, id: ass.id, rank: count } do %>
+                                <span style="font-size: 1.25rem;">"<%= count %>" Selected</span>
+                              <% end %>
+                            </span>
+                          <% else %>
+                          <% end %>
+                        <% else %>
+                          <% unless @ranking_form.rankings.where(rank: count).any? %>
+                            <span>
+                              <%= button_tag class: 'btn round', data: { reflex: "click->FormReflex#select", form: @ranking_form.id, id: ass.id, rank: count } do %>
+                                <%= count %>
+                              <% end %>
+                            <% end %>
+                          </span>
                         <% end %>
                       </span>
-                    <% else %>
-                    <% end %>
-                  <% else %>
-                    <% unless @ranking_form.rankings.where(rank: count).any? %>
-                      <span>
-                        <%= button_tag class: 'btn round', data: { reflex: "click->FormReflex#select", form: @ranking_form.id, id: ass.id, rank: count } do %>
-                          <%= count %>
-                        <% end %>
-                      <% end %>
-                    </span>
-                  <% end %>
+                    <% end %></p>
                 </span>
-              <% end %></p>
-         </span>
-        </span>
-      </p>
-    </td>
-  </tr>
-</tr>
-</tbody>
-</table>
+              </span>
+            </p>
+          </td>
+        </tr>
+      </tr>
+    </tbody>
+  </table>
 </div>
 <% end %>
 </div>
 <br class="clear" />
 <% else %>
-<h1> Thank you for your responses.</h1>
-<p class="center bold">You are done and  may close this window.</p>
+  <h1> Thank you for your responses.</h1>
+  <p class="center bold">You are done and  may close this window.</p>
 <% end %>

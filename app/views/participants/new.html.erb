@@ -23,8 +23,6 @@
     <%= f.number_field :phone, class: 'form-control' %>
     <%= f.label 'Address' %>
     <%= f.text_area :address, class: 'form-control' %>
-        <%= f.label 'Image Link' %>
-     <%= f.text_area :image_link, class: 'form-control' %>
     <div class="form-selectors">
       <%= f.label 'Country' %>
       <%= f.country_select :country_code, include_blank: '', required: true, priority_countries: ["AU", "CA", "CN", "FR", "DE", "GB", "IN", "JP", "MX", "NZ", "SA", "US"] %>

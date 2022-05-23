@@ -23,8 +23,13 @@
     <%= f.number_field :phone, class: 'form-control', input_html: { type: 'number' } %>
     <%= f.label 'Address' %>
     <%= f.text_area :address, class: 'form-control' %>
-    <%= f.label 'Image Link' %>
-    <%= f.text_area :image_link, class: 'form-control' %>
+    <% if @participant.type == "Associate" %>
+      <%= f.label 'Image Link' %>
+      <%= f.text_area :image_link, class: 'form-control' %>
+      <label>Profile</label>
+      <%= f.hidden_field :profile, id: "profile"  %>
+      <trix-editor input="profile"></trix-editor>
+    <% end %>
     <div "class="form-selectors">
       <%= f.label 'Country' %>
       <%= f.country_select :country_code, include_blank: '', required: true, priority_countries: ["AU", "CA", "CN", "FR", "DE", "GB", "IN", "JP", "MX", "NZ", "SA", "US"] %>

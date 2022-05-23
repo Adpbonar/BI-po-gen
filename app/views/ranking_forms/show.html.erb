@@ -24,12 +24,13 @@
                   </td>
                   <tr>
                     <td>
+                    <hr />
                       <p class="center">
-                        <div data-reflex-root=".rank">RANK <%= ass.member_name.upcase %>: </div>
+                        <div data-reflex-root=".rank" class="rank-name">RANK <%= ass.member_name.upcase %>: </div>
                         <div>
                           <% count = 0 %>
                           <% @members.count.times do %>
-                            <span class="rank"
+                            <span class="rank">
                       <% count = count + 1 %>
                       <% ranker = @ranking_form.rankings.where(participant_id: ass.id) %>
                       <% if ranker.any? %>

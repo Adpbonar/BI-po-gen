@@ -14,7 +14,7 @@ class RankingFormsController < ApplicationController
       redirect_to po_path(po)
     end
     if @ranking_form.shuffled_people.empty?
-      @rusers = Po.where(po_number: @ranking_form.po_number).first.rusers.all
+      @rusers = po.rusers.all
       @users = []
       @rusers.shuffle.each do  |associate| 
         party = Participant.find(associate.participant_id) 

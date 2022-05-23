@@ -1,9 +1,9 @@
-<h1>Select your Coach in Order of Preference</h1>
-<div class="center">
-  <p>Please review the profiles and then select them in order of preference.</p>
-  <p><span class="bold">Note:</span> Once you have made your last selection, you will not be able to make additional changes.</p>
-</div>
 <% unless @ranking_form.complete %>
+  <h1>Select your Coach in Order of Preference</h1>
+  <div class="center">
+    <p>Please review the profiles and then select them in order of preference.</p>
+    <p><span class="bold">Note:</span> Once you have made your last selection, you will not be able to make additional changes.</p>
+  </div>
   <div>
     <% @members.each do |ass| %>
       <div class="profile-container">

@@ -38,4 +38,10 @@ class FormReflex  < ApplicationReflex
             ranking.destroy_all
         end
     end
+
+    def sort
+        po = Po.find(element.dataset[:id])
+        po.process_form_data if RankingForm.where(po_number: po.po_number).any?
+    end
+
 end

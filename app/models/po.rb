@@ -291,7 +291,7 @@ class Po < ApplicationRecord
     end
 
     def check_submission_status
-      if self.rusers.any? && DateTime.now < (self.rusers.first.created_at + self.lead_time_in_days.days) 
+      if self.rusers.any? && (DateTime.now < (self.rusers.first.created_at + self.lead_time_in_days.days)) && ! self.sorted
         self.update(accepting_submissions: true)
       else
         self.update(accepting_submissions: false)

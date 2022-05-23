@@ -35,51 +35,68 @@
     </div>
     <% unless @results == 0 %>
       <h2>Po Survey Results</h2>
-      Total number of rankings: <%= @results %> | 
-      Number of surveys: <%= @number_of_forms.count %> | Number of Associates: <%= @po.rusers.count %>
-      <% @po.collect_form_results %>
-      <hr />
-      <h3>Groups</h3>
-      <br />
-      <% @number_of_forms.group_by(&:winner).each do |usr, forms| %>
-        <div>
-          <h4><%= usr.name %>: <%= forms.count %></h4>
-          <table style="width: 100%;" class="upcase">
-            <tbody>
-              <% forms.each do |form| %>
-                <tr>
-                  <td style="width: 30%; vertical-align: top">
-                    <li class="bold">
-                      <%= form.name %>
-                    </td>
-                    <td style="width: 70%;">
-                      <div>
-                        <button id="show-<%= form.id %>" style="Width: 80%;"type="button" class="rounded btn-secondary upcase">Move <%= form.name %></button>
-                        <div id="reveal-<%= form.id %>" class="hidden mt-4">
-                          <%= simple_form_for form do |f| %>
-                            <b><%= f.input :ranking, :collection => @po.rusers, :label_method => :party, :value_method => :participant_id,:include_blank => false, label: "Move #{form.name} to another group".titleize %></b>
-                            <%= f.submit 'Change', class: 'btn btn-success' %>
-                          <% end %>
-                        </div>
-                      </div>
-                    </td>
-                  </li>
-                </td>
-              </tr>
-              <script>
-                $("#reveal-<%= form.id %>").hide();
-                 $("#show-<%= form.id %>").click( () => {
-                   $("#reveal-<%= form.id %>").show();
-                   $("#show-<%= form.id %>").hide();
-                 });
-              </script>
+      <div id="survey-rank">
+        Total number of rankings: <%= @results %> | 
+        Number of surveys: <%= @number_of_forms.count %> | Number of Associates: <%= @po.rusers.count %>
+        <% unless @po.sorted %>
+          <div>
+            <%= content_tag :button, id: 'results-gen', class: 'btn btn-success', data: { reflex: "click->FormReflex#sort", id: @po.id } do %>
+              Generate Results
             <% end %>
-          </tbody>
-        </table>
-      </ol>
-    </div>
-  <% end %>
-  <hr />
+            <script>
+              $('#results-gen').click(function() {
+                  $("#survey-rank").hide();
+                  window.setTimeout(function () {
+              window.location.reload();
+                  }, 200);
+                });
+            </script>
+          </div>
+        <% else %>
+          <hr />
+          <h3>Groups</h3>
+          <br />
+          <% @number_of_forms.group_by(&:winner).each do |usr, forms| %>
+            <div>
+              <h4><%= usr.name %>: <%= forms.count %></h4>
+              <table style="width: 100%;" class="upcase">
+                <tbody>
+                  <% forms.each do |form| %>
+                    <tr>
+                      <td style="width: 30%; vertical-align: top">
+                        <li class="bold">
+                          <%= form.name %>
+                        </td>
+                        <td style="width: 70%;">
+                          <div>
+                            <button id="show-<%= form.id %>" style="Width: 80%;"type="button" class="rounded btn-secondary upcase">Move <%= form.name %></button>
+                            <div id="reveal-<%= form.id %>" class="hidden mt-4">
+                              <%= simple_form_for form do |f| %>
+                                <b><%= f.input :ranking, :collection => @po.rusers, :label_method => :party, :value_method => :participant_id,:include_blank => false, label: "Move #{form.name} to another group".titleize %></b>
+                                <%= f.submit 'Change', class: 'btn btn-success' %>
+                              <% end %>
+                            </div>
+                          </div>
+                        </td>
+                      </li>
+                    </td>
+                  </tr>
+                  <script>
+                    $("#reveal-<%= form.id %>").hide();
+                     $("#show-<%= form.id %>").click( () => {
+                       $("#reveal-<%= form.id %>").show();
+                       $("#show-<%= form.id %>").hide();
+                     });
+                  </script>
+                <% end %>
+              </tbody>
+            </table>
+          </ol>
+        </div>
+      <% end %>
+    <% end %>
+    <hr />
+  </div>
   <div class="ranks">
     <% @rankings.group_by(&:selected_user).each do |rank, users| %>
       <% if rank.present? %>
@@ -103,7 +120,7 @@
     </span>
   <% end %>
 </div>
-</div>
+
 <h2>Installments</h2>
 <% if @po.installments.count == @po.number_of_installments %>
   <div class="upcase">Number of installments: <%= @po.number_of_installments %>

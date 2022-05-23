@@ -1,10 +1,9 @@
 class PosController < ApplicationController
-  before_action :set_po, only: %i[ show edit update destroy has_installments set_form_results ]
+  before_action :set_po, only: %i[ show edit update destroy has_installments ]
   before_action :authenticate_user!
   after_action :update_status, only: :show
   before_action :has_installments, only: :show
   before_action :force_json, only: :pdf_chart
-  before_action :set_form_results
 
   # GET /pos or /pos.json
   def index
@@ -113,12 +112,6 @@ class PosController < ApplicationController
       @po.set_status
     end
     
-    def set_form_results
-      unless @po == nil
-        @po.process_form_data if RankingForm.where(po_number: @po.po_number).any?
-      end
-    end
-
     def has_installments
       unless @po.status == "New"
         if @po.installments.count == 0

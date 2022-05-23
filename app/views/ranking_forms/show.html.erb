@@ -1,8 +1,11 @@
 <p id="notice"><%= notice %></p>
+<% unless @ranking_form.complete %>
 <div>
   <% @members.each do |ass| %>
     <div class="profile-container">
+      <center>
       <img alt="<%= ass.name %>" class="form-profile-img" src="<%= ass.image_link %>" />
+      </center>
       <div class="profile">
         <table>
           <tbody>
@@ -61,7 +64,7 @@
 <% end %>
 </div>
 <br class="clear" />
-<div>
-  <%= link_to 'Edit', edit_ranking_form_path(@ranking_form) %> |
-  <%= link_to 'Back', ranking_forms_path %>
-</div>
+<% else %>
+<h1> Thank you for your responses.</h1>
+<p class="center bold">You are done and  may close this window.</p>
+<% end %>

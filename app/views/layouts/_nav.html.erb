@@ -31,7 +31,6 @@
                   </li>
                 <% end %>
               </ul>
-             
               <span class="navbar-text">
                 <%= link_to 'Logout', destroy_user_session_path, data: { turbo_method: :delete }, class: 'btn btn-danger' %>
               </span>
@@ -42,7 +41,7 @@
           <br />
         </nav>
       <% else %>
-        <div class="div-center"><%= image_tag 'Bonar-Institute-Logo-for-Purposeful-Leadership-Primary', width: '250px', class: 'div-center', alt: 'Bonar Institute Logo' %></div>
+        <div class="div-center"><a href="https://bonarinstitute.com"><%= image_tag 'Bonar-Institute-Logo-for-Purposeful-Leadership-Primary', width: '250px', class: 'div-center', alt: 'Bonar Institute Logo' %></a></div>
       <% end %>
     </div>
   </div>

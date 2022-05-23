@@ -16,11 +16,14 @@
   </thead>
 
   <tbody>
-    <% @pos.each do |po| %>    
+    <% @pos.each do |po| %>
+    <%= content_tag :tr, id: dom_id(po) do %>
+        <td class="bold" style="border: 0 !important;" colspan="8"><%= po.po_number %></td>  
+        <% end %>
         <%= content_tag :tr, id: dom_id(po) do %>
           <td><%= po.title %></td>
           <td><%= po.description %></td>
-          <td><%= po.status.upcase %></td>
+          <td<%= po.status.upcase %></td>
           <td><%= po.installments.count %> Installments</td>
           <td><%= time_ago_in_words(po.created_at).capitalize %> ago</td>
           <td><%= link_to 'Show', po, class: 'btn btn-success' %></td>

@@ -1,6 +1,7 @@
 class Participant < ApplicationRecord
     has_many :po_users
     has_many :invoices
+    has_many :rankings
     validates :phone,:presence => true,
                  :numericality => true,
                  :length => { :minimum => 10, :maximum => 15 }

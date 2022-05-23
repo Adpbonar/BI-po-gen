@@ -204,7 +204,7 @@ class Statement < ApplicationRecord
                                 if item.discounts.any?
                                     item.discounts.each do |discount|
                                         Discount.create(amount: discount.amount, amount_type: discount.amount_type, line_item_id: line.id)
-                                    end
+                                end
                                 end
                             end
                             StatementNote.create(statement_id: associate_statement.id, notes: Company.first.default_associate_note, terms: Company.first.default_associate_terms)

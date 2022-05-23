@@ -9,7 +9,7 @@ class Po < ApplicationRecord
 
     encrypts :learning_coordinator, type: :integer
     encrypts :found, type: :integer
-    encrypts :issued_to, :company_name, :approved_by
+    encrypts :issued_to, :company_name, :approved_by, :access_code
 
 		validates :po_number, presence: true, uniqueness: true
     validates :title, presence: true
@@ -64,6 +64,10 @@ class Po < ApplicationRecord
         self.destroy
 			end
 		end
+
+    def set_acccess_code
+      self.update(access_code: self.created_at.to_s.tr('^1-9', '').split("").shuffle.join)
+    end
 
     # Set the po number
     def set_po_number
@@ -287,13 +291,44 @@ class Po < ApplicationRecord
     end
 
     def check_submission_status
-      if self.rusers.any?
-        first = self.rusers.first.created_at
-        if (first + self.lead_time_in_days) > DateTime.now
-          self.update(accepting_submissions: true)
-        end
+      if self.rusers.any? && DateTime.now < (self.rusers.first.created_at + self.lead_time_in_days.days) 
+        self.update(accepting_submissions: true)
       else
         self.update(accepting_submissions: false)
       end
     end
+    
+  def collect_form_results
+    forms = RankingForm.where(po_number: self.po_number)
+    ranks_array = []
+    forms.all.each do |form|
+      form_list = []
+      Ranking.where(ranking_form_id: form.id).all.each do |score| 
+        form_list << score 
+      end
+      ranks_array = form_list + ranks_array
+    end
+     
+    return ranks_array
+  end
+
+  def process_form_data
+    score_array = []
+    forms = RankingForm.where(po_number: self.po_number)
+    forms.all.each do |form|
+      form.shuffled_people.each do |usr|
+        array = []
+        form.rankings.where(rank: 1, participant_id: usr).each do |tally| 
+          array << tally.participant_id
+        end
+          score_array << array
+      end
+    end
+    if forms.any? 
+      if forms.first.rankings.any?
+        final_score = score_array.reject { |c| c.empty? }
+        forms.first.adjust_counts(final_score.sort, forms, self)
+      end
+    end
+  end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_05_08_191710) do
+ActiveRecord::Schema.define(version: 2022_05_23_154037) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -272,10 +272,10 @@ ActiveRecord::Schema.define(version: 2022_05_08_191710) do
     t.string "slug"
     t.string "issue_code"
     t.integer "lead_time_in_days"
-    t.string "access_code"
     t.boolean "accepting_submissions", default: false
     t.boolean "fixed_payments", default: true
-    t.index ["access_code"], name: "index_pos_on_access_code"
+    t.boolean "sorted", default: false
+    t.text "access_code_ciphertext"
     t.index ["company_name_bidx"], name: "index_pos_on_company_name_bidx"
     t.index ["found_bidx"], name: "index_pos_on_found_bidx"
     t.index ["issued_to_bidx"], name: "index_pos_on_issued_to_bidx"
@@ -285,15 +285,15 @@ ActiveRecord::Schema.define(version: 2022_05_08_191710) do
   end
 
   create_table "ranking_forms", force: :cascade do |t|
-    t.string "name"
     t.integer "ranking"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.string "access_code"
     t.integer "po_number"
-    t.string "email"
     t.boolean "complete", default: false
     t.text "shuffled_people"
+    t.text "access_code_ciphertext"
+    t.text "name_ciphertext"
+    t.text "email_ciphertext"
   end
 
   create_table "rankings", force: :cascade do |t|

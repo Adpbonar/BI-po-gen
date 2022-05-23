@@ -19,6 +19,12 @@ body {
 
 }
 
+.form-inline {
+    div { 
+    display: inline !important;
+}
+}
+
 .set-installments-button {
     margin: 4px;
     padding: 2px;
@@ -681,13 +687,18 @@ h1 {
     -color: white;
 }
 
+.ranks {
+    text-transform: uppercase;
+}
+
 .form-profile-img {
     display: inline;
     border-radius: 50%;
-    width: 200px;
-    height: 200px;
+    width: 150px;
+    height: 150px;
     border: 2px solid #333333;
-    margin-left: 3em;
+    margin-left: auto;
+    margin-right: auto;
     box-shadow: 4px 4px 5px 0px rgba(207, 193, 193, 0.75);
     -webkit-box-shadow: 4px 4px 5px 0px rgba(207, 193, 193, 0.75);
     -moz-box-shadow: 4px 4px 5px 0px rgba(207, 193, 193, 0.75);
@@ -697,16 +708,16 @@ h1 {
 .profile {
     float: right;
     padding: 1.5em;
-    padding-top: calc(2.8em + 20px);
-    padding-bottom: calc(2.8em + 20px);
-    margin-bottom: calc(2.8em + 50px);
+    padding-top: calc(1.5em + 20px);
+    padding-bottom: calc(1.5em + 20px);
+    margin-bottom: calc(1.5em + 20px);
     padding-right: 2.25em;
     min-width: 50%;
-    max-width: calc(100vw - 274px);
-    margin-top: calc(-274px / 3);
+    max-width: calc(100vw - 100px);
+    margin-top: calc(-100px / 3);
     margin-right: 10px;
     background-color: rgba(207, 193, 193, 0.808) !important;
-    border-radius: 0 50px 30px 5px;
+    border-radius: 5px 100px 5px 100px;
 
     p {
         margin-top: -.5em;
@@ -728,6 +739,17 @@ h1 {
 
 .clear {
     clear: both;
+}
+
+.po-selections {
+    padding: 1em;
+    font-size: 1.75em;
+    font-weight: bold;
+}
+
+.show-results {
+    border-bottom: 2px solid #e8e8e8;
+    padding-left: 2em;
 }
 
 .round {

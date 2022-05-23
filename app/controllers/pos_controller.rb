@@ -1,9 +1,10 @@
 class PosController < ApplicationController
-  before_action :set_po, only: %i[ show edit update destroy has_installments ]
+  before_action :set_po, only: %i[ show edit update destroy has_installments set_form_results ]
   before_action :authenticate_user!
   after_action :update_status, only: :show
   before_action :has_installments, only: :show
   before_action :force_json, only: :pdf_chart
+  before_action :set_form_results
 
   # GET /pos or /pos.json
   def index
@@ -20,6 +21,10 @@ class PosController < ApplicationController
     @pdf_chart_data = @po.statements.first.pdf_installment_chart
     @associates = []
     @po_users.each { |user| @associates << user if user.type_of == "Associate" }
+    @rankings = RankingForm.where(po_number: @po.po_number).all
+    @number_of_forms = RankingForm.where(po_number: @po.po_number)
+    @results = @po.collect_form_results.count 
+   
   end
 
   # GET /pos/new
@@ -46,7 +51,7 @@ class PosController < ApplicationController
     @po.status = 'New' 
     respond_to do |format|
       if @po.save
-        @po.update(access_code: @po.created_at.to_s.tr('^1-9', '').split("").shuffle.join)
+        @po.set_acccess_code
         format.html { redirect_to @po, notice: "Po was successfully created." }
         format.json { render :show, status: :created, location: @po }
       else
@@ -94,7 +99,7 @@ class PosController < ApplicationController
   
   private
 
-    # Use callbacks to share common setup or constraints between actions.
+     # Use callbacks to share common setup or constraints between actions.
     def set_po
       @po = Po.friendly.find(params[:id])
     end
@@ -106,6 +111,12 @@ class PosController < ApplicationController
 
     def update_status
       @po.set_status
+    end
+    
+    def set_form_results
+      unless @po == nil
+        @po.process_form_data if RankingForm.where(po_number: @po.po_number).any?
+      end
     end
 
     def has_installments

@@ -4,11 +4,15 @@ class RankingFormsController < ApplicationController
 
   # GET /ranking_forms or /ranking_forms.json
   def index
-    @ranking_forms = RankingForm.all
+    @ranking_forms = RankingForm.all.order(:id).reverse_order
   end
 
   # GET /ranking_forms/1 or /ranking_forms/1.json
   def show
+    po = Po.where(po_number: @ranking_form.po_number).first
+    if po.sorted
+      redirect_to po_path(po)
+    end
     if @ranking_form.shuffled_people.empty?
       @rusers = Po.where(po_number: @ranking_form.po_number).first.rusers.all
       @users = []
@@ -41,20 +45,22 @@ class RankingFormsController < ApplicationController
 
   # POST /ranking_forms or /ranking_forms.json
   def create
-        @ranking_form = RankingForm.new(ranking_form_params)
-        if po = Po.where(access_code: @ranking_form.access_code).first
-          if po.accepting_submissions == true
-            @ranking_form.po_number = po.po_number
-        respond_to do |format|
-          if @ranking_form.save
-            format.html { redirect_to @ranking_form, notice: "Ranking form was successfully created." }
-            format.json { render :show, status: :created, location: @ranking_form }
-          else
-            format.html { render :new, status: :unprocessable_entity }
-            format.json { render json: @ranking_form.errors, status: :unprocessable_entity }
-          end
-        end
-      end 
+    @ranking_form = RankingForm.new(ranking_form_params)
+    accepting_po = 1
+    Po.all.each do |po|
+      if po.access_code == @ranking_form.access_code
+        accepting_po = po.id
+        @ranking_form.po_number = po.po_number
+      end
+    end
+    respond_to do |format|
+      if @ranking_form.save
+        format.html { redirect_to @ranking_form, notice: "Ranking form was successfully created." }
+        format.json { render :show, status: :created, location: @ranking_form }
+      else
+        format.html { render :new, status: :unprocessable_entity }
+        format.json { render json: @ranking_form.errors, status: :unprocessable_entity }
+      end
     end 
   end
 
@@ -89,6 +95,6 @@ class RankingFormsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def ranking_form_params
-      params.require(:ranking_form).permit(:name, :access_code)
+      params.require(:ranking_form).permit(:name, :access_code, :email, :ranking)
     end
 end

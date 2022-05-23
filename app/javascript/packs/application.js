@@ -14,16 +14,20 @@ import "@hotwired/turbo-rails"
 import "chartkick/chart.js"
 import "controllers"
 
+
+
+
 require("flatpickr/dist/flatpickr.css")
 require("easy-autocomplete")
 
 Rails.start()
 ActiveStorage.start()
-
+import Reveal from 'stimulus-reveal-controller'
 import { Application } from 'stimulus'
 import { definitionsFromContext } from 'stimulus/webpack-helpers'
 
 const application = Application.start()
+application.register('reveal', Reveal);
 const context = require.context('../controllers', true, /\.js$/)
 application.load(definitionsFromContext(context))
 
@@ -86,3 +90,4 @@ document.addEventListener("turbo:load", function () {
 
 require("trix")
 require("@rails/actiontext")
+

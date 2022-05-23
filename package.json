@@ -21,6 +21,7 @@
     "stimulus": "^2.0.0",
     "stimulus-character-counter": "^3.0.1",
     "stimulus-flatpickr": "^1.4.0",
+    "stimulus-reveal-controller": "^4.0.0",
     "stimulus_reflex": "3.4.1",
     "trix": "^1.2.0",
     "turbolinks": "^5.2.0",

@@ -1,4 +1,8 @@
-<p id="notice"><%= notice %></p>
+<h1>Select your Coach in Order of Preference</h1>
+<div class="center">
+  <p>Please review the profiles and then select them in order of preference.</p>
+  <p><span class="bold">Note:</span> Once you have made your last selection, you will not be able to make additional changes.</p>
+</div>
 <% unless @ranking_form.complete %>
   <div>
     <% @members.each do |ass| %>
@@ -24,47 +28,47 @@
                   </td>
                   <tr>
                     <td>
-                    <hr />
+                      <hr />
                       <p class="center">
                         <div data-reflex-root=".rank" class="rank-name">RANK <%= ass.member_name.upcase %>: </div>
                         <div>
                           <% count = 0 %>
                           <% @members.count.times do %>
                             <span class="rank">
-                      <% count = count + 1 %>
-                      <% ranker = @ranking_form.rankings.where(participant_id: ass.id) %>
-                      <% if ranker.any? %>
-                        <% if ranker.first.rank == count %>
-                          <span>
-                              <%= button_tag class: 'btn round', style: 'border: none; border-radius: 5px; width: auto;', data: { reflex: "click->FormReflex#select", form: @ranking_form.id, id: ass.id, rank: count } do %>
-                                <span style="font-size: 1.25rem;">"<%= count %>" Selected</span>
+                              <% count = count + 1 %>
+                              <% ranker = @ranking_form.rankings.where(participant_id: ass.id) %>
+                              <% if ranker.any? %>
+                                <% if ranker.first.rank == count %>
+                                  <span>
+                                    <%= button_tag class: 'btn round', style: 'border: none; border-radius: 5px; width: auto;', data: { reflex: "click->FormReflex#select", form: @ranking_form.id, id: ass.id, rank: count } do %>
+                                      <span style="font-size: 1.25rem;">"<%= count %>" Selected</span>
+                                    <% end %>
+                                  </span>
+                                <% else %>
+                                <% end %>
+                              <% else %>
+                                <% unless @ranking_form.rankings.where(rank: count).any? %>
+                                  <span>
+                                    <%= button_tag class: 'btn round', data: { reflex: "click->FormReflex#select", form: @ranking_form.id, id: ass.id, rank: count } do %>
+                                      <%= count %>
+                                    <% end %>
+                                  <% end %>
+                                </span>
                               <% end %>
                             </span>
-                          <% else %>
-                          <% end %>
-                        <% else %>
-                          <% unless @ranking_form.rankings.where(rank: count).any? %>
-                            <span>
-                              <%= button_tag class: 'btn round', data: { reflex: "click->FormReflex#select", form: @ranking_form.id, id: ass.id, rank: count } do %>
-                                <%= count %>
-                              <% end %>
-                            <% end %>
-                          </span>
-                        <% end %>
+                          <% end %></p>
                       </span>
-                    <% end %></p>
-                </span>
-              </span>
-            </p>
-          </td>
-        </tr>
-      </tr>
-    </tbody>
-  </table>
-</div>
-<% end %>
-</div>
-<br class="clear" />
+                    </span>
+                  </p>
+                </td>
+              </tr>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    <% end %>
+  </div>
+  <br class="clear" />
 <% else %>
   <h1> Thank you for your responses.</h1>
   <p class="center bold">You are done and  may close this window.</p>

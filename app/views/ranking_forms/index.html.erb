@@ -21,7 +21,7 @@
           <td colspan="4">
             <% ranking_form.rankings.order(:rank).each_with_index do |rank, i| %>
               <% if i == 0 %>
-                <span style="padding: 2px;" class="bold"><%= rank.ranking_form.name %>: </span>
+                <span style="padding: 2px;" class="bold">(<%= rank.id %>) <%= rank.ranking_form.name %>: </span>
               <% end %>
               <span style="padding: 2px;"><%= Participant.find(rank.participant_id).name %>: <%= rank.rank %></span>
             <% end %>

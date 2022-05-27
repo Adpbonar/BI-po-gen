@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_05_23_154037) do
+ActiveRecord::Schema.define(version: 2022_05_27_000532) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -63,6 +63,17 @@ ActiveRecord::Schema.define(version: 2022_05_23_154037) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["statement_id"], name: "index_adjustments_on_statement_id"
+  end
+
+  create_table "chargable_rates", force: :cascade do |t|
+    t.string "title"
+    t.bigint "company_id"
+    t.decimal "rate"
+    t.bigint "item_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["company_id"], name: "index_chargable_rates_on_company_id"
+    t.index ["item_id"], name: "index_chargable_rates_on_item_id"
   end
 
   create_table "companies", force: :cascade do |t|
@@ -302,6 +313,16 @@ ActiveRecord::Schema.define(version: 2022_05_23_154037) do
     t.datetime "updated_at", precision: 6, null: false
     t.integer "ranking_form_id"
     t.integer "rank"
+  end
+
+  create_table "rates", force: :cascade do |t|
+    t.string "title"
+    t.bigint "participant_id"
+    t.decimal "rate"
+    t.integer "hours"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["participant_id"], name: "index_rates_on_participant_id"
   end
 
   create_table "rusers", force: :cascade do |t|

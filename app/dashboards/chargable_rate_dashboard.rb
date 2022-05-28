@@ -43,6 +43,7 @@ class ChargableRateDashboard < Administrate::BaseDashboard
   FORM_ATTRIBUTES = %i[
     title
     rate
+    status
   ].freeze
 
   # COLLECTION_FILTERS

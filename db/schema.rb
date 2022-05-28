@@ -67,11 +67,9 @@ ActiveRecord::Schema.define(version: 2022_05_28_135541) do
 
   create_table "chargable_rates", force: :cascade do |t|
     t.string "title"
-    t.bigint "company_id"
     t.decimal "rate", precision: 12, scale: 9
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["company_id"], name: "index_chargable_rates_on_company_id"
   end
 
   create_table "companies", force: :cascade do |t|

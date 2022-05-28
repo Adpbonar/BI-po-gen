@@ -10,7 +10,6 @@ class ChargableRateDashboard < Administrate::BaseDashboard
   ATTRIBUTE_TYPES = {
     id: Field::Number,
     title: Field::String,
-    company_id: Field::Number,
     rate: Field::String.with_options(searchable: false),
     item_id: Field::Number,
     created_at: Field::DateTime,
@@ -25,7 +24,6 @@ class ChargableRateDashboard < Administrate::BaseDashboard
   COLLECTION_ATTRIBUTES = %i[
     id
     title
-    company_id
     rate
   ].freeze
 
@@ -34,7 +32,6 @@ class ChargableRateDashboard < Administrate::BaseDashboard
   SHOW_PAGE_ATTRIBUTES = %i[
     id
     title
-    company_id
     rate
     created_at
     updated_at
@@ -45,7 +42,6 @@ class ChargableRateDashboard < Administrate::BaseDashboard
   # on the model's form (`new` and `edit`) pages.
   FORM_ATTRIBUTES = %i[
     title
-    company_id
     rate
   ].freeze
 

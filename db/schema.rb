@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_05_27_000532) do
+ActiveRecord::Schema.define(version: 2022_05_28_135541) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -68,7 +68,7 @@ ActiveRecord::Schema.define(version: 2022_05_27_000532) do
   create_table "chargable_rates", force: :cascade do |t|
     t.string "title"
     t.bigint "company_id"
-    t.decimal "rate"
+    t.decimal "rate", precision: 12, scale: 9
     t.bigint "item_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -255,6 +255,15 @@ ActiveRecord::Schema.define(version: 2022_05_27_000532) do
     t.index ["po_id"], name: "index_po_users_on_po_id"
   end
 
+  create_table "porfessional_rates", force: :cascade do |t|
+    t.string "title"
+    t.bigint "participant_id", null: false
+    t.decimal "rate", precision: 12, scale: 9
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["participant_id"], name: "index_porfessional_rates_on_participant_id"
+  end
+
   create_table "pos", force: :cascade do |t|
     t.bigint "user_id"
     t.string "title"
@@ -318,7 +327,7 @@ ActiveRecord::Schema.define(version: 2022_05_27_000532) do
   create_table "rates", force: :cascade do |t|
     t.string "title"
     t.bigint "participant_id"
-    t.decimal "rate"
+    t.decimal "rate", precision: 12, scale: 9
     t.integer "hours"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -414,5 +423,6 @@ ActiveRecord::Schema.define(version: 2022_05_27_000532) do
   add_foreign_key "invoices", "users"
   add_foreign_key "items", "invoices"
   add_foreign_key "members", "groups"
+  add_foreign_key "porfessional_rates", "participants"
   add_foreign_key "statement_notes", "statements"
 end

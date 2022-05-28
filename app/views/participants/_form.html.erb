@@ -24,6 +24,8 @@
     <%= f.label 'Address' %>
     <%= f.text_area :address, class: 'form-control' %>
     <% if @participant.type == "Associate" %>
+     <%= f.label 'Part of sharing' %>
+      <%= f.input :revenue_share, class: 'form-control' %>
       <%= f.label 'Image Link' %>
       <%= f.text_area :image_link, class: 'form-control' %>
       <label>Profile</label>

@@ -1,26 +1,26 @@
 <%= simple_form_for @po do |f| %>
   <% if @po.errors.any? %>
     <div id="error_explanation">
-     The following errors prevented this PO from saving
+      The following errors prevented this PO from saving
       <ul>
-      <% @po.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
+        <% @po.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
       </ul>
     </div>
   <% end %>
   <div class="description-form" data-controller="countchar" data-countchar-limit="100">
-  <%= f.input :title, maxlength: "100", :input_html => { "autocomplete": "off", "data-target": "countchar.title", "data-action": "keyup->countchar#countTitle" } %>
-  <div><small>Title character count: <span data-target="countchar.titleCounter"><%= @po.description.to_s.size %></span></small></div>
+    <%= f.input :title, maxlength: "100", :input_html => { "autocomplete": "off", "data-target": "countchar.title", "data-action": "keyup->countchar#countTitle" } %>
+    <div><small>Title character count: <span data-target="countchar.titleCounter"><%= @po.description.to_s.size %></span></small></div>
   </div>
   <small id="character-limit" class="no-show"></small>
   <div class="description-form" data-controller="countchar" data-countchar-limit="600">
-      <%= f.input :description, placeholder: "Description can\'t be longer that 600 characters", maxlength: "605", :input_html => { "data-target": "countchar.description", "data-action": "keyup->countchar#countCharacters" } %>
-      <div><small>Description character count: <span data-target="countchar.counter"><%= @po.description.to_s.size %></span></small></div>
+    <%= f.input :description, placeholder: "Description can\'t be longer that 600 characters", maxlength: "605", :input_html => { "data-target": "countchar.description", "data-action": "keyup->countchar#countCharacters" } %>
+    <div><small>Description character count: <span data-target="countchar.counter"><%= @po.description.to_s.size %></span></small></div>
   </div>
   <%= f.input :company_name %>
   <%= f.input :tax_amount, input_html: { type: 'number' } %>
-  <label>Start Date</label>  
+  <label>Start Date</label>
   <%= f.text_field :start_date, class: 'flatpickr form-control', placeholder: 'select the start date', data: { controller: "flatpickr", flatpickr_enable_time: false, flatpickr_default_date: @po.start_date, flatpickr_date_format: "Y-m-d", flatpickr_disable_days_of_week: [0,6] } %>
   <label>End Date</label>
   <%= f.text_field :end_date, class: 'flatpickr form-control', placeholder: 'select the end date', data: { controller: "flatpickr", flatpickr_enable_time: false, flatpickr_default_date: @po.end_date, flatpickr_date_format: "Y-m-d", flatpickr_disable_days_of_week: [0,6] }  %>
@@ -28,9 +28,12 @@
   <%= f.input :currency, as: :select, collection: Po::CURRENCY, label: 'PO Currency' %>
   <%= f.input :founder_percentage, label: 'Initiator Percentage', input_html: { type: 'number' } %>
   <%= f.input :revenue_share, label: 'Revenue Share Percentage', input_html: { type: 'number' } %>
-  <%= f.input :associate_percentage, label: 'Associate Percentage', input_html: { type: 'number' } %>
-   <small>Minus expense costs</small>
+  <% unless @po.fixed_payments %>
+    <%= f.input :associate_percentage, label: 'Associate Percentage', input_html: { type: 'number' } %>
+  <% else %>
+    <%= f.input :fixed_payments %>
+  <% end %>
+  <small>Minus expense costs</small>
   <%= f.input :lead_time_in_days, label: 'Number of days between when a client is expected to pay and associate invoices are due', input_html: { type: 'number' } %>
   <div><%= f.submit class: 'btn btn-primary' %></div>
 <% end %>
-

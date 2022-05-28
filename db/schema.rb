@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_05_28_173937) do
+ActiveRecord::Schema.define(version: 2022_05_28_191823) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -70,6 +70,7 @@ ActiveRecord::Schema.define(version: 2022_05_28_173937) do
     t.decimal "rate", precision: 12, scale: 9
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["title"], name: "index_chargable_rates_on_title"
   end
 
   create_table "companies", force: :cascade do |t|
@@ -258,6 +259,7 @@ ActiveRecord::Schema.define(version: 2022_05_28_173937) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["participant_id"], name: "index_porfessional_rates_on_participant_id"
+    t.index ["title"], name: "index_porfessional_rates_on_title"
   end
 
   create_table "pos", force: :cascade do |t|
@@ -331,6 +333,7 @@ ActiveRecord::Schema.define(version: 2022_05_28_173937) do
     t.integer "session_count"
     t.index ["participant_id"], name: "index_rates_on_participant_id"
     t.index ["statement_id"], name: "index_rates_on_statement_id"
+    t.index ["title"], name: "index_rates_on_title"
   end
 
   create_table "rusers", force: :cascade do |t|

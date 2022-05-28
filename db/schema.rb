@@ -69,11 +69,9 @@ ActiveRecord::Schema.define(version: 2022_05_28_135541) do
     t.string "title"
     t.bigint "company_id"
     t.decimal "rate", precision: 12, scale: 9
-    t.bigint "item_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["company_id"], name: "index_chargable_rates_on_company_id"
-    t.index ["item_id"], name: "index_chargable_rates_on_item_id"
   end
 
   create_table "companies", force: :cascade do |t|
@@ -329,9 +327,11 @@ ActiveRecord::Schema.define(version: 2022_05_28_135541) do
     t.bigint "participant_id"
     t.decimal "rate", precision: 12, scale: 9
     t.integer "hours"
+    t.bigint "statement_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["participant_id"], name: "index_rates_on_participant_id"
+    t.index ["statement_id"], name: "index_rates_on_statement_id"
   end
 
   create_table "rusers", force: :cascade do |t|

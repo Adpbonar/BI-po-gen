@@ -8,7 +8,8 @@ Rails.application.routes.draw do
 
   namespace :admin do
       resources :saved_items, except: [ :new ]
-      resources :companies, only: [ :index, :show, :edit, :update ]    
+      resources :companies, only: [ :index, :show, :edit, :update ]  
+      resources :chargable_rates
       root to: "saved_items#index"
     end
     

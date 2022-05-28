@@ -1,9 +1,5 @@
 Rails.application.routes.draw do
 
-  resources :ranking_forms
-  resources :rankings
-  resources :invoices
-  resources :inoices
   devise_for :users
 
   namespace :admin do
@@ -12,9 +8,7 @@ Rails.application.routes.draw do
       resources :chargable_rates
       root to: "saved_items#index"
     end
-    
-  resources :discounts, only: [ :new, :create, :destroy ]
-  resources :installments
+  
   root to: 'pos#index'
   resources :pos
   resources :statement_notes, only: [ :edit, :update ]
@@ -23,9 +17,14 @@ Rails.application.routes.draw do
   resources :line_items, only: [ :new, :create, :edit, :update, :destroy ]
   resources :items, except: [ :index, :show ]
   resources :ranking_forms, path: 'forms', except: [ :destroy, :edit, :update]
-  get :search_programs, controller: :line_items
-  get :default_options, controller: :static_pages, path: 'defaults'
-
+  resources :rates
+  resources :discounts, only: [ :new, :create, :destroy ]
+  resources :installments
+  resources :ranking_forms
+  resources :rankings
+  resources :invoices
   
+  get :search_programs, controller: :line_items
+  get :default_options, controller: :static_pages, path: 'defaults' 
 
 end 

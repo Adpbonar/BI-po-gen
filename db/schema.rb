@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_05_28_191823) do
+ActiveRecord::Schema.define(version: 2022_05_28_194108) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -331,8 +331,10 @@ ActiveRecord::Schema.define(version: 2022_05_28_191823) do
     t.datetime "updated_at", precision: 6, null: false
     t.float "session_length"
     t.integer "session_count"
+    t.string "status"
     t.index ["participant_id"], name: "index_rates_on_participant_id"
     t.index ["statement_id"], name: "index_rates_on_statement_id"
+    t.index ["status"], name: "index_rates_on_status"
     t.index ["title"], name: "index_rates_on_title"
   end
 

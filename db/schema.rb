@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_05_28_194108) do
+ActiveRecord::Schema.define(version: 2022_05_28_195917) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -70,6 +70,8 @@ ActiveRecord::Schema.define(version: 2022_05_28_194108) do
     t.decimal "rate", precision: 12, scale: 9
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "status"
+    t.index ["status"], name: "index_chargable_rates_on_status"
     t.index ["title"], name: "index_chargable_rates_on_title"
   end
 

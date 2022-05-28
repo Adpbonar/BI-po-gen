@@ -1,4 +1,5 @@
 class StatementNotesController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_statement_note, only: %i[ edit update ]
 
   def edit

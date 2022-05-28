@@ -11,7 +11,6 @@ class ChargableRateDashboard < Administrate::BaseDashboard
     id: Field::Number,
     title: Field::String,
     rate: Field::String.with_options(searchable: false),
-    item_id: Field::Number,
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
   }.freeze
@@ -22,7 +21,6 @@ class ChargableRateDashboard < Administrate::BaseDashboard
   # By default, it's limited to four items to reduce clutter on index pages.
   # Feel free to add, remove, or rearrange items.
   COLLECTION_ATTRIBUTES = %i[
-    id
     title
     rate
   ].freeze
@@ -30,7 +28,6 @@ class ChargableRateDashboard < Administrate::BaseDashboard
   # SHOW_PAGE_ATTRIBUTES
   # an array of attributes that will be displayed on the model's show page.
   SHOW_PAGE_ATTRIBUTES = %i[
-    id
     title
     rate
     created_at

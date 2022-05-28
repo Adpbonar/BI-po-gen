@@ -1,36 +1,34 @@
 <%= link_to 'New Po', new_po_path, class: 'btn btn-primary', style: "position: fixed; right: 1em;" %>
 <h1>POs</h1>
 <small>We have made <%= @pos.count %> using this system.</small>
-
 <table class="po-index">
   <thead>
     <tr>
       <th>Title</th>
       <th>Description</th>
       <th># of Installments</th>
-       <th>Created</th>
-
+      <th>Created</th>
       <th colspan="3">Options</th>
     </tr>
   </thead>
-
   <tbody>
     <% @pos.each do |po| %>
-    <%= content_tag :tr, id: dom_id(po) do %>
-        <td class="bold" style="border: 0 !important;" colspan="8"><%= po.po_number %></td>  
-        <% end %>
-        <%= content_tag :tr, id: dom_id(po) do %>
-          <td><%= po.title %></td>
-          <td><%= po.description %></td>
-          <td<%= po.status.upcase %></td>
+      <%= content_tag :tr, id: dom_id(po) do %>
+        <td class="bold" style="border: 0 !important;" colspan="8"><%= po.po_number %></td>
+      <% end %>
+      <%= content_tag :tr, id: dom_id(po) do %>
+        <td><%= po.title %></td>
+        <td><%= po.description %></td>
+        <td<%= po.status.upcase %></td>
           <td><%= po.installments.count %> Installments</td>
           <td><%= time_ago_in_words(po.created_at).capitalize %> ago</td>
           <td><%= link_to 'Show', po, class: 'btn btn-success' %></td>
           <td><%= link_to 'Edit', edit_po_path(po), class: 'btn btn-warning' %></td>
-          <td><%= link_to 'Destroy', po, class: 'btn btn-danger', data: {"turbo-method": :delete,
+          <% if current_user.id == po.options[:user] %>
+            <td><%= link_to 'Destroy', po, class: 'btn btn-danger', data: {"turbo-method": :delete,
           confirm: 'Are you sure'}  %></td>
+          <% end %>
         <% end %>
-    <% end %>
-  </tbody>
-</table>
-
+      <% end %>
+    </tbody>
+  </table>

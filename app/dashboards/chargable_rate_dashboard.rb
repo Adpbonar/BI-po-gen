@@ -11,6 +11,7 @@ class ChargableRateDashboard < Administrate::BaseDashboard
     id: Field::Number,
     title: Field::String,
     rate: Field::String.with_options(searchable: false),
+    status: Field::String,
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
   }.freeze
@@ -23,6 +24,7 @@ class ChargableRateDashboard < Administrate::BaseDashboard
   COLLECTION_ATTRIBUTES = %i[
     title
     rate
+    status
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
@@ -30,6 +32,7 @@ class ChargableRateDashboard < Administrate::BaseDashboard
   SHOW_PAGE_ATTRIBUTES = %i[
     title
     rate
+    status
     created_at
     updated_at
   ].freeze

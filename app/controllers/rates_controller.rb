@@ -2,13 +2,7 @@ class RatesController < ApplicationController
   before_action :set_statement_note, only: %i[ edit update ]
   before_action :authenticate_user!
 
-  def new
 
-  end
-
-  def create
-
-  end
 
   def update
 

@@ -20,9 +20,8 @@ Rails.application.routes.draw do
   resources :rates
   resources :discounts, only: [ :new, :create, :destroy ]
   resources :installments
-  resources :ranking_forms
   resources :rankings
-  resources :invoices
+  # resources :invoices
   
   get :search_programs, controller: :line_items
   get :default_options, controller: :static_pages, path: 'defaults' 

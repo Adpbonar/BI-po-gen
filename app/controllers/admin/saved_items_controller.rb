@@ -8,12 +8,6 @@ module Admin
     #   send_foo_updated_email(requested_resource)
     # end
 
-    def valid_action?(name, resource = resource_class)
-      if current_user.id  == Company.first.company_options[:user]
-        %w[:destroy].exclude?(name.to_s) && super
-      end
-    end
-
     # Override this method to specify custom lookup behavior.
     # This will be used to set the resource for the `show`, `edit`, and `update`
     # actions.

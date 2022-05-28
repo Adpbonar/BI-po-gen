@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_05_28_135541) do
+ActiveRecord::Schema.define(version: 2022_05_28_173937) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -77,11 +77,11 @@ ActiveRecord::Schema.define(version: 2022_05_28_135541) do
     t.text "address"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.json "company_options", default: {}
     t.text "default_client_note"
     t.text "default_associate_note"
     t.text "default_client_terms"
     t.text "default_associate_terms"
+    t.json "company_options"
   end
 
   create_table "details", force: :cascade do |t|
@@ -324,10 +324,11 @@ ActiveRecord::Schema.define(version: 2022_05_28_135541) do
     t.string "title"
     t.bigint "participant_id"
     t.decimal "rate", precision: 12, scale: 9
-    t.integer "hours"
     t.bigint "statement_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.float "session_length"
+    t.integer "session_count"
     t.index ["participant_id"], name: "index_rates_on_participant_id"
     t.index ["statement_id"], name: "index_rates_on_statement_id"
   end

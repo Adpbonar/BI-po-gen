@@ -9,7 +9,7 @@ module Admin
     before_action :authenticate_admin
 
     def authenticate_admin
-     unless user_signed_in?
+     unless user_signed_in? && current_user.id  == Company.first.company_options[:user]
       sign_out current_user
         redirect_to user_session_path
         flash[:notice] = 'You must login to your account to continue'

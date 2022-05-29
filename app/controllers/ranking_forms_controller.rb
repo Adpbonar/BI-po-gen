@@ -60,6 +60,18 @@ class RankingFormsController < ApplicationController
     end 
   end
 
+  def update
+    respond_to do |format|
+      if @ranking_form.update(ranking_form_params)
+        format.html { redirect_to po_path(Po.where(po_number: @ranking_form.po_number).first), notice: "Po was successfully updated." }
+        format.json { render :show, status: :ok, location: @po }
+      else
+        format.html { render :edit, status: :unprocessable_entity }
+        format.json { render json: @ranking_form.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
   private
 
     # Use callbacks to share common setup or constraints between actions.

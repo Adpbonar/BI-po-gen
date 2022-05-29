@@ -34,7 +34,11 @@ class RankingForm < ApplicationRecord
     if ! po.sorted && ! po.accepting_submissions
       if forms.where(complete: true).all.count == forms.all.count
         usr_count = po.rusers.all.count
-        survey_count = (forms.where(complete: true).all.count).divmod(usr_count)
+        unless usr_count == 0
+          survey_count = (forms.where(complete: true).all.count).divmod(usr_count)
+        else
+          survey_count = (forms.where(complete: true).all.count).divmod(1)
+        end
         s_count = survey_count.first
         sheets = forms.where(complete: true)
         i = 1

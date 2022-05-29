@@ -2,7 +2,7 @@
   <h1>PO <%= @po.po_number %>: <%= @po.title %></h1>
   <%= render 'nav', po: @po %>
   <p style="text-transform: uppercase;"><b>Status: <%= @po.status %></b></p>
-  <% if @po.accepting_submissions == true %>
+  <% if @po.accepting_submissions %>
     <p style="text-transform: uppercase;"><b>Selection Survey Access Code: <span class="green"><%= @po.access_code %></span></b></p>
   <% end %>
   <p>Service: <%= @po.service_type %></p>
@@ -120,7 +120,6 @@
     </span>
   <% end %>
 </div>
-
 <h2>Installments</h2>
 <% if @po.installments.count == @po.number_of_installments %>
   <div class="upcase">Number of installments: <%= @po.number_of_installments %>

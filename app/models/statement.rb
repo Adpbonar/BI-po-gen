@@ -168,6 +168,10 @@ class Statement < ApplicationRecord
     def generate_fixed_amount_associate_statements
         if groups.any?
             self.groups.group_by(&:winner).each do |group, clients|
+                timetable = []
+                installments = po.installments.each { |installment| timetable << installment }
+                timetable.shift
+                timetable.pop
                 statement = AssociateStatement.new(po_id: self.po.id,company_name: Company.first.company_name, company_address: Company.first.address, participant_name: group.name, participant_address: group.leader.address, invoice_number: 'PO-' + self.po.po_number.to_s + '-P-' + group.leader.id.to_s, currency: group.leader.currency, tax_rate: group.leader.tax_rate, issued_to: group.leader.id)
                 if statement.save
                     clients.each do |client|
@@ -180,7 +184,8 @@ class Statement < ApplicationRecord
                                 end
                             else
                                 self.session_count.times do 
-                                    Rate.create(statement_id: statement.id, title: (rate.title.to_s + " for " + client.name.to_s), status: rate.status, session_count: self.session_count, rate: rate.rate, participant_id: group.leader.id)
+                                    Rate.create(statement_id: statement.id, title: (rate.title.to_s + " for " + client.name.to_s), status: rate.status, due_date: timetable.first, rate: rate.rate, participant_id: group.leader.id)
+                                    timetable.shift
                                 end
                             end
                         end
@@ -204,13 +209,12 @@ class Statement < ApplicationRecord
                 end
             end
         end
-   
         PoUser.destroy_duplicates_by(:participant_id, :po_id)
         clients = []
         ass_users.each { |user| clients << user if user.participant.type == "Client" }
         if clients.count > 0
             if self.po.status == 'Prepared' && self.po.statements.count == 1 && self.type == 'GeneralStatement' && self.achieved == false
-                unless self.po.found.blank? && self.po.learning_coordinator.blank?
+                unless self.po.found.blank?
                     initiator = Participant.find(self.po.found.to_i)
                     if initiator
                         founder_statement = AssociateStatement.create(po_id: self.po.id, total: percentage_amount(self.subtotal.to_d, self.po.founder_percentage), company_name: Company.first.company_name, company_address: Company.first.address, participant_name: initiator.name, participant_address: initiator.address, invoice_number: 'REQ-' + self.po.po_number.to_s + '-F', percentage: Company.first.company_options[:business_finder], currency: initiator.currency, tax_rate: initiator.tax_rate, issued_to: initiator.id)

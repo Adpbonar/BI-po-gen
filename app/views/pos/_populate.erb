@@ -66,12 +66,14 @@
                             <% end %>
                             <div>
                               <% participants.sort.each do |participant| %>
-                                <% if ! PoUser.where(po_id: @po.id, participant_id: participant.id).any? %>
-                                  <%= content_tag :div, class: 'saved-item', data: { reflex: "click->PartitipantReflex#add", id: participant.id, po: @po.id }  do %>
-                                    <%= participant.name %>
+                                <% unless @po.fixed_payments && participant.type == "Associate" %>
+                                  <% if ! PoUser.where(po_id: @po.id, participant_id: participant.id).any? %>
+                                    <%= content_tag :div, class: 'saved-item', data: { reflex: "click->PartitipantReflex#add", id: participant.id, po: @po.id }  do %>
+                                      <%= participant.name %>
+                                    <% end %>
+                                  <% else %>
+                                    <p class="upcase" style="padding-left: 5px;"> <%= type_of %> <strong><%= participant.name %></strong> has already been added to this PO. <%= button_tag class: "round-btn", data: { reflex: "click->PartitipantReflex#remove_participant", id: participant.po_users.where(po_id: @po.id).first.id, po: @po.id } do %>X<% end %></p>
                                   <% end %>
-                                <% else %>
-                                  <p class="upcase" style="padding-left: 5px;"> <%= type_of %> <strong><%= participant.name %></strong> has already been added to this PO. <%= button_tag class: "round-btn", data: { reflex: "click->PartitipantReflex#remove_participant", id: participant.po_users.where(po_id: @po.id).first.id, po: @po.id } do %>X<% end %></p>
                                 <% end %>
                                 <center>
                                   <div>
@@ -80,13 +82,13 @@
                                         <div>
                                           <% if @po.found.blank? %>
                                             <div>
-                                              <%= content_tag :button, class: 'btn btn-success', data: { reflex: "click->PartitipantReflex#initiator", id: @po.id, coordinator: participant.id } do %>
+                                              <%= content_tag :button, class: 'btn btn-success assBtn', data: { reflex: "click->PartitipantReflex#initiator", id: @po.id, coordinator: participant.id } do %>
                                                 Make <%= participant.member_name %> PO initiator
                                               <% end %>
                                             </div>
                                           <% elsif @po.found == participant.id %>
                                             <div>
-                                              <%= content_tag :button, class: 'btn btn-danger', data: { reflex: "click->PartitipantReflex#remove_initiator", id: @po.id } do %>
+                                              <%= content_tag :button, class: 'btn btn-danger assBtn', data: { reflex: "click->PartitipantReflex#remove_initiator", id: @po.id } do %>
                                                 demote <%= participant.member_name %> from PO initiator role
                                               <% end %>
                                             </div>
@@ -96,13 +98,13 @@
                                           <% unless participant.profile.blank? || participant.image_link.blank? %>
                                             <% if check_for_r_user(@po, participant.id) %>
                                               <div>
-                                                <%= content_tag :button, class: 'btn btn-success', data: { reflex: "click->FormReflex#add", id: @po.id, user: participant.id } do %>
+                                                <%= content_tag :button, class: 'btn btn-success assBtn', data: { reflex: "click->FormReflex#add", id: @po.id, user: participant.id } do %>
                                                   Add <%= participant.member_name %> to Selection Survey
                                                 <% end %>
                                               </div>
                                             <% else %>
                                               <div>
-                                                <%= content_tag :button, class: 'btn btn-danger', data: { reflex: "click->FormReflex#remove", id: @po.id , user: participant.id} do %>
+                                                <%= content_tag :button, class: 'btn btn-danger assBtn', data: { reflex: "click->FormReflex#remove", id: @po.id , user: participant.id} do %>
                                                   Remove <%= participant.member_name %> Selection Survey
                                                 <% end %>
                                               </div>

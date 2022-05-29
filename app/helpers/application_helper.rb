@@ -24,13 +24,16 @@ module ApplicationHelper
     end
 
     def ass_type(record)
-      if record.rs
-        return "Share"
+      unless record.invoice_number == nil
+        if record.rs
+          return "Share"
+        end
+        if record.founder
+          return "Initiator"
+        end 
       end
-      if record.founder
-        return "Initiator"
-      end 
     end
+    
     def sanitized_installment_money(record1, record2)
       if record1.po.currency.html_safe.to_s.include?('$')
         return number_to_currency(record2)

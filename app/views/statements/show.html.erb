@@ -1,3 +1,6 @@
+<%= content_tag :button, id: 'gStatements', class: 'btn btn-success', data: { reflex: "click->StatementReflex#associates_generate", id: @statement.id } do %>
+  generate associate statements
+<% end %>
 <%= render 'navigation', statement: @statement, :formats => [:html] %>
 <div id="pdfLoading"></div>
 <div class="invoice-image">

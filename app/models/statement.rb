@@ -173,7 +173,11 @@ class Statement < ApplicationRecord
                     clients.each do |client|
                         ChargableRate.all.each do |rate|
                             unless rate.status == "Ongoing"
-                                Rate.create(statement_id: statement.id, title: (rate.title.to_s + " for " + client.name.to_s).upcase, status: rate.status, session_count: self.session_count, rate: rate.rate, participant_id: group.leader.id)
+                                if rate.status == "First"
+                                    Rate.create(statement_id: statement.id, title: (rate.title.to_s + " for " + client.name.to_s).upcase, status: rate.status, due_date: po.installments.first.due_date, rate: rate.rate, participant_id: group.leader.id)
+                                elsif rate.status == "Last"
+                                    Rate.create(statement_id: statement.id, title: (rate.title.to_s + " for " + client.name.to_s).upcase, status: rate.status, due_date: po.installments.last.due_date, rate: rate.rate, participant_id: group.leader.id)
+                                end
                             else
                                 self.session_count.times do 
                                     Rate.create(statement_id: statement.id, title: (rate.title.to_s + " for " + client.name.to_s), status: rate.status, session_count: self.session_count, rate: rate.rate, participant_id: group.leader.id)

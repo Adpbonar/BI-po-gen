@@ -81,41 +81,43 @@
             <br />
             <% @number_of_forms.group_by(&:winner).each do |usr, forms| %>
               <div>
-                <h4><%= usr.name %>: <%= forms.count %></h4>
-                <table style="width: 100%;" class="upcase">
-                  <tbody>
-                    <% forms.each do |form| %>
-                      <tr>
-                        <td style="width: 30%; vertical-align: top">
-                          <li class="bold">
-                            <%= form.name %>
-                          </td>
-                          <td style="width: 70%;">
-                            <div>
-                              <button id="show-<%= form.id %>" style="Width: 80%;"type="button" class="rounded btn-secondary upcase">Move <%= form.name %></button>
-                              <div id="reveal-<%= form.id %>" class="hidden mt-4">
-                                <%= simple_form_for form do |f| %>
-                                  <b><%= f.input :ranking, :collection => @po.rusers, :label_method => :party, :value_method => :participant_id,:include_blank => false, label: "Move #{form.name} to another group".titleize %></b>
-                                  <%= f.submit 'Change', class: 'btn btn-success' %>
-                                <% end %>
+                <% if usr %>
+                  <h4><%= usr.name %>: <%= forms.count %></h4>
+                  <table style="width: 100%;" class="upcase">
+                    <tbody>
+                      <% forms.each do |form| %>
+                        <tr>
+                          <td style="width: 30%; vertical-align: top">
+                            <li class="bold">
+                              <%= form.name %>
+                            </td>
+                            <td style="width: 70%;">
+                              <div>
+                                <button id="show-<%= form.id %>" style="Width: 80%;"type="button" class="rounded btn-secondary upcase">Move <%= form.name %></button>
+                                <div id="reveal-<%= form.id %>" class="hidden mt-4">
+                                  <%= simple_form_for form do |f| %>
+                                    <b><%= f.input :ranking, :collection => @po.rusers, :label_method => :party, :value_method => :participant_id,:include_blank => false, label: "Move #{form.name} to another group".titleize %></b>
+                                    <%= f.submit 'Change', class: 'btn btn-success' %>
+                                  <% end %>
+                                </div>
                               </div>
-                            </div>
-                          </td>
-                        </li>
-                      </td>
-                    </tr>
-                    <script>
-                      $("#reveal-<%= form.id %>").hide();
-                       $("#show-<%= form.id %>").click( () => {
-                         $("#reveal-<%= form.id %>").show();
-                         $("#show-<%= form.id %>").hide();
-                       });
-                    </script>
-                  <% end %>
-                </tbody>
-              </table>
-            </ol>
-          </div>
+                            </td>
+                          </li>
+                        </td>
+                      </tr>
+                      <script>
+                        $("#reveal-<%= form.id %>").hide();
+                        $("#show-<%= form.id %>").click( () => {
+                          $("#reveal-<%= form.id %>").show();
+                          $("#show-<%= form.id %>").hide();
+                        });
+                      </script>
+                    <% end %>
+                  </tbody>
+                </table>
+              </ol>
+            </div>
+          <% end %>
         <% end %>
       <% end %>
     <% end %>

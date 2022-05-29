@@ -23,7 +23,9 @@ class RankingForm < ApplicationRecord
   end
 
   def winner
-    Participant.find(self.ranking)
+    unless self.ranking.blank?
+      Participant.find(self.ranking)
+    end
   end
 
   def po
@@ -34,11 +36,9 @@ class RankingForm < ApplicationRecord
     if ! po.sorted && ! po.accepting_submissions
       if forms.where(complete: true).all.count == forms.all.count
         usr_count = po.rusers.all.count
-        unless usr_count == 0
+        
           survey_count = (forms.where(complete: true).all.count).divmod(usr_count)
-        else
-          survey_count = (forms.where(complete: true).all.count).divmod(1)
-        end
+        
         s_count = survey_count.first
         sheets = forms.where(complete: true)
         i = 1
@@ -49,7 +49,7 @@ class RankingForm < ApplicationRecord
             i = i + 1
           end
           if scores
-          party = scores.select { |i| i.include?(form.ranking) } 
+            party = scores.select { |i| i.include?(form.ranking) } 
             if party.length != s_count
               difference = (party.length - s_count).abs
               responses = sheets.where(ranking: form.ranking).last(difference).each do 
@@ -68,6 +68,7 @@ class RankingForm < ApplicationRecord
     end
     print scores.flatten
     po.update(sorted: true)
+    po.update(accepting_submissions: false)
   end
 
 end

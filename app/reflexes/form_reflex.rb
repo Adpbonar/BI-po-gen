@@ -41,6 +41,7 @@ class FormReflex  < ApplicationReflex
 
     def sort
         po = Po.find(element.dataset[:id])
+        po.update(accepting_submissions: false)
         po.process_form_data if RankingForm.where(po_number: po.po_number).any?
     end
 

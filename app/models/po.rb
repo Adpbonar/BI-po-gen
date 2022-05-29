@@ -4,7 +4,6 @@ class Po < ApplicationRecord
     belongs_to :user
 		has_many :installments
 		has_many :po_users
-    has_many :groups
     has_many :rusers
 
     encrypts :learning_coordinator, type: :integer

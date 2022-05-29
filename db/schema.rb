@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_05_28_195917) do
+ActiveRecord::Schema.define(version: 2022_05_29_143329) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -121,10 +121,11 @@ ActiveRecord::Schema.define(version: 2022_05_28_195917) do
 
   create_table "groups", force: :cascade do |t|
     t.bigint "po_id"
-    t.integer "bill_to"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "ruser_id"
     t.index ["po_id"], name: "index_groups_on_po_id"
+    t.index ["ruser_id"], name: "index_groups_on_ruser_id"
   end
 
   create_table "hours_requireds", force: :cascade do |t|
@@ -190,9 +191,10 @@ ActiveRecord::Schema.define(version: 2022_05_28_195917) do
 
   create_table "members", force: :cascade do |t|
     t.bigint "group_id", null: false
-    t.integer "po_user"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "client"
+    t.index ["client"], name: "index_members_on_client"
     t.index ["group_id"], name: "index_members_on_group_id"
   end
 

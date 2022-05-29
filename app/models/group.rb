@@ -1,4 +1,4 @@
 class Group < ApplicationRecord
-    belongs_to :po
+    belongs_to :ruser
     has_many :members
 end

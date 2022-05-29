@@ -55,44 +55,66 @@
         <% else %>
           <hr />
           <h3>Groups</h3>
-          <br />
-          <% @number_of_forms.group_by(&:winner).each do |usr, forms| %>
-            <div>
-              <h4><%= usr.name %>: <%= forms.count %></h4>
-              <table style="width: 100%;" class="upcase">
-                <tbody>
-                  <% forms.each do |form| %>
-                    <tr>
-                      <td style="width: 30%; vertical-align: top">
-                        <li class="bold">
-                          <%= form.name %>
-                        </td>
-                        <td style="width: 70%;">
-                          <div>
-                            <button id="show-<%= form.id %>" style="Width: 80%;"type="button" class="rounded btn-secondary upcase">Move <%= form.name %></button>
-                            <div id="reveal-<%= form.id %>" class="hidden mt-4">
-                              <%= simple_form_for form do |f| %>
-                                <b><%= f.input :ranking, :collection => @po.rusers, :label_method => :party, :value_method => :participant_id,:include_blank => false, label: "Move #{form.name} to another group".titleize %></b>
-                                <%= f.submit 'Change', class: 'btn btn-success' %>
-                              <% end %>
+          <% if @groups.any? %>
+            <center>
+              <% @groups.each do |group| %>
+                <div class="installment-display" style="border-radius: 50px; width: 50%; vertical-align: top;">
+                  <div class="top-bottom-spacing">
+                    <p class="bold center">Leader: <%= group.leader %></p>
+                    <p class="bold center">Contact: <%= mail_to group.email %></p>
+                    <hr />
+                    <ul>
+                      <% group.members.each do |member| %>
+                        <li class="left"><span class="bold"><%= member.name %>:</span> <%= mail_to member.email %></li>
+                      <% end %>
+                    </ul>
+                  </div>
+                </div>
+              <% end %>
+            </center>
+          <% else %>
+            <%= content_tag :button, class: 'btn btn-success', data: { reflex: "click->FormReflex#group", id: @po.id } do %>
+              Finalize Rankings
+            <% end %>
+            <br />
+            <% @number_of_forms.group_by(&:winner).each do |usr, forms| %>
+              <div>
+                <h4><%= usr.name %>: <%= forms.count %></h4>
+                <table style="width: 100%;" class="upcase">
+                  <tbody>
+                    <% forms.each do |form| %>
+                      <tr>
+                        <td style="width: 30%; vertical-align: top">
+                          <li class="bold">
+                            <%= form.name %>
+                          </td>
+                          <td style="width: 70%;">
+                            <div>
+                              <button id="show-<%= form.id %>" style="Width: 80%;"type="button" class="rounded btn-secondary upcase">Move <%= form.name %></button>
+                              <div id="reveal-<%= form.id %>" class="hidden mt-4">
+                                <%= simple_form_for form do |f| %>
+                                  <b><%= f.input :ranking, :collection => @po.rusers, :label_method => :party, :value_method => :participant_id,:include_blank => false, label: "Move #{form.name} to another group".titleize %></b>
+                                  <%= f.submit 'Change', class: 'btn btn-success' %>
+                                <% end %>
+                              </div>
                             </div>
-                          </div>
-                        </td>
-                      </li>
-                    </td>
-                  </tr>
-                  <script>
-                    $("#reveal-<%= form.id %>").hide();
-                     $("#show-<%= form.id %>").click( () => {
-                       $("#reveal-<%= form.id %>").show();
-                       $("#show-<%= form.id %>").hide();
-                     });
-                  </script>
-                <% end %>
-              </tbody>
-            </table>
-          </ol>
-        </div>
+                          </td>
+                        </li>
+                      </td>
+                    </tr>
+                    <script>
+                      $("#reveal-<%= form.id %>").hide();
+                       $("#show-<%= form.id %>").click( () => {
+                         $("#reveal-<%= form.id %>").show();
+                         $("#show-<%= form.id %>").hide();
+                       });
+                    </script>
+                  <% end %>
+                </tbody>
+              </table>
+            </ol>
+          </div>
+        <% end %>
       <% end %>
     <% end %>
     <hr />

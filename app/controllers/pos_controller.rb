@@ -23,7 +23,7 @@ class PosController < ApplicationController
     @rankings = RankingForm.where(po_number: @po.po_number).all
     @number_of_forms = RankingForm.where(po_number: @po.po_number)
     @results = @po.collect_form_results.count 
-   
+    @groups =  Group.where(po_id: @po.id).all
   end
 
   # GET /pos/new

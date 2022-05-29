@@ -44,4 +44,18 @@ class FormReflex  < ApplicationReflex
         po.process_form_data if RankingForm.where(po_number: po.po_number).any?
     end
 
+    def group
+        po = Po.find(element.dataset[:id])
+        members =  RankingForm.where(po_number: po.po_number)
+        members.group_by(&:winner).each do |usr, forms| 
+            g = Group.new(po_id: po.id, ruser_id: usr.id)
+            if g.save
+                forms.each do |form|
+                    m = Member.new(group_id: g.id, client: form.id)
+                    m.save
+                end
+            end
+        end
+    end
+
 end

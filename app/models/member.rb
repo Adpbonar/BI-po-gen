@@ -1,11 +1,15 @@
 class Member < ApplicationRecord
   belongs_to :group
 
+  def groupy
+    RankingForm.find(self.client)
+  end
+
   def name
-    RankingForm.find(self.client).name
+    self.groupy.name
   end
 
   def email
-    RankingForm.find(self.client).email
+    self.groupy.email
   end
 end

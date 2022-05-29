@@ -125,6 +125,10 @@ class Statement < ApplicationRecord
         end
     end
 
+    def groups
+        Group.where(po_id: self.id).all
+    end
+
     def generate_client_statement
         customers = self.po.po_users.all
         associates = []
@@ -154,6 +158,32 @@ class Statement < ApplicationRecord
             end
         else
             errors.add :associates, 'must be present'
+        end
+    end
+
+    def session_count
+        self.po.number_of_installments
+    end
+
+    def generate_fixed_amount_associate_statements
+        if groups.any?
+            self.groups.group_by(&:winner).each do |group, clients|
+                statement = AssociateStatement.new(po_id: self.po.id,company_name: Company.first.company_name, company_address: Company.first.address, participant_name: group.name, participant_address: group.leader.address, invoice_number: 'PO-' + self.po.po_number.to_s + '-P-' + group.leader.id.to_s, currency: group.leader.currency, tax_rate: group.leader.tax_rate, issued_to: group.leader.id)
+                if statement.save
+                    clients.each do |client|
+                        ChargableRate.all.each do |rate|
+                            unless rate.status == "Ongoing"
+                                Rate.create(statement_id: statement.id, title: (rate.title.to_s + " for " + client.name.to_s).upcase, status: rate.status, session_count: self.session_count, rate: rate.rate, participant_id: group.leader.id)
+                            else
+                                self.session_count.times do 
+                                    Rate.create(statement_id: statement.id, title: (rate.title.to_s + " for " + client.name.to_s), status: rate.status, session_count: self.session_count, rate: rate.rate, participant_id: group.leader.id)
+                                end
+                            end
+                        end
+                    end
+                    StatementNote.create(statement_id: statement.id, notes: Company.first.default_associate_note, terms: Company.first.default_associate_terms)
+                end
+            end
         end
     end
 
@@ -213,7 +243,7 @@ class Statement < ApplicationRecord
                         end
                     end 
                 else
-                    puts "not configured yet."
+                    self.generate_fixed_amount_associate_statements
                 end
                 rs_total = (percentage_amount(self.subtotal.to_d, self.po.revenue_share) - expenses)
                 Participant.where(revenue_share: true).all.each do |participant|

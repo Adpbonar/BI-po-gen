@@ -6,15 +6,15 @@
   <div class="bold upcase"><small>PO Number: <%= @statement.po.po_number %></div>
     <div class="bold upcase"><small>Type: 
         <% unless @statement.type == "GeneralStatement" %>
-         <%= @statement.invoice_type %></small></div>
-         <% end %>
+          <%= @statement.invoice_type %></small></div>
+    <% end %>
   </div>
   <% if @statement.type != "GeneralStatement" %>
     <p class="bold"><%= @statement.kind? %> Number: 
       <%= @statement.invoice_number %></p>
     <div class="top-bottom-spacing">
       <table width="100%">
-      <tbody>
+        <tbody>
           <tr>
             <td style=" width: 50%; vertical-align: top;">
               <p class="bold">From:</p>
@@ -32,6 +32,27 @@
       </table>
     <% end %>
     <% if @statement.type == "GeneralStatement" && ! @statement.no_general %>
+      <div>
+        <h3>Groups</h3>
+        <% if @groups.any? %>
+          <center>
+            <% @groups.each do |group| %>
+              <div class="installment-display" style="border-radius: 50px; width: 50%; vertical-align: top;">
+                <div class="top-bottom-spacing">
+                  <p class="bold center">Leader: <%= group.name %></p>
+                  <p class="bold center">Contact: <%= mail_to group.email %></p>
+                  <hr />
+                  <ul>
+                    <% group.members.each do |member| %>
+                      <li class="left"><span class="bold"><%= member.name %>:</span> <%= mail_to member.email %></li>
+                    <% end %>
+                  </ul>
+                </div>
+              </div>
+            <% end %>
+          </center>
+        <% end %>
+      </div>
       <%= render partial: 'general', statement: @statement %>
     <% end %>
     <% if @statement.client || @statement.associate %>
@@ -46,8 +67,8 @@
         <% end %>
       <% end %>
       <%= button_tag class: "btn btn-warning", data: { reflex: "click->StatementReflex#send_statement", id: @statement.id }  do %>
-          Send out this statement
-        <% end %>
+        Send out this statement
+      <% end %>
       <%= link_to 'PDF', statement_url(@statement) + '.pdf', id: 'openPDF', class: 'btn btn-success' %>
       <script>
         $("#openPDF").click(function() {

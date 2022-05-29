@@ -26,6 +26,8 @@ class StatementsController < ApplicationController
     @note = @statement.statement_note
     @company_info = Company.first
     @company = @company_info.company_options
+    @po = @statement.po
+    @groups =  Group.where(po_id: @po.id).all
     respond_to do |format|
       format.html
       format.pdf do

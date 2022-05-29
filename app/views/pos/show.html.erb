@@ -34,10 +34,12 @@
       <% end %>
     </div>
     <% unless @results == 0 %>
-      <h2>Po Survey Results</h2>
-      <div id="survey-rank">
-        Total number of rankings: <%= @results %> | 
-        Number of surveys: <%= @number_of_forms.count %> | Number of Associates: <%= @po.rusers.count %>
+      <% unless @groups.any? %>
+        <h2>Po Survey Results</h2>
+        <div id="survey-rank">
+          Total number of rankings: <%= @results %> | 
+          Number of surveys: <%= @number_of_forms.count %> | Number of Associates: <%= @po.rusers.count %>
+        <% end %>
         <% unless @po.sorted %>
           <div>
             <%= content_tag :button, id: 'results-gen', class: 'btn btn-success', data: { reflex: "click->FormReflex#sort", id: @po.id } do %>
@@ -148,9 +150,11 @@
     (<%= @po.show_installments_total_percent %>) | PO client currency: <%= show_currency(@po) %> | PO value:
     <%= @po.currency.html_safe.to_s + number_to_currency(@po.statements.first.subtotal).split("$").last %> | Client Payment Lead Time: <%= @po.lead_time_in_days %> days</div>
 <% end %>
-<div style="margin: 5px; padding: 5px; background-color: #e8e8e8e8; border: 1px dotted green;">
-  <%= render 'change', po: @po %>
-</div>
+<% unless @po.status.include?("Submitted") %>
+  <div style="margin: 5px; padding: 5px; background-color: #e8e8e8e8; border: 1px dotted green;">
+    <%= render 'change', po: @po %>
+  </div>
+<% end %>
 <div>
   <center>
     <% @po.installments.order([:id]).each_with_index do |installment, index| %>

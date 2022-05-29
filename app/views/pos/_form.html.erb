@@ -32,7 +32,9 @@
   <% unless @po.fixed_payments %>
     <%= f.input :associate_percentage, label: 'Associate Percentage', input_html: { type: 'number' } %>
   <% else %>
-    <%= f.input :fixed_payments %>
+    <% if current_user.id == @po.options[:user] %>
+      <%= f.input :fixed_payments %>
+    <% end %>
   <% end %>
   <%= f.input :lead_time_in_days, label: 'Number of days between when a client is expected to pay and associate invoices are due', input_html: { type: 'number' } %>
   <div><%= f.submit class: 'btn btn-primary' %></div>

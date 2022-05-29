@@ -184,8 +184,10 @@ class Statement < ApplicationRecord
                                 end
                             else
                                 self.session_count.times do 
-                                    Rate.create(statement_id: statement.id, title: (rate.title.to_s + " for " + client.name.to_s), status: rate.status, due_date: timetable.first, rate: rate.rate, participant_id: group.leader.id)
-                                    timetable.shift
+                                    rate = Rate.new(statement_id: statement.id, title: (rate.title.to_s + " for " + client.name.to_s), status: rate.status, due_date: timetable.first, rate: rate.rate, participant_id: group.leader.id)
+                                    if rate.save
+                                        timetable.shift
+                                    end
                                 end
                             end
                         end

@@ -94,8 +94,6 @@
                                             </div>
                                           <% end %>
                                         </div>
-                             
-                                          <% unless participant.profile.blank? || participant.image_link.blank? %>
                                             <% if check_for_r_user(@po, participant.id) %>
                                               <div>
                                                 <%= content_tag :button, class: 'btn btn-success assBtn', data: { reflex: "click->FormReflex#add", id: @po.id, user: participant.id } do %>
@@ -108,8 +106,6 @@
                                                   Remove <%= participant.member_name %> Selection Survey
                                                 <% end %>
                                               </div>
-                                            <% end %>
-                                          
                                         <% end %>
                                       <% end %>
                                     </div>

@@ -5,6 +5,7 @@ class Po < ApplicationRecord
 		has_many :installments
 		has_many :po_users
     has_many :rusers
+    has_many :groups
 
     encrypts :learning_coordinator, type: :integer
     encrypts :found, type: :integer

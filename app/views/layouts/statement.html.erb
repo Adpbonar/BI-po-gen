@@ -46,491 +46,640 @@
         <tbody>
           <tr>
             <td style=" width: 50%;">
-              <%= image_tag 'https://bonarinstitute.com/wp-content/uploads/2021/06/BonarInstitute-Logo-Horizontal-RGB-1.jpg', alt: 'Bonar Institute Logo', class: 'top-bottom-spacing', width: '350px' %>
+              <%= image_tag 'https://drive.google.com/uc?export=view&id=1FzZiKhw7XzJLJOwSmJwIY7aA9QzbUDTz', alt: 'Bonar Institute Logo', alt: 'Bonar Institute Logo', class: 'top-bottom-spacing', width: '350px' %>
             </td>
             <td style=" width: 50%;">
-              <h1><%= @statement.kind? %></h1>
-              <% if @statement.kind?.include?("Request") %>
-                <p class="bold">PO: <%= @statement.po.po_number %>
-                <% end %>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <hr />
-      <p class="bold"><%= @statement.kind? %> Number: 
-        <%= @statement.invoice_number %></p>
-         <p class="bold"><%= @statement.kind? %> Date: 
-        <%= read_date(@statement.created_at) %></p>
-      <div class="top-bottom-spacing">
-        <table width="100%">
-          <tbody>
-            <tr>
-              <td style=" width: 50%; vertical-align: top;">
-                <p class="bold">From:</p>
-                <%= @statement.company_name %>
-                <%= sanitize @statement.company_address %>
-              </td>
-              <td style=" width: 50%; vertical-align: top;">
-                <p class="bold">To:</p>
-                <%= @statement.po.company_name %><br />
-                <%= @statement.participant_name %>
-                <%= @statement.participant_address %>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <% if @statement.kind?.include?("Request") %>
-          <h2>About PO <%= @statement.po.po_number %></h2>
-          <p><%=sanitize @statement.po.description %>
-          <% end %>
-          <% unless @statement.associate %>
-            <p><span class="bold">Service Category:</span> <%= @statement.po.service_type %></p>
-          <% end %>
-        </div>
-      </div>
-      <% if @statement.client %>
-        <table width="100%">
-          <tbody>
-            <td style="width: 25%; text-transform: uppercase; color: #750019;">
-              <b>Item</b>
-            </td>
-            <td style="width: 50%; text-transform: uppercase; color: #750019;">
-              <b>Description</b>
-            </td>
-            <td style="width: 25%; text-transform: uppercase; color: #750019;">
-              <b>Price</b>
-            </td>
-            <% items = '' 
-            @line_items.map { |item| items = 'yes' if item.discounts.any? } %>
-            <td style="width: 25% text-transform: uppercase; color: #750019;">
-              <% if items == 'yes' %>
-                <b>DISCOUNTS</b>
-              <% end %>
-            </td>
-            <% if @statement.show_detailed == true %>
-              <% @line_items.each do |item| %>
-                <tr class="td-border">
-                  <td style="width: 25%; vertical-align: top;" class="td-border">
-                    <%= item.title %>
-                  </td>
-                  <td style="width: 50%;" class="td-border">
-                    <%=sanitize item.description %>
-                  </td>
-                  <% if items == 'yes' %>
-                    <td style="width: 12.5%; vertical-align: top;" class="td-border">
-                      <%= statement_money(@statement, item.cost, @statement) %>
-                    </td>
-                    <td style="width: 12.5%; vertical-align: top;" class="td-border">
-                      <% item.discounts.each do |discount| %>
-                        <div class="center"><%= render 'discount', discount: discount %></div>
-                      <% end %>
-                    </td>
-                  <% else %>
-                    <td style="width: 25%; vertical-align: top;" class="td-border">
-                      <%= statement_money(@statement, item.cost, @statement) %>
-                    </td>
+              <% unless @statement.po.fixed_payments %>
+                <h1><%= @statement.kind? %></h1>
+                <% if @statement.kind?.include?("Request") %>
+                  <p class="bold">PO Number: <%= @statement.po.po_number %>
                   <% end %>
-                </tr>
-              <% end %>
-            <% else %>
-              <tr>
-                <td style="width: 25%" class="td-border">
-                  Professonal Services
-                </td>
-                <td style="width: 50%" class="td-border">
-                  Customized business solutions
-                </td>
-                <% if items == 'yes' %>
-                  <td style="width: 12.5%" class="td-border">
-                    <%= show_money(@statement, @statement.no_discount_cost, @statement) %>
-                  </td>
-                  <td style="width: 12.5%;" class="td-border">
-                    - <%= statement_money(@statement, @statement.total_discounts, @statement) %>
-                  </td>
                 <% else %>
-                  <td style="width: 25%" class="td-border">
-                    <%= statement_money(@statement, @statement.no_discount_cost, @statement) %>
-                  </td>
-                <% end %>
+                  <h1>Purchase Order</h1>
+                  <p class="bold">PO: <%= @statement.po.po_number %>
+                  <% end %>
+                </td>
               </tr>
-            <% end %>
-          </tbody>
-        </table>
-      <% end %>
-      <div>
-        <% if items == 'yes' %>
-          <strong>
-            <p class="upcase">Value of Items: <%= statement_money(@statement, @statement.no_discount_cost, "") %></p>
-            <p class="green upcase">Discounts: (<%= statement_money(@statement, @statement.total_discounts, "") %>)</p>
-          </strong>
-        <% end %>
-        <h3 class="upcase">
-          <% if @statement.associate %>
-            Client 
-          <% end %>
-          Subtotal: <%= statement_money(@statement, @statement.subtotal, @statement) %>
-        </h3>
-        <% if @statement.associate %>
-          <h3>
-            Your Total: <%= statement_money(@statement, @statement.percentage_amount(@statement.subtotal, @statement.percentage), "") %>
-          </h3>
-          <b><%= po_ass_type %> Percentage: <%= @statement.percentage %>%</b><br />
-          <% unless @statement.founder || @statement.rs %>
-            Number of associates that participated with this PO: <%= @statement.number_participating_associates %><br />
-          <% end %>
-          <small>See "How the <%= po_ass_type %> Toal is Calculated?" below for more information.</small>
-          <br />
-        <% end %>
-      </div>
-      <div>
-        <h2>Payment Information</h2>
-        <% unless @statement.po.installments.count == 1 %>
-          <h3>Payment Breakdown</h3>
-          <div style="width: 50%; margin-left: auto; margin-right:auto;">
-            <canvas id="chartContainer" width="400" height="250" alt="Installment Breakdown Pie Chart" title="Installment Pie Chart"></canvas>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+        <% unless @statement.po.fixed_payments %>
+          <p class="bold"><%= @statement.kind? %> Number: 
+            <%= @statement.invoice_number %></p>
+          <p class="bold"><%= @statement.kind? %> Date: 
+            <%= read_date(@statement.created_at) %></p>
+        <% else %>
+          <div class="bold">
+            <p class="center upcase">Date Issued: <%= read_date(@statement.created_at) %>  |  Document Number: <%= @statement.invoice_number %></p>
           </div>
-          <div class="page-break"></div>
-          <h4>Amounts & Due Dates</h4>
         <% end %>
-        <% if @statement.po.installments.count != 1 %>
-          <center>
-            <% @statement.po.installments.order(:position).each do |installment| %>
-              <div class="installment-display">
-                <div class="top-bottom-spacing">
-                  <% if @statement.client %>
-                    <p><b>Payment <%= installment.position %>:</b> <%= statement_money(installment, installment.cost, @statement) %> due on <b><%= installment.due_date.strftime("%B %e, %Y") %></b>
-                    <% else %>
-                      <p><b>Invoice <%= installment.position %>:</b> in the amount of <%= statement_money(installment, @statement.percentage_amount(installment.cost, @statement.percentage), @statement) %> to be made on or after <br /><b><%= installment.lead_time.strftime("%B %e, %Y") %></b><sup>*</sup>
+        <div class="top-bottom-spacing">
+          <table width="100%">
+            <tbody>
+              <tr>
+                <td style=" width: 50%; vertical-align: top;">
+                  <p class="bold">From:</p>
+                  <%= @statement.company_name %>
+                  <%= sanitize @statement.company_address %>
+                </td>
+                <td style=" width: 50%; vertical-align: top;">
+                  <p class="bold">To:</p>
+                  <%= @statement.po.company_name %><br />
+                  <%= @statement.participant_name %>
+                  <%= @statement.participant_address %>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <% if @statement.po.fixed_payments == false|| (! @statement.associate && @statement.po.fixed_payments) %>
+            <% if @statement.kind?.include?("Request") %>
+              <h2>About PO <%= @statement.po.po_number %></h2>
+              <p><%=sanitize @statement.po.description %>
+              <% end %>
+              <% unless @statement.associate %>
+                <p><span class="bold">Service Category:</span> <%= @statement.po.service_type %></p>
+              <% end %>
+            </div>
+          </div>
+          <% if @statement.client %>
+            <table width="100%">
+              <tbody>
+                <td style="width: 25%; text-transform: uppercase; color: #750019;">
+                  <b>Item</b>
+                </td>
+                <td style="width: 50%; text-transform: uppercase; color: #750019;">
+                  <b>Description</b>
+                </td>
+                <td style="width: 25%; text-transform: uppercase; color: #750019;">
+                  <b>Price</b>
+                </td>
+                <% items = '' 
+              @line_items.map { |item| items = 'yes' if item.discounts.any? } %>
+                <td style="width: 25% text-transform: uppercase; color: #750019;">
+                  <% if items == 'yes' %>
+                    <b>DISCOUNTS</b>
+                  <% end %>
+                </td>
+                <% if @statement.show_detailed == true %>
+                  <% @line_items.each do |item| %>
+                    <tr class="td-border">
+                      <td style="width: 25%; vertical-align: top;" class="td-border">
+                        <%= item.title %>
+                      </td>
+                      <td style="width: 50%;" class="td-border">
+                        <%=sanitize item.description %>
+                      </td>
+                      <% if items == 'yes' %>
+                        <td style="width: 12.5%; vertical-align: top;" class="td-border">
+                          <%= statement_money(@statement, item.cost, @statement) %>
+                        </td>
+                        <td style="width: 12.5%; vertical-align: top;" class="td-border">
+                          <% item.discounts.each do |discount| %>
+                            <div class="center"><%= render 'discount', discount: discount %></div>
+                          <% end %>
+                        </td>
+                      <% else %>
+                        <td style="width: 25%; vertical-align: top;" class="td-border">
+                          <%= statement_money(@statement, item.cost, @statement) %>
+                        </td>
                       <% end %>
-                    </div>
-                  </div>
+                    </tr>
+                  <% end %>
+                <% else %>
+                  <tr>
+                    <td style="width: 25%" class="td-border">
+                      Professonal Services
+                    </td>
+                    <td style="width: 50%" class="td-border">
+                      Customized business solutions
+                    </td>
+                    <% if items == 'yes' %>
+                      <td style="width: 12.5%" class="td-border">
+                        <%= show_money(@statement, @statement.no_discount_cost, @statement) %>
+                      </td>
+                      <td style="width: 12.5%;" class="td-border">
+                        - <%= statement_money(@statement, @statement.total_discounts, @statement) %>
+                      </td>
+                    <% else %>
+                      <td style="width: 25%" class="td-border">
+                        <%= statement_money(@statement, @statement.no_discount_cost, @statement) %>
+                      </td>
+                    <% end %>
+                  </tr>
                 <% end %>
-              </center>
-            <% else %>
-     
+              </tbody>
+            </table>
+          <% end %>
+          <div>
+            <% if items == 'yes' %>
+              <strong>
+                <p class="upcase">Value of Items: <%= statement_money(@statement, @statement.no_discount_cost, "") %></p>
+                <p class="green upcase">Discounts: (<%= statement_money(@statement, @statement.total_discounts, "") %>)</p>
+              </strong>
+            <% end %>
+            <h3 class="upcase">
+              <% if @statement.associate %>
+                Client 
+              <% end %>
+              Subtotal: <%= statement_money(@statement, @statement.subtotal, @statement) %>
+            </h3>
+            <% if @statement.associate && ! @statement.po.fixed_payments %>
+              <h3>
+                Your Total: <%= statement_money(@statement, @statement.percentage_amount(@statement.subtotal, @statement.percentage), "") %>
+              </h3>
+              <b><%= po_ass_type %> Percentage: <%= @statement.percentage %>%</b><br />
+              <% unless @statement.founder || @statement.rs %>
+                Number of associates that participated with this PO: <%= @statement.number_participating_associates %><br />
+              <% end %>
+              <small>See "How the <%= po_ass_type %> Toal is Calculated?" below for more information.</small>
+              <br />
+            <% end %>
+          </div>
+          <div>
+            <h2>Payment Information</h2>
+            <% unless @statement.po.installments.count == 1 %>
+              <h3>Payment Breakdown</h3>
+              <div style="width: 50%; margin-left: auto; margin-right:auto;">
+                <canvas id="chartContainer" width="400" height="250" alt="Installment Breakdown Pie Chart" title="Installment Pie Chart"></canvas>
+              </div>
+              <div class="page-break"></div>
+              <h4>Amounts & Due Dates</h4>
+            <% end %>
+            <% if @statement.po.installments.count != 1 %>
+              <center>
+                <% @statement.po.installments.order(:position).each do |installment| %>
+                  <div class="installment-display">
+                    <div class="top-bottom-spacing">
+                      <% if @statement.client %>
+                        <p><b>Payment <%= installment.position %>:</b> <%= statement_money(installment, installment.cost, @statement) %> due on <b><%= installment.due_date.strftime("%B %e, %Y") %></b>
+                        <% else %>
+                          <p><b>Invoice <%= installment.position %>:</b> in the amount of <%= statement_money(installment, @statement.percentage_amount(installment.cost, @statement.percentage), @statement) %> to be made on or after <br />
+                            <b><%= installment.lead_time.strftime("%B %e, %Y") %></b><sup>*</sup>
+                          <% end %>
+                        </div>
+                      </div>
+                    <% end %>
+                  </center>
+                <% else %>
                   <% if @statement.client %>
                     <b>Payment of <%= statement_money(@statement.po.installments.first, @statement.po.installments.first.cost, @statement) %> due on <%= @statement.po.installments.first.due_date.strftime("%B %e, %Y") %></b>
                   <% else %>
                     <b>Invoice in the amount of  <%= statement_money(@statement.po.installments.first, @statement.percentage_amount(@statement.po.installments.first.cost, @statement.percentage), @statement) %> due on or after <%= @statement.po.installments.first.lead_time.strftime("%B %e, %Y") %></b></b><sup>*</sup>
                 <% end %>
-             
-          <% end %>
-          <% if @statement.associate %>
-            <br />
-            <br />
-            <small>* Dependent upon receipt of client installment amount.</small>
-          <% end %>
-        </div>
-      </div>
-      <div class="default-link">
-        <h2>Notes</h2>
-        <%= sanitize @statement.statement_note.notes %>
-        <h2>Terms & Conditions</h2>
-        <%= sanitize @statement.statement_note.terms %>
-        <% if @statement.client %>
-          <br />
-          <div class="issued-box">
-            <p><%= sanitize @statement.po.issued_by %></p>
-            <hr />
-            <p class="center">
-              If you have any questions, concerns or comments, please contact don't hesitate to get in touch.
-            </p>
+              <% end %>
+              <% if @statement.associate %>
+                <br />
+                <br />
+                <small>* Dependent upon receipt of client installment amount.</small>
+              <% end %>
+            </div>
           </div>
         <% end %>
-      </div>
-      <div>
-        <% if @statement.associate %>
-          <div class="page-break"></div>
-          <div class="calculator-box">
-            <h2 class="center">How the <%= po_ass_type %> Toal is Calculated?</h2>
-            <table style="width: 100%; border: 1px solid black;">
+        <% if @statement.associate && @statement.po.fixed_payments %>
+          <br />
+          <% i = 0 %>
+          <% c = 0.to_d %>
+          <% @rates.group_by(&:date).each do |date, rates| %>
+            <% i = i + 1 %>
+            <div>
+              <h2>PERIOD <%= i %> SESSIONS COMPLETED BY <%= date.strftime("%B %e, %Y").upcase %></h2>
+              <span class="black-td">
+                Invoice by: <%= (date + @statement.po.lead_time_in_days.days).strftime("%B %e, %Y")  %>
+              </span>
+              <ol>
+                <% rates.group_by(&:person).each do |rate, prices| %>
+                  <li class="bold upcase"><%= rate %>
+                    <div class="rate">
+                      <table>
+                        <tbody>
+                          <tr>
+                            <td><strong>Item</strong></td>
+                            <td><strong>Price</strong></td>
+                          </tr>
+                          <% prices.sort.each do |price| %>
+                            <tr>
+                              <td>
+                                <%= price.item %>
+                              </td>
+                              <td>
+                                <%= statement_money(@statement, price.rate, "") %>
+                                <% c = c + price.rate %>
+                              </td>
+                            </tr>
+                          <% end %>
+                        </tbody>
+                      </table>
+                    </div>
+                  </li>
+                </ul>
+                <br />
+              <% end %>
+            </div>
+          </ol>
+          <div class="rate2">
+            <table>
               <tbody>
-                <th colspan="2" style="padding: 1em;">
-                  <strong>Variables</strong>
-                </th>
                 <tr>
-                  <td>
-                    <strong>Client Amount:</strong>
-                    <td>The Client Subtotal for this PO (<%= statement_money(@statement, @statement.subtotal, @statement) %>)</td>
+                  <td colspan="2" class="center bold">
+                    <h3><strong>Total Invoice Amount for Period <%= i %></strong></h3>
                   </td>
                 </tr>
                 <tr>
+                  <td><strong>Item</strong></td>
+                  <td><strong>Price</strong></td>
+                </tr>
+                <tr>
                   <td>
-                    <strong><%= po_ass_type %> Percentage:</strong>
-                    <td>The <%= po_ass_type %> Percentage, as per Bonar Institute Associates Agreement (<%= @statement.percentage %>%)</td>
+                    Work Completed during period <%= i %>
+                  </td>
+                  <td>
+                    <%= statement_money(@statement, c, "") %>
                   </td>
                 </tr>
-                <% unless @statement.founder || @statement.rs %>
+                <% unless @participant.tax_rate == 0 %>
                   <tr>
                     <td>
-                      <strong>Expenses:</strong>
-                      <td>The costs related to assessments, presentations, etc. (<%=statement_money(@statement, expenses, @statement) %>)</td>
+                      Tax for period <%= i %> invoice
                     </td>
-                  </tr>
-                  <tr>
                     <td>
-                      <strong>Associates:</strong>
-                      <td>The number of associates that participated in this PO (<%= @statement.number_participating_associates %>).</td>
+                      <%= statement_money(@statement, (c * ("0." + @participant.tax_rate.to_s).to_d), "") %>
+                      <% c = c + (c * ("0." + @participant.tax_rate.to_s).to_d) %>
                     </td>
                   </tr>
                 <% end %>
                 <tr>
                   <td>
-                    <strong>Your Total:</strong>
-                    <td>Your portion of Client Total (<%= statement_money(@statement, @statement.percentage_amount(@statement.subtotal, @statement.percentage), @statement) %>)</td>
+                    Total for period <%= i %> invoice
+                  </td>
+                  <td>
+                    <%= statement_money(@statement, c, "") %>
                   </td>
                 </tr>
-              </tbody>
-            </table>
-            <div class="formula">
-              <p><b>The Formula</b></p>
-              <% unless @statement.founder ||  @statement.rs %>
-                <span>((<b>Client Amount</b> x 0.(<b>Associate Percentage</b>)) - <b>Expenses</b>) &#247; <b>Associates</b> = <b>Your Totoal</b></span>
-              <% else %>
-                <span>(<b>Client Amount</b> x 0.(<b><%= po_ass_type %> Percentage</b>)) = <b>Your Totoal</b></span>
-              <% end %>
-            </div>
+                <tr>
+                  <td colspan="2" class="center">
+                    <small>* Payment Timing May be impacted by the timing of the receipt of client installment amount.</small>
+                  </td>
+                  <tr />
+                  </tbody>
+                </table>
+                <br />
+              </div>
+              <% c = 0.to_d %>
+            <% end %>
+            <p class="center">
+              If you have any questions, concerns or comments, please contact don't hesitate to get in touch.
+            </p>
+          <% end %>
+          <div class="default-link">
+            <h2>Notes</h2>
+            <%= sanitize @statement.statement_note.notes %>
+            <h2>Terms & Conditions</h2>
+            <%= sanitize @statement.statement_note.terms %>
+            <% if @statement.client %>
+              <br />
+              <div class="issued-box">
+                <p><%= sanitize @statement.po.issued_by %></p>
+                <hr />
+                <p class="center">
+                  If you have any questions, concerns or comments, please contact don't hesitate to get in touch.
+                </p>
+              </div>
+            <% end %>
           </div>
-        <% end %>
-      </div>
-    </body>
-    <style>
-      @import "bootstrap";
+          <div>
+            <% if @statement.associate && !@statement.po.fixed_payments %>
+              <div class="page-break"></div>
+              <div class="calculator-box">
+                <h2 class="center">How the <%= po_ass_type %> Toal is Calculated?</h2>
+                <table style="width: 100%; border: 1px solid black;">
+                  <tbody>
+                    <th colspan="2" style="padding: 1em;">
+                      <strong>Variables</strong>
+                    </th>
+                    <tr>
+                      <td>
+                        <strong>Client Amount:</strong>
+                        <td>The Client Subtotal for this PO (<%= statement_money(@statement, @statement.subtotal, @statement) %>)</td>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <strong><%= po_ass_type %> Percentage:</strong>
+                        <td>The <%= po_ass_type %> Percentage, as per Bonar Institute Associates Agreement (<%= @statement.percentage %>%)</td>
+                      </td>
+                    </tr>
+                    <% unless @statement.founder || @statement.rs %>
+                      <tr>
+                        <td>
+                          <strong>Expenses:</strong>
+                          <td>The costs related to assessments, presentations, etc. (<%=statement_money(@statement, expenses, @statement) %>)</td>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <strong>Associates:</strong>
+                          <td>The number of associates that participated in this PO (<%= @statement.number_participating_associates %>).</td>
+                        </td>
+                      </tr>
+                    <% end %>
+                    <tr>
+                      <td>
+                        <strong>Your Total:</strong>
+                        <td>Your portion of Client Total (<%= statement_money(@statement, @statement.percentage_amount(@statement.subtotal, @statement.percentage), @statement) %>)</td>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div class="formula">
+                  <p><b>The Formula</b></p>
+                  <% unless @statement.founder ||  @statement.rs %>
+                    <span>((<b>Client Amount</b> x 0.(<b>Associate Percentage</b>)) - <b>Expenses</b>) &#247; <b>Associates</b> = <b>Your Totoal</b></span>
+                  <% else %>
+                    <span>(<b>Client Amount</b> x 0.(<b><%= po_ass_type %> Percentage</b>)) = <b>Your Totoal</b></span>
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </body>
+        <style>
+          @import "bootstrap";
 
-      body {
-        margin-left: 2em;
-        margin-right: 2em;
-        padding-top: 1.5em;
-        padding-bottom: 1.5em;
-      }
-
-      h2 {
-        color: gray;
-        border-bottom: 1px solid gray;
-        margin-top: 3em;
-        padding: 2px;
-
-      }
-
-      .installment-display {
-          display: inline-block;
-          margin: .5em;
-          padding-top: 1em;
-          padding-bottom: 1em;
-          padding: 5px;
-          border: 2px solid black;
-          border-radius: 4px;
-          min-width: 365px;
-          text-align: center;
-          max-width: 30%;
-          background-color: #e8e8e8b2;
-      }
-
-      .issued-box {
-        border: 2px solid #750019;
-        padding: 1em;
-        margin-top: 1em;
-        border-radius: 5px;
-      }
-
-      .page-break {
-        display: block;
-        clear: both;
-        page-break-after: always;
-      }
-
-      table,
-      p,
-      span,
-      div {
-        font-size: 12.5pt !important;
-      }
-
-      table {
-        border-collapse: collapse;
-      }
-
-      table tr:not(:last-child) {
-        border-top: 1px solid #600a15;
-        border-bottom: 1px solid #600a15;
-      }
-
-      .td-border {
-        padding: 1em;
-      }
-
-
-      td {
-        padding: .5em;
-      }
-
-      #set-installment {
-        width: 100%;
-      }
-
-      .top-bottom-spacing {
-        padding-top: 1.3em !important;
-        padding-bottom: 1.3em !important;
-      }
-
-      .center {
-        text-align: center;
-      }
-
-      .upcase {
-        text-transform: uppercase;
-      }
-
-      .total-box {
-        padding: 1em;
-        border-top: 2px solid green;
-      }
-
-      .tax {
-        font-weight: 700;
-        padding: 1em;
-        text-transform: uppercase;
-        font-size: 1.3em;
-      }
-
-      .green {
-        color: green;
-        border-bottom: 2px solid green;
-        padding-bottom: .6em;
-      }
-
-      .extra-padding {
-        padding: .5em;
-      }
-
-      .btn-sm {
-        border-radius: 50%;
-      }
-
-      .invoice-image h1,
-      .invoice-image img {
-        display: inline-block !important;
-        text-transform: uppercase;
-      }
-
-      .invoice-image img {
-        margin-right: 2em;
-      }
-
-      .discount-applied {
-        padding: 2px;
-        margin-bottom: 2px;
-        color: green;
-        width: 170px;
-        text-align: center;
-        text-transform: uppercase;
-      }
-
-      .td-border td {
-        padding: 1em;
-
-      }
-
-      .bold {
-        font-weight: 700;
-      }
-
-      #chartContainer {
-        width: 100%;
-        height: auto;
-      }
-
-      .default-link a {
-        color: navy !important;
-        border-bottom: 1px solid grey;
-        text-decoration: none !important;
-        margin: .2rem;
-      }
-
-      .calculator-box {
-        border: 2px solid green;
-        border-radius: 25px;
-        padding-left: 2em;
-        padding-right: 2em;
-        padding-bottom: 2em;
-      }
-
-      .calculator-box td {
-        font-size: 1rem;
-      }
-
-      .formula {
-        width: 100%;
-        pading: 1em;
-        margin-top: 1em;
-      }
-
-      .formula p {
-        text-align: center;
-      }
-
-      .formula span {
-        font-size: 1rem !important;
-      }
-    </style>
-    <script>
-      function drawPieChart(data, colors) {
-          var canvas = document.getElementById("chartContainer");
-          var context = canvas.getContext("2d");
-
-          // get length of data array
-          var dataLength = data.length;
-          // declare variable to store the total of all values
-          var total = 0;
-
-          // calculate total
-          for (var i = 0; i < dataLength; i++) {
-              // add data value to total
-              total += data[i][1];
+          body {
+            margin-left: 2em;
+            margin-right: 2em;
+            padding-top: 1.5em;
+            padding-bottom: 1.5em;
           }
 
-          // declare X and Y coordinates of the mid-point and radius
-          var x = 100;
-          var y = 100;
-          var radius = 100;
+          h2 {
+            color: gray;
+            border-bottom: 1px solid gray;
+            margin-top: 3em;
+            padding: 2px;
 
-          // declare starting point (right of circle)
-          var startingPoint = 0;
+          }
 
-          for (var i = 0; i < dataLength; i++) {
-              // calculate percent of total for current value
-              var percent = data[i][1] * 100 / total;
+          h3 {
+            margin: 0 !important;
+            padding: 0 !important;
+          }
 
-              // calculate end point using the percentage (2 is the final point for the chart)
-              var endPoint = startingPoint + (2 / 100 * percent);
+          .rate tr:nth-child(odd) {
+              background-color: #e8e8e8;
+          }
 
-              // draw chart segment for current element
-              context.beginPath();
-              // select corresponding color
-              context.fillStyle = colors[i];
-              context.moveTo(x, y);
-              context.arc(x, y, radius, startingPoint * Math.PI, endPoint * Math.PI);
-              context.fill();
+          .rate2 tr:nth-child(even) {
+              background-color: gray;
+              color: white;
+          }
+          .rate, .rate2 td {
+            padding: 0.5em;
+            text-transform: uppercase;
+          }
 
-              // starting point for next element
-              startingPoint = endPoint;
+          .rate table {
+            width: 60%;
+            margin-left: 2em;
+            padding: 0.5em;
+            margin-top: 5pt;
+          }
 
-              // draw labels for each element
-              context.rect(220, 25 * i, 15, 15);
-              context.fill();
-              context.fillStyle = "black";
-              context.fillText(data[i][0] + " (" + data[i][1] + "%)", 245, 25 * i + 15);
+          .rate2 table {
+            width: 100%;
+            padding: 0.5em;
+            margin-top: 5pt;
+          }
+
+          .black-td {
+            border: 2pt solid black !important;
+            text-align: center;
+            font-weight: 700;
+            padding: 4pt;
+            margin-top: 8pt;
+            border-radius: 5px;
+            text-transform: uppercase;
+            float: right;
+          }
+
+          .installment-display {
+              display: inline-block;
+              margin: .5em;
+              padding-top: 1em;
+              padding-bottom: 1em;
+              padding: 5px;
+              border: 2px solid black;
+              border-radius: 4px;
+              min-width: 365px;
+              text-align: center;
+              max-width: 30%;
+              background-color: #e8e8e8b2;
+          }
+
+          .issued-box {
+            border: 2px solid #750019;
+            padding: 1em;
+            margin-top: 1em;
+            border-radius: 5px;
+          }
+
+          .page-break {
+            display: block;
+            clear: both;
+            page-break-after: always;
+          }
+
+          table,
+          p,
+          span,
+          div {
+            font-size: 12.5pt !important;
+          }
+
+          table {
+            border-collapse: collapse;
+          }
+
+          table tr:not(:last-child) {
+            border-top: 1px solid #600a15;
+            border-bottom: 1px solid #600a15;
+          }
+
+          .td-border {
+            padding: 1em;
           }
 
 
-      }
+          td {
+            padding: .5em;
+          }
 
-      var data = <%= sanitize @pdf_chart_data.to_s %> ;
-      var colors = <%= sanitize @statement.colors.to_s %>;
+          #set-installment {
+            width: 100%;
+          }
 
-      // using the function
-      drawPieChart(data, colors);
-    </script>
-  </html>
+          .top-bottom-spacing {
+            padding-top: 1.3em !important;
+            padding-bottom: 1.3em !important;
+          }
+
+          .center {
+            text-align: center;
+          }
+
+          .upcase {
+            text-transform: uppercase;
+          }
+
+          .total-box {
+            padding: 1em;
+            border-top: 2px solid green;
+          }
+
+          .tax {
+            font-weight: 700;
+            padding: 1em;
+            text-transform: uppercase;
+            font-size: 1.3em;
+          }
+
+          .green {
+            color: green;
+            border-bottom: 2px solid green;
+            padding-bottom: .6em;
+          }
+
+          .extra-padding {
+            padding: .5em;
+          }
+
+          .btn-sm {
+            border-radius: 50%;
+          }
+
+          .invoice-image h1,
+          .invoice-image img {
+            display: inline-block !important;
+            text-transform: uppercase;
+          }
+
+          .invoice-image img {
+            margin-right: 2em;
+          }
+
+          .discount-applied {
+            padding: 2px;
+            margin-bottom: 2px;
+            color: green;
+            width: 170px;
+            text-align: center;
+            text-transform: uppercase;
+          }
+
+          .td-border td {
+            padding: 1em;
+
+          }
+
+          .bold {
+            font-weight: 700;
+          }
+
+          #chartContainer {
+            width: 100%;
+            height: auto;
+          }
+
+          .default-link a {
+            color: navy !important;
+            border-bottom: 1px solid grey;
+            text-decoration: none !important;
+            margin: .2rem;
+          }
+
+          .calculator-box {
+            border: 2px solid green;
+            border-radius: 25px;
+            padding-left: 2em;
+            padding-right: 2em;
+            padding-bottom: 2em;
+          }
+
+          .calculator-box td {
+            font-size: 1rem;
+          }
+
+          .formula {
+            width: 100%;
+            pading: 1em;
+            margin-top: 1em;
+          }
+
+          .formula p {
+            text-align: center;
+          }
+
+          .formula span {
+            font-size: 1rem !important;
+          }
+        </style>
+        <script>
+          function drawPieChart(data, colors) {
+              var canvas = document.getElementById("chartContainer");
+              var context = canvas.getContext("2d");
+
+              // get length of data array
+              var dataLength = data.length;
+              // declare variable to store the total of all values
+              var total = 0;
+
+              // calculate total
+              for (var i = 0; i < dataLength; i++) {
+                  // add data value to total
+                  total += data[i][1];
+              }
+
+              // declare X and Y coordinates of the mid-point and radius
+              var x = 100;
+              var y = 100;
+              var radius = 100;
+
+              // declare starting point (right of circle)
+              var startingPoint = 0;
+
+              for (var i = 0; i < dataLength; i++) {
+                  // calculate percent of total for current value
+                  var percent = data[i][1] * 100 / total;
+
+                  // calculate end point using the percentage (2 is the final point for the chart)
+                  var endPoint = startingPoint + (2 / 100 * percent);
+
+                  // draw chart segment for current element
+                  context.beginPath();
+                  // select corresponding color
+                  context.fillStyle = colors[i];
+                  context.moveTo(x, y);
+                  context.arc(x, y, radius, startingPoint * Math.PI, endPoint * Math.PI);
+                  context.fill();
+
+                  // starting point for next element
+                  startingPoint = endPoint;
+
+                  // draw labels for each element
+                  context.rect(220, 25 * i, 15, 15);
+                  context.fill();
+                  context.fillStyle = "black";
+                  context.fillText(data[i][0] + " (" + data[i][1] + "%)", 245, 25 * i + 15);
+              }
+
+
+          }
+
+          var data = <%= sanitize @pdf_chart_data.to_s %> ;
+          var colors = <%= sanitize @statement.colors.to_s %>;
+
+          // using the function
+          drawPieChart(data, colors);
+        </script>
+      </html>

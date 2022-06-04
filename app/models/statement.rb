@@ -5,6 +5,7 @@ class Statement < ApplicationRecord
     has_many :payments
     has_many :adjustments
     has_one :statement_note
+    has_many :rates
 
     encrypts :participant_address, :participant_name
     encrypts :statement_participant, type: :integer
@@ -26,8 +27,6 @@ class Statement < ApplicationRecord
         end
     end
 
-  
-
     def locked
         if self.type == 'GeneralStatement'
             if self.status_code == 'A' || self.status_code == 'L'
@@ -40,10 +39,12 @@ class Statement < ApplicationRecord
         if record2.to_s.split(".").to_s[0] == "0" || record2.to_s[0] == "."
             return (record1.to_i * ("0." + record2.to_s.split(".").last.to_s).to_f)
         else
-            if record2.to_s.split(".").first.size < 2
-                return (record1.to_i * ("0.0" + record2.to_s.split(".").join).to_f)
-            else
-                return (record1.to_i * ("0." + record2.to_s).to_f)
+            if record2
+                if record2.to_s.split(".").first.size < 2
+                    return (record1.to_i * ("0.0" + record2.to_s.split(".").join).to_f)
+                else
+                    return (record1.to_i * ("0." + record2.to_s).to_f)
+                end
             end
         end
     end
@@ -170,35 +171,38 @@ class Statement < ApplicationRecord
     end
 
     def generate_fixed_amount_associate_statements
-        if groups.any?
-            self.groups.group_by(&:leader_id).each do |group, clients|
-                g = Participant.find(group)
-                timetable = []
-                installments = po.installments.each { |installment| timetable << installment }
-                timetable.shift
-                timetable.pop
-                statement = AssociateStatement.new(po_id: self.po.id,company_name: Company.first.company_name, company_address: Company.first.address, participant_name: Participant.find(group).name, participant_address: Participant.find(group).address, invoice_number: 'PO-' + self.po.po_number.to_s + '-P-' + group.to_s, currency: Participant.find(group).currency, tax_rate: Participant.find(group).tax_rate, issued_to: group)
-                if statement.save
-                    clients.each do |client|
-                        ChargableRate.all.each do |rate|
-                            unless rate.status == "Ongoing"
-                                if rate.status == "First"
-                                    Rate.create(statement_id: statement.id, title: (rate.title.to_s + " for " + client.name.to_s).upcase, status: rate.status, due_date: po.installments.first.due_date, rate: rate.rate, participant_id: group)
-                                elsif rate.status == "Last"
-                                    Rate.create(statement_id: statement.id, title: (rate.title.to_s + " for " + client.name.to_s).upcase, status: rate.status, due_date: po.installments.last.due_date, rate: rate.rate, participant_id: group)
-                                end
-                            else
-                                self.session_count.times do 
-                                    rate = Rate.new(statement_id: statement.id, title: (rate.title.to_s + " for " + client.name.to_s), status: rate.status, due_date: timetable.first, rate: rate.rate, participant_id: group)
-                                    if rate.save
-                                        timetable.shift
-                                    end
+        purchase_order = self.po
+        if purchase_order.groups.any? && purchase_order.fixed_payments 
+            timetable = []
+            purchase_order.installments.all.each { |installment| timetable << installment.due_date.to_s}
+            puts timetable.to_s
+            Group.where(po_id:purchase_order.id).all.each do |group|
+                leader = group.leader
+                leader_id = group.leader_id
+                charges = ChargableRate.all
+                statement = AssociateStatement.create(po_id: purchase_order.id, company_name: Company.first.company_name, company_address: Company.first.address, participant_name: leader.name, participant_address: leader.address, invoice_number: 'PO-' + po.po_number.to_s + '-P-' + leader_id.to_s, currency: leader.currency, tax_rate: leader.tax_rate, issued_to: leader_id)
+                StatementNote.create(statement_id: statement.id, notes: Company.first.default_associate_note, terms: Company.first.default_associate_terms)
+                group.members.each do |member|
+                    charges.all.each do |rate|
+                        if rate.status == "First"
+                            r = Rate.new(statement_id: statement.id, title: (rate.title.to_s + " for " + member.name.to_s), status: rate.status, due_date: self.po.installments.first.due_date, rate: rate.rate, participant_id: leader_id)
+                            r.save
+                        end
+                        if rate.status == "Last"
+                            r = Rate.new(statement_id: statement.id, title: (rate.title.to_s + " for " + member.name.to_s), status: rate.status, due_date: self.po.installments.last.due_date, rate: rate.rate, participant_id: leader_id)
+                        end
+                    end
+                        po.installments.order(:due_date).each do |i|
+                            charges.each do |rate|
+                           
+                                if rate.status == "Ongoing"
+                                    r = Rate.new(statement_id: statement.id, title: (rate.title.to_s + " for " + member.name.to_s), status: rate.status, due_date: i.due_date, rate: rate.rate, participant_id: leader_id)
+                                    r.save
+                                    timetable.shift
                                 end
                             end
                         end
                     end
-                    StatementNote.create(statement_id: statement.id, notes: Company.first.default_associate_note, terms: Company.first.default_associate_terms)
-                end
             end
         end
     end
@@ -257,8 +261,6 @@ class Statement < ApplicationRecord
                             end
                         end
                     end 
-                else
-                    self.generate_fixed_amount_associate_statements
                 end
                 rs_total = (percentage_amount(self.subtotal.to_d, self.po.revenue_share) - expenses)
                 Participant.where(revenue_share: true).all.each do |participant|

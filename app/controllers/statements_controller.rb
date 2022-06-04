@@ -28,6 +28,10 @@ class StatementsController < ApplicationController
     @company = @company_info.company_options
     @po = @statement.po
     @groups =  Group.where(po_id: @po.id).all
+    @rates =  Rate.where(statement_id: @statement.id).order(:due_date).all
+    unless @statement.issued_to.blank?
+      @participant = Participant.find(@statement.issued_to)
+    end
     respond_to do |format|
       format.html
       format.pdf do

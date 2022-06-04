@@ -53,21 +53,21 @@
           }, 2000);
         });
     </script>
-    <% number = 2
-       58.times do 
-       number = number + 1 %>
-    <%= button_tag number.to_s, id: 'installment-select-' + number.to_s, class: 'btn-primary set-installments-button circle', data: { reflex: "click->InstallmentReflex#select_installments", id: @po.installments.first.id, installments: number.to_s } %>
-    <script>
-      $('#installment-select-<%= number.to_s %>').click(function() {
-          document.getElementById("loadingChart").textContent = "Updating Installment Chart. This page will reload shortly...";
-          $("#installmentChart").hide();
-          window.setTimeout(function () {
-      window.location.reload();
-          }, 2000);
-        });
-    </script>
-  <% end %>
-</div>
+    <% number = 2 %>
+    <% 58.times do %>
+      <% number = number + 1 %>
+      <%= button_tag number.to_s, id: 'installment-select-' + number.to_s, class: 'btn-primary set-installments-button circle', data: { reflex: "click->InstallmentReflex#select_installments", id: @po.installments.first.id, installments: number.to_s } %>
+      <script>
+        $('#installment-select-<%= number.to_s %>').click(function() {
+            document.getElementById("loadingChart").textContent = "Updating Installment Chart. This page will reload shortly...";
+            $("#installmentChart").hide();
+            window.setTimeout(function () {
+        window.location.reload();
+            }, 2000);
+          });
+      </script>
+    <% end %>
+  </div>
 <% else %>
   <p class="center bold">You cannot change the number of installments right now.</p>
   <p class="center bold">You are only allow to adjust the due dates.</p>

@@ -32,21 +32,32 @@ class Installment < ApplicationRecord
       errors.add :due_date, 'must not be before the po start date'
     end
 
+    def add_decimal(s)
+      pfx = [ '0.00', '0.0', '0.' ]
+      if(pfx[s.length])
+        s = pfx[s.length] + s
+      else
+        s = s.dup
+        s[-2, 0] = '.'
+      end
+      s
+    end
+
     # Totaling statement line items and costing intallments
     def cost
-        cost = 0.0
-        items = self.po.statements.first.line_items.order(:id)
-        items.each do |item|
-            if item.discounts.any?
-                unless item.calculate_discounts == "Free"
-                    cost = cost + item.calculate_discounts
-                end
-        
-            else
-                cost = cost + item.cost
-            end
-        end
-        return (cost * ("0." + self.percentage.to_s).to_f).to_d
+      cost = 0.to_d
+      items = self.po.statements.first.line_items.order(:id)
+      items.each do |item|
+          if item.discounts.any?
+              unless item.calculate_discounts == "Free"
+                  cost = cost + item.calculate_discounts.to_d
+              end
+          else
+              cost = cost + item.cost
+          end
+      end
+      percentage = self.percentage
+      return (cost * ((add_decimal(percentage.to_s).to_d) / 100))
     end
     
     def lead_time
@@ -98,7 +109,7 @@ class Installment < ApplicationRecord
             date_collector = []
             num =  multiple_installments -2
             date = ((po.end_date.to_i - po.start_date.to_i) / num).round.abs
-            perc = 100 / multiple_installments.to_d
+            perc = 100 / (multiple_installments.to_d)
             i = -1
             multiple_installments.times do 
               i = i + 1

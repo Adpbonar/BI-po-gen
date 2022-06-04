@@ -70,5 +70,4 @@ class RankingForm < ApplicationRecord
     po.update(sorted: true)
     po.update(accepting_submissions: false)
   end
-
 end

@@ -16,6 +16,7 @@ class StatementReflex < ApplicationReflex
     statement = Statement.find(element.dataset[:id])
     po = statement.po
     # unless po.locked
+      statement.generate_fixed_amount_associate_statements
       statement.generate_associate_statement
       po.set_status
      # end

@@ -168,7 +168,7 @@
                               <%= f.input   :status, as: :hidden, :input_html => { :value => "Ongoing" } %>
                               <%= f.input   :title, as: :hidden, :input_html => { :value => "Coaching for #{rate}" } %>
                               <label>Due Date</label>
-                              <%= f.text_field :due_date, class: 'flatpickr form-control', placeholder: 'select the end date', data: { controller: "flatpickr", flatpickr_enable_time: false, flatpickr_date_format: "Y-m-d", flatpickr_disable_days_of_week: [0,6] }  %>
+                              <%= f.text_field :due_date, class: 'flatpickr form-control', placeholder: 'Select the due date', data: { controller: "flatpickr", flatpickr_enable_time: false, flatpickr_date_format: "Y-m-d", flatpickr_disable_days_of_week: [0,6] }  %>
                               <%= f.input :rate %>
                               <center><%= f.submit "Add Item", class: 'btn btn-success' %></center>
                             <% end %>

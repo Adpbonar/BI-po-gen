@@ -14,7 +14,7 @@ Rails.application.routes.draw do
   resources :statement_notes, only: [ :edit, :update ]
   resources :statements, except: [ :destroy ] 
   resources :participants
-  resources :line_items, only: [ :new, :create, :edit, :update, :destroy ]
+  resources :line_items
   resources :items, except: [ :index, :show, :edit, :update ]
   resources :ranking_forms, path: 'forms', except: [ :destroy, :edit ]
   resources :rates, only: [ :new, :create, :update ]

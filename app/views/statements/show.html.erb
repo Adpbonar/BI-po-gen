@@ -158,7 +158,7 @@
                           </tr>
                         </div>
                       </tr>
-                      <% unless rate.include?("Training") %>
+                      <% unless rate.include?("Training") || i != 0 %>
                         <tr>
                           <td>
                             <h3>Add Coaching | <%= price.person %></h3>

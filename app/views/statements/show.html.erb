@@ -26,7 +26,9 @@
             </td>
             <td style=" width: 50%; vertical-align: top;">
               <p class="bold">To:</p>
-              <%= @statement.po.company_name %><br />
+              <% unless @statement.client %>
+                <%= @statement.po.company_name %><br />
+              <% end %>
               <%= @statement.participant_name %>
               <%= @statement.participant_address %>
             </td>
@@ -115,20 +117,19 @@
             </span>
             <ol>
               <% rates.group_by(&:person).each do |rate, prices| %>
-                  <div class="rate">
-                    <table>
-                      <tbody>
-                        <% prices.sort.each_with_index do |price, i| %>
-                           <tr>
-                            <% if i == 0 %> 
-                              <td colspan="3", style="width: 100%;">
-                                <hr />
-                                <p class="bold" style="font-size: 1.25em;">New Item for <%= price.person %></p>
-                               
-                                 <li class="bold upcase"><%= rate %>
+                <div class="rate">
+                  <table>
+                    <tbody>
+                      <% prices.sort.each_with_index do |price, i| %>
+                        <tr>
+                          <% if i == 0 %>
+                            <td colspan="3", style="width: 100%;">
+                              <hr />
+                              <p class="bold" style="font-size: 1.25em;">New Item for <%= price.person %></p>
+                              <li class="bold upcase"><%= rate %>
                               </td>
-                              <% end %>
-                            </tr>
+                            <% end %>
+                          </tr>
                           <tr>
                             <td>
                               <%= price.item %>
@@ -137,84 +138,83 @@
                               <%= show_money(@statement, price.rate, "") %>
                             </td>
                             <td>
-                            <%= link_to edit_rate_url(price) do %>
-                              edit item
-                            <% end %>
+                              <%= link_to edit_rate_url(price) do %>
+                                edit item
+                              <% end %>
                               <%= button_tag 'X', class: 'btn-danger btn-sm', data: { reflex: "click->StatementReflex#remove", id: price.id } %>
                             </td>
-                            </tr>
-                           
-                          </div>
-                        </tr>
-                      <% end %>
-                    </tbody>
-                  </table>
-                </div>
-              </li>
-            </ul>
-            <br />
-          <% end %>
+                          </tr>
+                        </div>
+                      </tr>
+                    <% end %>
+                  </tbody>
+                </table>
+              </div>
+            </li>
+          </ul>
+          <br />
         <% end %>
-      </div>
-    </ol>
-  <% end %>
-  <br />
-  <%= render 'navigation', statement: @statement, :formats => [:html] %>
-  <style>
-    input { width: 50%; margin-bottom: 2px; }
-  </style>
-  <script>
-    document.addEventListener("turbo:load", function () {
-        var list = ""
-        $input = $("[data-behavior='autocomplete']")
-        $('#program-search').keydown(function (event) {
-            if (event.which === 13 || event.keyCode === 13) {
-                event.preventDefault();
-                return false;
-            }
-            else return true;
-        });
-        var options = {
-        getValue: "name",
-        url: function(phrase) {
-            return "/search_programs.json?q=" + phrase;
-        },
-        categories: [
-            {
-            listLocation: "saved_items",
-            header: "<strong>Programs</strong>",
-            },
-        ],
-        list: {
-            onChooseEvent: function() {
-            var url = $input.getSelectedItemData().url
-            $input.val("")
-            Turbo.visit(url)
-            $(url).css("display", "block");
-            $(url).css("background-color", "green");
-            window.history.replaceState({}, document.title, window.location.href.split('#')[0]);
-            setTimeout(function(){
-                $(url).css("background-color", "transparent");
-            }, 2500);
+      <% end %>
+    </div>
+  </ol>
+<% end %>
+<br />
+<%= render 'navigation', statement: @statement, :formats => [:html] %>
+<style>
+  input { width: 50%; margin-bottom: 2px; }
+</style>
+<script>
+  document.addEventListener("turbo:load", function () {
+      var list = ""
+      $input = $("[data-behavior='autocomplete']")
+      $('#program-search').keydown(function (event) {
+          if (event.which === 13 || event.keyCode === 13) {
+              event.preventDefault();
+              return false;
+          }
+          else return true;
+      });
+      var options = {
+      getValue: "name",
+      url: function(phrase) {
+          return "/search_programs.json?q=" + phrase;
+      },
+      categories: [
+          {
+          listLocation: "saved_items",
+          header: "<strong>Programs</strong>",
+          },
+      ],
+      list: {
+          onChooseEvent: function() {
+          var url = $input.getSelectedItemData().url
+          $input.val("")
+          Turbo.visit(url)
+          $(url).css("display", "block");
+          $(url).css("background-color", "green");
+          window.history.replaceState({}, document.title, window.location.href.split('#')[0]);
+          setTimeout(function(){
+              $(url).css("background-color", "transparent");
+          }, 2500);
 
-    $(url).click(function() {
-        $(url).css("display", "none");
-        list = "added"
-        console.log(list)
-        if (! list == "") {
-            $("#done").css("display", "block");
-        }
+  $(url).click(function() {
+      $(url).css("display", "none");
+      list = "added"
+      console.log(list)
+      if (! list == "") {
+          $("#done").css("display", "block");
+      }
 
-    });
-            }
-        }
-        }
-        $input.easyAutocomplete(options)
+  });
+          }
+      }
+      }
+      $input.easyAutocomplete(options)
 
-    });
+  });
 
 
-        $("#done").click(function() {
-            location.reload();
-    });
-  </script>
+      $("#done").click(function() {
+          location.reload();
+  });
+</script>

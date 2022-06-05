@@ -85,7 +85,7 @@
                 </td>
                 <td style=" width: 50%; vertical-align: top;">
                   <p class="bold">To:</p>
-                  <% unless @statement.client %>
+                  <% if @statement.client %>
                     <%= @statement.po.company_name %><br />
                   <% end %>
                   <%= @statement.participant_name %>

@@ -192,17 +192,16 @@ class Statement < ApplicationRecord
                             r = Rate.new(statement_id: statement.id, title: (rate.title.to_s + " for " + member.name.to_s), status: rate.status, due_date: self.po.installments.last.due_date, rate: rate.rate, participant_id: leader_id)
                         end
                     end
-                        po.installments.order(:due_date).each do |i|
-                            charges.each do |rate|
-                           
-                                if rate.status == "Ongoing"
-                                    r = Rate.new(statement_id: statement.id, title: (rate.title.to_s + " for " + member.name.to_s), status: rate.status, due_date: i.due_date, rate: rate.rate, participant_id: leader_id)
-                                    r.save
-                                    timetable.shift
-                                end
+                    po.installments.order(:due_date).each do |i|
+                        charges.each do |rate|
+                            if rate.status == "Ongoing"
+                                r = Rate.new(statement_id: statement.id, title: (rate.title.to_s + " for " + member.name.to_s), status: rate.status, due_date: i.due_date, rate: rate.rate, participant_id: leader_id)
+                                r.save
+                                timetable.shift
                             end
                         end
                     end
+                end
             end
         end
     end

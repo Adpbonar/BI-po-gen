@@ -107,6 +107,18 @@
       <% if @statement.associate && @statement.po.fixed_payments %>
         <br />
         <hr />
+        <h1>Add Training</h2>
+        <%= simple_form_for(@price) do |f| %>
+          <%= f.input   :participant_id, as: :hidden, :input_html => { :value => @participant.id } %>
+          <%= f.input   :statement_id, as: :hidden, :input_html => { :value => @statement.id } %>
+          <%= f.input   :status, as: :hidden, :input_html => { :value => "Ongoing" } %>
+          <%= f.input   :title, as: :hidden, :input_html => { :value => "Training for Group Training" } %>
+          <label>Due Date</label>
+          <%= f.text_field :due_date, class: 'flatpickr form-control', placeholder: 'Select the due date', data: { controller: "flatpickr", flatpickr_enable_time: false, flatpickr_date_format: "Y-m-d", flatpickr_disable_days_of_week: [0,6] }  %>
+          <%= f.input :rate %>
+          <center><%= f.submit "Add Item", class: 'btn btn-success' %></center>
+        <% end %>
+        <br />
         <% i = 0 %>
         <% @rates.group_by(&:date).sort.each do |date, rates| %>
           <% i = i + 1 %>
@@ -125,7 +137,6 @@
                           <% if i == 0 %>
                             <td colspan="3", style="width: 100%;">
                               <hr />
-                              <p class="bold" style="font-size: 1.25em;">New Item for <%= price.person %></p>
                               <li class="bold upcase"><%= rate %>
                               </td>
                             <% end %>
@@ -138,7 +149,7 @@
                               <%= show_money(@statement, price.rate, "") %>
                             </td>
                             <td>
-                              <%= link_to edit_rate_url(price) do %>
+                              <%= link_to edit_rate_url(price), class: 'btn btn-warning' do %>
                                 edit item
                               <% end %>
                               <%= button_tag 'X', class: 'btn-danger btn-sm', data: { reflex: "click->StatementReflex#remove", id: price.id } %>
@@ -146,6 +157,25 @@
                           </tr>
                         </div>
                       </tr>
+                      <% unless rate.include?("Training") %>
+                        <% if i == 0 %>
+                          <tr>
+                            <td>
+                              <h3>Add Coaching | <%= price.person %></h3>
+                              <%= simple_form_for(@price) do |f| %>
+                                <%= f.input   :participant_id, as: :hidden, :input_html => { :value => @participant.id } %>
+                                <%= f.input   :statement_id, as: :hidden, :input_html => { :value => @statement.id } %>
+                                <%= f.input   :status, as: :hidden, :input_html => { :value => "Ongoing" } %>
+                                <%= f.input   :title, as: :hidden, :input_html => { :value => "Coaching for #{rate}" } %>
+                                <label>Due Date</label>
+                                <%= f.text_field :due_date, class: 'flatpickr form-control', placeholder: 'select the end date', data: { controller: "flatpickr", flatpickr_enable_time: false, flatpickr_date_format: "Y-m-d", flatpickr_disable_days_of_week: [0,6] }  %>
+                                <%= f.input :rate %>
+                                <center><%= f.submit "Add Item", class: 'btn btn-success' %></center>
+                              <% end %>
+                            </td>
+                          </tr>
+                        <% end %>
+                      <% end %>
                     <% end %>
                   </tbody>
                 </table>

@@ -38,7 +38,7 @@ class RatesController < ApplicationController
   private
 
   def rate_params
-    params.require(:rate).permit(:title, :rate, :status, :due_date)
+    params.require(:rate).permit(:title, :rate, :status, :due_date, :statement_id, :participant_id)
   end
 
   def set_rate

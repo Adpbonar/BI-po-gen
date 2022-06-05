@@ -113,7 +113,7 @@
           <div>
             <h2>PERIOD <%= i %> SESSIONS COMPLETED BY <%= date.strftime("%B %e, %Y").upcase %></h2>
             <span class="black-td">
-              Invoice by: <%= (date + @statement.po.lead_time_in_days.days).strftime("%b. %e, %Y")  %>
+              Invoice by: <%= (date.end_of_month).strftime("%b. %e, %Y")  %>
             </span>
             <ol>
               <% rates.group_by(&:person).each do |rate, prices| %>

@@ -242,7 +242,7 @@
           <br />
           <% i = 0 %>
           <% c = 0.to_d %>
-          <% @rates.group_by(&:date).each do |date, rates| %>
+          <% @rates.group_by(&:date).sort.each do |date, rates| %>
             <% i = i + 1 %>
             <div>
               <h2>PERIOD <%= i %> SESSIONS COMPLETED BY <%= date.strftime("%B %e, %Y").upcase %></h2>
@@ -250,7 +250,7 @@
                 Invoice by: <%= (date.end_of_month).strftime("%b. %e, %Y")  %>
               </span>
               <ol>
-                <% rates.group_by(&:person).each do |rate, prices| %>
+                <% rates.group_by(&:person).sort.each do |rate, prices| %>
                   <li class="bold upcase"><%= rate %>
                     <div class="rate">
                       <table>

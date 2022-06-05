@@ -127,6 +127,7 @@
             <span class="black-td">
               Invoice by: <%= (date.end_of_month).strftime("%b. %e, %Y")  %>
             </span>
+            <% l = nil %>
             <ol>
               <% rates.group_by(&:person).sort.each do |rate, prices| %>
                 <div class="rate">
@@ -158,23 +159,21 @@
                         </div>
                       </tr>
                       <% unless rate.include?("Training") %>
-                        <% if i == 0 %>
-                          <tr>
-                            <td>
-                              <h3>Add Coaching | <%= price.person %></h3>
-                              <%= simple_form_for(@price) do |f| %>
-                                <%= f.input   :participant_id, as: :hidden, :input_html => { :value => @participant.id } %>
-                                <%= f.input   :statement_id, as: :hidden, :input_html => { :value => @statement.id } %>
-                                <%= f.input   :status, as: :hidden, :input_html => { :value => "Ongoing" } %>
-                                <%= f.input   :title, as: :hidden, :input_html => { :value => "Coaching for #{rate}" } %>
-                                <label>Due Date</label>
-                                <%= f.text_field :due_date, class: 'flatpickr form-control', placeholder: 'select the end date', data: { controller: "flatpickr", flatpickr_enable_time: false, flatpickr_date_format: "Y-m-d", flatpickr_disable_days_of_week: [0,6] }  %>
-                                <%= f.input :rate %>
-                                <center><%= f.submit "Add Item", class: 'btn btn-success' %></center>
-                              <% end %>
-                            </td>
-                          </tr>
-                        <% end %>
+                        <tr>
+                          <td>
+                            <h3>Add Coaching | <%= price.person %></h3>
+                            <%= simple_form_for(@price) do |f| %>
+                              <%= f.input   :participant_id, as: :hidden, :input_html => { :value => @participant.id } %>
+                              <%= f.input   :statement_id, as: :hidden, :input_html => { :value => @statement.id } %>
+                              <%= f.input   :status, as: :hidden, :input_html => { :value => "Ongoing" } %>
+                              <%= f.input   :title, as: :hidden, :input_html => { :value => "Coaching for #{rate}" } %>
+                              <label>Due Date</label>
+                              <%= f.text_field :due_date, class: 'flatpickr form-control', placeholder: 'select the end date', data: { controller: "flatpickr", flatpickr_enable_time: false, flatpickr_date_format: "Y-m-d", flatpickr_disable_days_of_week: [0,6] }  %>
+                              <%= f.input :rate %>
+                              <center><%= f.submit "Add Item", class: 'btn btn-success' %></center>
+                            <% end %>
+                          </td>
+                        </tr>
                       <% end %>
                     <% end %>
                   </tbody>

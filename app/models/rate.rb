@@ -1,6 +1,9 @@
 class Rate < ApplicationRecord
   belongs_to :statement
 
+  validates :due_date, presence: true
+  validates :rate, presence: true
+
   def date
     self.due_date
   end

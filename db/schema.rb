@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_05_31_003131) do
+ActiveRecord::Schema.define(version: 2022_06_05_145718) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -67,7 +67,7 @@ ActiveRecord::Schema.define(version: 2022_05_31_003131) do
 
   create_table "chargable_rates", force: :cascade do |t|
     t.string "title"
-    t.decimal "rate", precision: 12, scale: 9
+    t.decimal "rate", precision: 10, scale: 5
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "status"
@@ -259,7 +259,7 @@ ActiveRecord::Schema.define(version: 2022_05_31_003131) do
   create_table "porfessional_rates", force: :cascade do |t|
     t.string "title"
     t.bigint "participant_id", null: false
-    t.decimal "rate", precision: 12, scale: 9
+    t.decimal "rate", precision: 10, scale: 5
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["participant_id"], name: "index_porfessional_rates_on_participant_id"
@@ -329,7 +329,7 @@ ActiveRecord::Schema.define(version: 2022_05_31_003131) do
   create_table "rates", force: :cascade do |t|
     t.string "title"
     t.bigint "participant_id"
-    t.decimal "rate", precision: 12, scale: 9
+    t.decimal "rate", precision: 10, scale: 5
     t.bigint "statement_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false

@@ -137,6 +137,9 @@
                               <%= show_money(@statement, price.rate, "") %>
                             </td>
                             <td>
+                            <%= link_to edit_rate_url(price) do %>
+                              edit item
+                            <% end %>
                               <%= button_tag 'X', class: 'btn-danger btn-sm', data: { reflex: "click->StatementReflex#remove", id: price.id } %>
                             </td>
                             </tr>

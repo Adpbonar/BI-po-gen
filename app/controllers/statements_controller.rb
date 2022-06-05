@@ -49,7 +49,7 @@ class StatementsController < ApplicationController
           bottom: '1cm',
           left:   '1cm',
           right:  '1cm' 
-        },
+      },
         lowquality: false,
         zoom: 1,
         footer: { content: render_to_string('pdffooter') }     
@@ -101,10 +101,6 @@ class StatementsController < ApplicationController
       format.html { redirect_to statements_url, notice: "Statement was successfully destroyed." }
       format.json { head :no_content }
     end
-  end
-
-  def achieve_po
-
   end
 
   private

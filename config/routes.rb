@@ -17,7 +17,7 @@ Rails.application.routes.draw do
   resources :line_items
   resources :items, except: [ :index, :show, :edit, :update ]
   resources :ranking_forms, path: 'forms', except: [ :destroy, :edit ]
-  resources :rates, only: [ :new, :create, :update ]
+  resources :rates
   resources :discounts, only: [ :new, :create, :destroy ]
   resources :installments
   resources :rankings

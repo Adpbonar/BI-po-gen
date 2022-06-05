@@ -1,9 +1,12 @@
 class RatesController < ApplicationController
-  before_action :set_statement_note, only: %i[ edit update ]
+  before_action :set_rate, only: %i[ edit update ]
   before_action :authenticate_user!
 
   def new
-    @po = Po.new
+    @rate = Rate.new
+  end
+
+  def edit
   end
 
   def create

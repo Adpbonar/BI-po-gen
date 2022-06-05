@@ -29,5 +29,9 @@ class StatementReflex < ApplicationReflex
     end
   end
       
+  def remove
+    rate = Rate.find(element.dataset[:id])
+    rate.destroy
+  end
  
 end

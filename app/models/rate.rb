@@ -17,4 +17,10 @@ class Rate < ApplicationRecord
     self.title.split("for").first
   end
 
+  TYPE = {
+    'Pay after first period': 'First',
+    'Pay after last period': 'Last',
+    'Pay after each period': 'Ongoing'
+  }
+
 end

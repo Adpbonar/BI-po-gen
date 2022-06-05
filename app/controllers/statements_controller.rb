@@ -32,6 +32,7 @@ class StatementsController < ApplicationController
     unless @statement.issued_to.blank?
       @participant = Participant.find(@statement.issued_to)
     end
+    @price = Rate.new
     respond_to do |format|
       format.html
       format.pdf do

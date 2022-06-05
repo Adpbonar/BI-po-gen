@@ -245,7 +245,7 @@
             <div>
               <h2>PERIOD <%= i %> SESSIONS COMPLETED BY <%= date.strftime("%B %e, %Y").upcase %></h2>
               <span class="black-td">
-                Invoice by: <%= (date + @statement.po.lead_time_in_days.days).strftime("%B %e, %Y")  %>
+                Invoice by: <%= (date + @statement.po.lead_time_in_days.days).strftime("%b. %e, %Y")  %>
               </span>
               <ol>
                 <% rates.group_by(&:person).each do |rate, prices| %>
@@ -318,7 +318,7 @@
                 </tr>
                 <tr>
                   <td colspan="2" class="center">
-                    <small>* Payment Timing May be impacted by the timing of the receipt of client installment amount.</small>
+                    <small>* The timing of payments may be dependent of the receipt of client installment balance.</small>
                   </td>
                   <tr />
                   </tbody>

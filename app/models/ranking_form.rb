@@ -1,5 +1,5 @@
 class RankingForm < ApplicationRecord
-
+  attr_accessor :po_id
   encrypts :name, :email, :access_code
  
   has_many :rankings

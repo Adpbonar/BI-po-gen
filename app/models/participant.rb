@@ -33,6 +33,9 @@ class Participant < ApplicationRecord
         self.type
     end
 
+    def short_name
+        return (self.member_name + " " + self.name.split(" ").last[0] +".").to_s
+    end
 
     def member_name
         initiator = self.name.split(" ")

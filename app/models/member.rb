@@ -5,6 +5,10 @@ class Member < ApplicationRecord
     RankingForm.find(self.client)
   end
 
+  def leader
+    self.group.leader_id
+  end
+
   def name
     self.groupy.name
   end

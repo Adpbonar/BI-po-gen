@@ -49,15 +49,26 @@ class RankingFormsController < ApplicationController
         @ranking_form.po_number = po.po_number
       end
     end
+    po = Po.where(po_number: @ranking_form.po_number).first
     respond_to do |format|
       if @ranking_form.save
-        format.html { redirect_to @ranking_form, notice: "Ranking form was successfully created." }
-        format.json { render :show, status: :created, location: @ranking_form }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @ranking_form.errors, status: :unprocessable_entity }
-      end
-    end 
+        if po.fixed_payments
+          unless po.accepting_submissions 
+            m = Member.create(group_id: po.groups.where(ruser_id: @ranking_form.ranking.to_i).first.id, client: @ranking_form.id)
+            rate = ChargableRate.first
+            2.times do
+              r = Rate.new(statement_id: Statement.where(issued_to: @ranking_form.ranking, po_id: po.id).first.id, title: ("Debrief" + " for " + m.name.to_s), status: rate.status, due_date: DateTime.now, rate: rate.rate, participant_id: m.group.ruser_id)
+              r.save
+            end
+          end
+          format.html { redirect_to @ranking_form, notice: "Ranking form was successfully created." }
+          format.json { render :show, status: :created, location: @ranking_form }
+        else
+          format.html { render :new, status: :unprocessable_entity }
+          format.json { render json: @ranking_form.errors, status: :unprocessable_entity }
+        end
+      end 
+    end
   end
 
   def update
@@ -81,6 +92,6 @@ class RankingFormsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def ranking_form_params
-      params.require(:ranking_form).permit(:name, :access_code, :email, :ranking)
+      params.require(:ranking_form).permit(:name, :access_code, :email, :ranking, :complete, :po_id)
     end
 end

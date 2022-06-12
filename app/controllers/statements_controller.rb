@@ -27,12 +27,16 @@ class StatementsController < ApplicationController
     @company_info = Company.first
     @company = @company_info.company_options
     @po = @statement.po
+    @associates = Associate.all
     @groups =  Group.where(po_id: @po.id).all
     @rates =  Rate.where(statement_id: @statement.id).order(:due_date).all
     unless @statement.issued_to.blank?
       @participant = Participant.find(@statement.issued_to)
     end
     @price = Rate.new
+    users_without_statements = []
+    @associates.each { |a| users_without_statements << a.id unless Ruser.where(participant_id: a.id).any? || @po.statements.where(issued_to: a.id).any? }
+    @not_in_po = users_without_statements
     respond_to do |format|
       format.html
       format.pdf do

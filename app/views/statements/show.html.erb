@@ -1,6 +1,3 @@
-<%= content_tag :button, id: 'gStatements', class: 'btn btn-success', data: { reflex: "click->StatementReflex#associates_generate", id: @statement.id } do %>
-  generate associate statements
-<% end %>
 <%= render 'navigation', statement: @statement, :formats => [:html] %>
 <div id="pdfLoading"></div>
 <div class="invoice-image">
@@ -105,20 +102,21 @@
         </div>
       <% end %>
       <% if @statement.associate && @statement.po.fixed_payments %>
-        <br />
-        <hr />
-        <h1>Add Training</h2>
-        <%= simple_form_for(@price) do |f| %>
-          <%= f.input   :participant_id, as: :hidden, :input_html => { :value => @participant.id } %>
-          <%= f.input   :statement_id, as: :hidden, :input_html => { :value => @statement.id } %>
-          <%= f.input   :status, as: :hidden, :input_html => { :value => "Ongoing" } %>
-          <%= f.input   :title, as: :hidden, :input_html => { :value => "Training for Group Training" } %>
-          <label>Due Date</label>
-          <%= f.text_field :due_date, class: 'flatpickr form-control', placeholder: 'Select the due date', data: { controller: "flatpickr", flatpickr_enable_time: false, flatpickr_date_format: "Y-m-d", flatpickr_disable_days_of_week: [0,6] }  %>
-          <%= f.input :rate %>
-          <center><%= f.submit "Add Item", class: 'btn btn-success' %></center>
-        <% end %>
-        <br />
+        <div><br />
+          <hr />
+          <h1>Add Training</h2>
+          <%= simple_form_for(@price) do |f| %>
+            <%= f.input   :participant_id, as: :hidden, :input_html => { :value => @participant.id } %>
+            <%= f.input   :statement_id, as: :hidden, :input_html => { :value => @statement.id } %>
+            <%= f.input   :status, as: :hidden, :input_html => { :value => "Ongoing" } %>
+            <%= f.input   :title, as: :hidden, :input_html => { :value => "Training for Group Training" } %>
+            <label>Due Date</label>
+            <%= f.text_field :due_date, class: 'flatpickr form-control', placeholder: 'Select the due date', data: { controller: "flatpickr", flatpickr_enable_time: false, flatpickr_date_format: "Y-m-d", flatpickr_disable_days_of_week: [0,6] }  %>
+            <%= f.input :rate %>
+            <center><%= f.submit "Add Item", class: 'btn btn-success' %></center>
+          <% end %>
+          <br />
+        </div>
         <% i = 0 %>
         <% @rates.group_by(&:date).sort.each do |date, rates| %>
           <% i = i + 1 %>
@@ -134,14 +132,26 @@
                   <table>
                     <tbody>
                       <% prices.sort.each_with_index do |price, i| %>
-                        <tr>
-                          <% if i == 0 %>
-                            <td colspan="3", style="width: 100%;">
-                              <hr />
-                              <li class="bold upcase"><%= rate %>
+                        <% unless rate.include?("Training") || i != 0 %>
+                          <tr>
+                            <td>
+                              <h3>
+                                <li class="bold upcase"><%= rate %></h3
+                               <hr />
+                                <h4>Add Coaching | <%= price.person %></h4>
+                                <%= simple_form_for(@price) do |f| %>
+                                  <%= f.input   :participant_id, as: :hidden, :input_html => { :value => @participant.id } %>
+                                  <%= f.input   :statement_id, as: :hidden, :input_html => { :value => @statement.id } %>
+                                  <%= f.input   :status, as: :hidden, :input_html => { :value => "Ongoing" } %>
+                                  <%= f.input   :title, as: :hidden, :input_html => { :value => "Coaching for #{rate}" } %>
+                                  <label>Due Date</label>
+                                  <%= f.text_field :due_date, class: 'flatpickr form-control', placeholder: 'Select the due date', data: { controller: "flatpickr", flatpickr_enable_time: false, flatpickr_date_format: "Y-m-d", flatpickr_disable_days_of_week: [0,6] }  %>
+                                  <%= f.input :rate %>
+                                  <center><%= f.submit "Add Item", class: 'btn btn-success' %></center>
+                                <% end %>
                               </td>
-                            <% end %>
-                          </tr>
+                            </tr>
+                          <% end %>
                           <tr>
                             <td>
                               <%= price.item %>
@@ -158,23 +168,6 @@
                           </tr>
                         </div>
                       </tr>
-                      <% unless rate.include?("Training") || i != 0 %>
-                        <tr>
-                          <td>
-                            <h3>Add Coaching | <%= price.person %></h3>
-                            <%= simple_form_for(@price) do |f| %>
-                              <%= f.input   :participant_id, as: :hidden, :input_html => { :value => @participant.id } %>
-                              <%= f.input   :statement_id, as: :hidden, :input_html => { :value => @statement.id } %>
-                              <%= f.input   :status, as: :hidden, :input_html => { :value => "Ongoing" } %>
-                              <%= f.input   :title, as: :hidden, :input_html => { :value => "Coaching for #{rate}" } %>
-                              <label>Due Date</label>
-                              <%= f.text_field :due_date, class: 'flatpickr form-control', placeholder: 'Select the due date', data: { controller: "flatpickr", flatpickr_enable_time: false, flatpickr_date_format: "Y-m-d", flatpickr_disable_days_of_week: [0,6] }  %>
-                              <%= f.input :rate %>
-                              <center><%= f.submit "Add Item", class: 'btn btn-success' %></center>
-                            <% end %>
-                          </td>
-                        </tr>
-                      <% end %>
                     <% end %>
                   </tbody>
                 </table>

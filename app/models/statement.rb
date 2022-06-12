@@ -27,6 +27,10 @@ class Statement < ApplicationRecord
         end
     end
 
+    def short_name
+        return (self.participant_name.split(" ").first + " " + self.participant_name.split(" ").last[0] +".").to_s
+    end
+
     def locked
         if self.type == 'GeneralStatement'
             if self.status_code == 'A' || self.status_code == 'L'

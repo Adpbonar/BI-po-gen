@@ -70,6 +70,17 @@
                         <li class="left"><span class="bold"><%= member.name %>:</span> <%= mail_to member.email %></li>
                       <% end %>
                     </ul>
+                    <hr />
+                    <p class="bold upcase">Add someone to this group</p>
+                    <%= simple_form_for(@member) do |f| %>
+                      <%= f.input :name %>
+                      <%= f.input :email %>
+                      <%= f.input :complete, as: :hidden, :input_html => { :value => true } %>
+                      <%= f.input :ranking, as: :hidden, :input_html => { :value => group.leader_id } %>
+                        <%= f.input :po_id, as: :hidden, :input_html => { :value => @po.id } %>
+                      <%= f.input :access_code, as: :hidden, :input_html => { :value => group.po.access_code } %>                    
+                      <%= f.submit 'Add', class: 'btn btn-success' %>
+                    <% end %>
                   </div>
                 </div>
               <% end %>

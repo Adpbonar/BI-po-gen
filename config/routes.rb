@@ -21,9 +21,9 @@ Rails.application.routes.draw do
   resources :discounts, only: [ :new, :create, :destroy ]
   resources :installments
   resources :rankings
+  resources :members, only: [:new, :create]
   # resources :invoices
   
   get :search_programs, controller: :line_items
   get :default_options, controller: :static_pages, path: 'defaults' 
-
 end 

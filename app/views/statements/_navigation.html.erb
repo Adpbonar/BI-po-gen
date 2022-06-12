@@ -23,10 +23,12 @@
                         <div class="dropdown">
                           <button class="dropbtn btn btn-info">More Statements from PO <%= @statement.po.po_number %></button>
                           <div class="dropdown-content">
+                            <p class="bold center upcase" style="padding: 4px;">Go to another statement included in PO <%= @statement.po.po_number %></p>
+                              <hr />
                             <% @statement.po.statements.where(achieved: false).all.order(:id).reverse_order.each do |statement| %>
                               <% unless statement == @statement || statement.type == "GeneralStatement" %>
-                                <%= link_to statement_path(statement) do %>
-                                  <u><%= ass_type(statement) %> <%= statement.type.underscore.titleize %></u> for <strong><%= statement.participant_name.split(".").last %></strong>
+                                <%= link_to statement_path(statement), class: 'upcase' do %>
+                                  <u><%= ass_type(statement) %> <%= statement.type.underscore.titleize %></u> for <strong><%= statement.short_name %></strong>
                                 <% end %>
                               <% end %>
                             <% end %>
@@ -35,6 +37,30 @@
                         </div>
                       </center>
                     </td>
+                    <% if @statement.associate && @statement.po.fixed_payments %>
+                      <td>
+                        <center>
+                          <div class="dropdown">
+                            <button class="dropbtn btn btn-info">new</button>
+                            <div class="dropdown-content" style="width: 320px;">
+                              <p class="bold center upcase" style="padding: 4px;">Create a new Blank Training PO for <%= @statement.po.po_number %> in the name of</p>
+                              <hr />
+                              <% @associates.each do |a| %>
+                                <% unless @not_in_po.include?(a.id) %>
+                                  <div>
+                                    <%= content_tag :a, class: 'left', style: 'cursor: pointer', data: { reflex: "click->StatementReflex#create_statement", id: a.id, statement: @statement.id } do %>
+                                      <% p = Participant.find(a.id) %>
+                                      <%= p.short_name %>
+                                    <% end %>
+                                  </div>
+                                <% end %>
+                              <% end %>
+                              <br />
+                            </div>
+                          </div>
+                        </center>
+                      </td>
+                    <% end %>
                     <td style="width: 33.33%">
                       <% if @statement.next.present? %>
                         <div style="text-align: right;">

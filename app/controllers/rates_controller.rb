@@ -28,7 +28,7 @@ class RatesController < ApplicationController
 
     respond_to do |format|
       if @rate.update(rate_params)
-        @rate.update_title
+        @rate.set_title
         format.html { redirect_to statement_path(@rate.statement), notice: "rate was successfully updated." }
         format.json { render :show, status: :ok, location: @rate }
       else

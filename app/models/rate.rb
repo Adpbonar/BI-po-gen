@@ -32,15 +32,6 @@ encrypts :person_id
     end
   end
 
-  def update_title
-    unless self.person.blank?
-      unless self.title.include?("for")
-        self.title = self.title.to_s + " for " + self.person_id.to_s
-        self.save
-      end
-    end
-  end
-
   TYPE = {
     'Pay after first period': 'First',
     'Pay after last period': 'Last',

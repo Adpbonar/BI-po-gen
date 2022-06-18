@@ -79,6 +79,8 @@ class RankingForm < ApplicationRecord
       'Presentation': 'Presentation',
       'Consulting': 'Consulting',
       'First Debrief': 'First Debrief',
+      'Event': 'Event',
+      'Workshop': 'Workshop',
       'Second Debrief': 'Second Debrief'
     }
 

@@ -1,4 +1,10 @@
-<h1>Edit <%= @rate.title %></h1>
+<h1>Edit 
+  <% unless@rate.title.include?("Group Training") %>
+    <%= @rate.title %>
+  <% else %>
+    <%= @rate.person %>
+  <% end %>
+</h1>
 <br />
 <%= simple_form_for(@rate) do |f| %>
   <% unless @rate.title.include?("Group Training") %>

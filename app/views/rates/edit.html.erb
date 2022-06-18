@@ -14,5 +14,5 @@
   <%= f.input   :person_id, as: :hidden, :input_html => { :value => @rate.person } %>
   <label>Due Date</label>
   <%= f.text_field :due_date, class: 'flatpickr form-control', placeholder: 'Select the due date', data: { controller: "flatpickr", flatpickr_enable_time: false, flatpickr_date_format: "Y-m-d", flatpickr_disable_days_of_week: [0,6] }  %>
-  <%= f.submit "Add Item", class: 'btn btn-success' %>
+  <%= f.submit "Update Item", class: 'btn btn-success' %>
 <% end %>

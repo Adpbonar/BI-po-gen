@@ -1,5 +1,6 @@
 class Rate < ApplicationRecord
   belongs_to :statement
+  validates :title, presence: true
 
 encrypts :person_id
 

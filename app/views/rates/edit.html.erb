@@ -1,6 +1,6 @@
 <h1>Edit 
   <% unless@rate.title.include?("Group Training") %>
-    <%= @rate.title %>
+    <%= @rate.item %> (<%= @rate.person %>)
   <% else %>
     <%= @rate.person %>
   <% end %>

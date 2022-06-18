@@ -73,6 +73,7 @@ class RankingForm < ApplicationRecord
 
   TYPE = {
       'Individual Training': 'Individual Training',
+      'Consultation': 'Consultation',
       'Coaching': 'Coaching',
       'Mentoring': 'Mentoring',
       'Presentation': 'Presentation',

@@ -14,6 +14,7 @@ class RatesController < ApplicationController
 
     respond_to do |format|
       if @rate.save
+        @rate.set_title
         format.html { redirect_to statement_path(@rate.statement), notice: "Statement was successfully created." }
         format.json { render :show, status: :created, location: @rate }
       else
@@ -24,8 +25,10 @@ class RatesController < ApplicationController
   end
 
   def update
+
     respond_to do |format|
       if @rate.update(rate_params)
+        @rate.set_title
         format.html { redirect_to statement_path(@rate.statement), notice: "rate was successfully updated." }
         format.json { render :show, status: :ok, location: @rate }
       else
@@ -38,7 +41,7 @@ class RatesController < ApplicationController
   private
 
   def rate_params
-    params.require(:rate).permit(:title, :rate, :status, :due_date, :statement_id, :participant_id)
+    params.require(:rate).permit(:title, :rate, :status, :due_date, :statement_id, :participant_id, :person_id)
   end
 
   def set_rate

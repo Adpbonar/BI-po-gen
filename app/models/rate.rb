@@ -1,6 +1,8 @@
 class Rate < ApplicationRecord
   belongs_to :statement
 
+encrypts :person_id
+
   validates :due_date, presence: true
   validates :rate, presence: true
 
@@ -18,6 +20,15 @@ class Rate < ApplicationRecord
 
   def item
     self.title.split("for").first
+  end
+
+  def set_title
+    unless self.person.blank?
+      unless self.title.include?("for")
+        self.title = self.title.to_s + " for " + self.person_id.to_s.strip!
+        self.save
+      end
+    end
   end
 
   TYPE = {

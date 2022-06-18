@@ -104,7 +104,7 @@
       <% if @statement.associate && @statement.po.fixed_payments %>
         <div><br />
           <hr />
-          <h1>Add Training</h2>
+          <h1>Add Group Training</h2>
           <%= simple_form_for(@price) do |f| %>
             <%= f.input   :participant_id, as: :hidden, :input_html => { :value => @participant.id } %>
             <%= f.input   :statement_id, as: :hidden, :input_html => { :value => @statement.id } %>
@@ -138,14 +138,15 @@
                               <h3>
                                 <li class="bold upcase"><%= rate %></h3
                                <hr />
-                                <h4>Add Coaching | <%= price.person %></h4>
+                                <h4>Add Service | <%= price.person %></h4>
                                 <%= simple_form_for(@price) do |f| %>
                                   <%= f.input   :participant_id, as: :hidden, :input_html => { :value => @participant.id } %>
                                   <%= f.input   :statement_id, as: :hidden, :input_html => { :value => @statement.id } %>
+                                  <%= f.input   :person_id, as: :hidden, :input_html => { :value => rate } %>
                                   <%= f.input   :status, as: :hidden, :input_html => { :value => "Ongoing" } %>
-                                  <%= f.input   :title, as: :hidden, :input_html => { :value => "Coaching for #{rate}" } %>
+                                  <%= f.input   :title, as: :select, collection: RankingForm::TYPE.sort, label: 'Service Type' %>
                                   <label>Due Date</label>
-                                  <%= f.text_field :due_date, class: 'flatpickr form-control', placeholder: 'Select the due date', data: { controller: "flatpickr", flatpickr_enable_time: false, flatpickr_date_format: "Y-m-d", flatpickr_disable_days_of_week: [0,6] }  %>
+                                  <%= f.text_field :due_date, class: 'flatpickr form-control', placeholder: 'Select the due date', data: { controller: "flatpickr", flatpickr_enable_time: false, flatpickr_date_format: "Y-m-d", flatpickr_default_date: date, flatpickr_disable_days_of_week: [0,6] }  %>
                                   <%= f.input :rate %>
                                   <center><%= f.submit "Add Item", class: 'btn btn-success' %></center>
                                 <% end %>

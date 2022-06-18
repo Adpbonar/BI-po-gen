@@ -1,6 +1,6 @@
 class RankingForm < ApplicationRecord
   attr_accessor :po_id
-  encrypts :name, :email, :access_code
+  encrypts :name, :email, :access_code, :person
  
   has_many :rankings
   serialize :shuffled_people, Array
@@ -70,4 +70,16 @@ class RankingForm < ApplicationRecord
     po.update(sorted: true)
     po.update(accepting_submissions: false)
   end
+
+  TYPE = {
+      'Individual Training': 'Individual Training',
+      'Coaching': 'Coaching',
+      'Mentoring': 'Mentoring',
+      'Presentation': 'Presentation',
+      'Consulting': 'Consulting',
+      'First Debrief': 'First Debrief',
+      'Second Debrief': 'Second Debrief'
+    }
+
+
 end

@@ -57,7 +57,7 @@ class RankingFormsController < ApplicationController
             m = Member.create(group_id: po.groups.where(ruser_id: @ranking_form.ranking.to_i).first.id, client: @ranking_form.id)
             rate = ChargableRate.first
             2.times do
-              r = Rate.new(statement_id: Statement.where(issued_to: @ranking_form.ranking, po_id: po.id).first.id, title: ("Debrief" + " for " + m.name.to_s), status: rate.status, due_date: DateTime.now, rate: rate.rate, participant_id: m.group.ruser_id)
+              r = Rate.new(statement_id: Statement.where(issued_to: @ranking_form.ranking, po_id: po.id).first.id, title: ("Dummy Item".upcase + " for " + m.name.to_s), status: rate.status, due_date: DateTime.now, rate: rate.rate, participant_id: m.group.ruser_id)
               r.save
             end
           end
